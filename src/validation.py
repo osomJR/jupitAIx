@@ -2,8 +2,6 @@ from typing import Type
 from src.schema import (
     AnalyzerRequest,
     FeatureType,
-    UserTier,
-    MAX_DAILY_ACTIONS_FREE,
     QUESTION_SCALING_RULES,
     QuestionScale,
     StructuredTextResponse,
@@ -18,14 +16,6 @@ from src.schema import (
 )
 
 # CORE VALIDATION FUNCTIONS
-
-def validate_usage(snapshot) -> None:
-    """
-    Enforces daily usage limits per user tier.
-    """
-    if snapshot.user_tier == UserTier.free:
-        if snapshot.actions_used_today >= MAX_DAILY_ACTIONS_FREE:
-            raise ValueError("Daily action limit reached for free tier")
 
 def validate_action_payload_consistency(request: AnalyzerRequest) -> None:
     """
@@ -108,7 +98,6 @@ def validate_analyzer_request(
     """
     Full deterministic validation pipeline.
     """
-    validate_usage(usage_snapshot)
     validate_action_payload_consistency(request)
     validate_word_count_bounds(request)
 

@@ -1,149 +1,195 @@
 import pytest
-from src.schema import (
-    AnalyzerRequest,
-    DocumentPayload,
-    DocumentMetadata,
-    InputFormat,
-    FeatureType,
-    UserTier,
-    UsageSnapshot,
-    ConversionRequest,
-    SummarizationRequest,
-    QuestionGenerationRequest,
-    AnswerGenerationRequest,
-)
 from src.validation import (
-    validate_usage,
     validate_action_payload_consistency,
     validate_word_count_bounds,
     classify_question_scale,
     get_question_range,
     validate_structured_text_response,
     validate_numbered_list_response,
-    validate_analyzer_request,
+    validate_analyzer_request
+)
+from src.schema import (
+    AnalyzerRequest,
+    FeatureType,
+    ConversionRequest,
+    SummarizationRequest,
+    GrammarCorrectionRequest,
+    TranslationRequest,
+    ExplanationRequest,
+    QuestionGenerationRequest,
+    AnswerGenerationRequest,
+    QuestionScale,
+    StructuredTextResponse,
+    NumberedListResponse,
+    QUESTION_SCALING_RULES,
+    OutputFormat,
+    DocumentPayload,
+    DocumentMetadata
 )
 
-# FIXTURE HELPERS
+# Helper: create DocumentPayload
 
-def make_valid_metadata(word_count: int = 100):
-    return DocumentMetadata(
-        input_format=InputFormat.txt,
-        file_size_mb=1,
-        extracted_word_count=word_count,
-        ocr_used=False,
-    )
-
-def make_valid_document(word_count: int = 100):
+def make_document(word_count: int, text: str = "Sample text content") -> DocumentPayload:
+    # Ensure Pydantic-valid value (1-1000)
+    valid_wc = max(1, min(word_count, 1000))
     return DocumentPayload(
-        text="Valid text content",
-        metadata=make_valid_metadata(word_count),
+        text=text,
+        metadata=DocumentMetadata(
+            input_format="txt",
+            file_size_mb=0.1,
+            extracted_word_count=valid_wc,
+            ocr_used=False
+        )
     )
 
-def make_valid_snapshot(actions_used=0):
-    return UsageSnapshot(
-        user_tier=UserTier.free,
-        actions_used_today=actions_used,
-    )
+# Payload Mocks
 
-# USAGE VALIDATION
+mock_payloads = {
+    FeatureType.convert: ConversionRequest,
+    FeatureType.summarize: SummarizationRequest,
+    FeatureType.grammar_correct: GrammarCorrectionRequest,
+    FeatureType.translate: TranslationRequest,
+    FeatureType.explain: ExplanationRequest,
+    FeatureType.generate_questions: QuestionGenerationRequest,
+    FeatureType.generate_answers: AnswerGenerationRequest,
+}
 
-def test_validate_usage_within_limit():
-    snapshot = make_valid_snapshot(actions_used=3)
-    validate_usage(snapshot)  # Should not raise
+# TEST: validate_action_payload_consistency
 
-def test_validate_usage_exceeds_limit():
-    snapshot = make_valid_snapshot(actions_used=5)
-    with pytest.raises(ValueError):
-        validate_usage(snapshot)
+@pytest.mark.parametrize("feature_type,payload_class", mock_payloads.items())
+def test_validate_action_payload_consistency_valid(feature_type, payload_class):
+    if payload_class is ConversionRequest:
+        payload_instance = payload_class(feature=FeatureType.convert, output_format=OutputFormat.txt)
+    elif payload_class is TranslationRequest:
+        payload_instance = payload_class(feature=FeatureType.translate, target_language="fr")
+    elif payload_class is AnswerGenerationRequest:
+        payload_instance = payload_class(
+            feature=FeatureType.generate_answers,
+            questions=["1. What is this?", "2. How does it work?"]
+        )
+    elif payload_class is QuestionGenerationRequest:
+        payload_instance = payload_class(feature=FeatureType.generate_questions)
+    else:
+        payload_instance = payload_class(feature=feature_type)
 
-# ACTION–PAYLOAD CONSISTENCY
-
-def test_valid_action_payload_match():
-    request = AnalyzerRequest(
-        user_tier=UserTier.free,
-        action=FeatureType.summarize,
-        document=make_valid_document(),
-        payload=SummarizationRequest(feature=FeatureType.summarize),
-    )
+    request = AnalyzerRequest(action=feature_type, payload=payload_instance, document=make_document(10))
     validate_action_payload_consistency(request)
 
-def test_invalid_action_payload_mismatch():
+def test_validate_action_payload_consistency_invalid_payload():
     request = AnalyzerRequest(
-        user_tier=UserTier.free,
         action=FeatureType.convert,
-        document=make_valid_document(),
         payload=SummarizationRequest(feature=FeatureType.summarize),
+        document=make_document(10)
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Payload does not match declared action"):
         validate_action_payload_consistency(request)
 
-# WORD COUNT VALIDATION
+def test_validate_action_payload_consistency_missing_payload():
+    request = AnalyzerRequest(action=FeatureType.convert, payload=None, document=make_document(10))
+    with pytest.raises(ValueError, match="Payload is required"):
+        validate_action_payload_consistency(request)
 
-def test_valid_word_count():
+# TEST: validate_word_count_bounds
+
+def test_validate_word_count_bounds_valid():
     request = AnalyzerRequest(
-        user_tier=UserTier.free,
         action=FeatureType.summarize,
-        document=make_valid_document(100),
         payload=SummarizationRequest(feature=FeatureType.summarize),
+        document=make_document(500)
     )
     validate_word_count_bounds(request)
 
-# QUESTION SCALING
+def test_validate_word_count_bounds_too_small():
+    doc = make_document(1)  # Pydantic-valid
+    request = AnalyzerRequest(
+        action=FeatureType.summarize,
+        payload=SummarizationRequest(feature=FeatureType.summarize),
+        document=doc
+    )
+    
+    # override to simulate invalid value
+    
+    request.document.metadata.extracted_word_count = 0
+    with pytest.raises(ValueError, match="Document contains no words"):
+        validate_word_count_bounds(request)
 
-def test_classify_small_scale():
-    scale = classify_question_scale(200)
-    assert scale.value == "small"
+def test_validate_word_count_bounds_too_large():
+    doc = make_document(1000)  # Pydantic-valid
+    request = AnalyzerRequest(
+        action=FeatureType.summarize,
+        payload=SummarizationRequest(feature=FeatureType.summarize),
+        document=doc
+    )
+    request.document.metadata.extracted_word_count = 1001
+    with pytest.raises(ValueError, match="Document exceeds maximum allowed word count"):
+        validate_word_count_bounds(request)
 
-def test_classify_medium_scale():
-    scale = classify_question_scale(500)
-    assert scale.value == "medium"
+# TEST: classify_question_scale & get_question_range
 
-def test_classify_large_scale():
-    scale = classify_question_scale(900)
-    assert scale.value == "large"
+def test_classify_question_scale_valid():
+    for rule in QUESTION_SCALING_RULES:
+        assert classify_question_scale(rule.min_words) == rule.classification
+        assert classify_question_scale(rule.max_words) == rule.classification
 
-def test_question_range_small():
-    min_q, max_q = get_question_range(200)
-    assert min_q == 4
-    assert max_q == 6
+def test_classify_question_scale_invalid():
+    with pytest.raises(ValueError, match="Word count outside supported scaling rules"):
+        classify_question_scale(-1)
 
-# RESPONSE VALIDATION
+def test_get_question_range_valid():
+    for rule in QUESTION_SCALING_RULES:
+        min_q, max_q = get_question_range(rule.min_words)
+        assert min_q == rule.min_questions
+        assert max_q == rule.max_questions
 
-def test_validate_structured_text_response():
-    response = validate_structured_text_response("Valid output")
-    assert response.content == "Valid output"
+def test_get_question_range_invalid():
+    with pytest.raises(ValueError, match="Word count outside supported scaling rules"):
+        get_question_range(-5)
 
-def test_structured_text_empty():
-    with pytest.raises(ValueError):
-        validate_structured_text_response("   ")
+# TEST: validate_structured_text_response
+
+def test_validate_structured_text_response_valid():
+    result = validate_structured_text_response("Hello world")
+    assert isinstance(result, StructuredTextResponse)
+    assert result.content == "Hello world"
+
+@pytest.mark.parametrize("content", ["", "   ", None])
+def test_validate_structured_text_response_invalid(content):
+    with pytest.raises(ValueError, match="Response content cannot be empty"):
+        validate_structured_text_response(content)
+
+# TEST: validate_numbered_list_response
 
 def test_validate_numbered_list_response_valid():
-    items = [
-        "1. First item",
-        "2. Second item",
-    ]
-    response = validate_numbered_list_response(items)
-    assert len(response.items) == 2
+    items = ["1. One", "2. Two", "3. Three"]
+    result = validate_numbered_list_response(items)
+    assert isinstance(result, NumberedListResponse)
+    assert result.items == items
 
-def test_validate_numbered_list_response_invalid_numbering():
-    items = [
-        "1. First item",
-        "3. Wrong numbering",
-    ]
-    with pytest.raises(ValueError):
-        validate_numbered_list_response(items)
+def test_validate_numbered_list_response_invalid():
+    with pytest.raises(ValueError, match="Response list cannot be empty"):
+        validate_numbered_list_response([])
 
-# FULL ANALYZER PIPELINE
+# TEST: validate_analyzer_request
 
-def test_validate_analyzer_request_full_success():
-    request = AnalyzerRequest(
-        user_tier=UserTier.free,
-        action=FeatureType.generate_questions,
-        document=make_valid_document(200),
-        payload=QuestionGenerationRequest(
-            feature=FeatureType.generate_questions
-        ),
+def test_validate_analyzer_request_generate_questions():
+    payload = QuestionGenerationRequest(feature=FeatureType.generate_questions)
+    doc = make_document(50)
+    request = AnalyzerRequest(action=FeatureType.generate_questions, payload=payload, document=doc)
+    validate_analyzer_request(request, usage_snapshot=None)
+
+def test_validate_analyzer_request_generate_answers_missing_questions():
+   
+    # Initialize with Pydantic-valid sequential questions
+    
+    payload = AnswerGenerationRequest(
+        feature=FeatureType.generate_answers,
+        questions=["1. What is this?", "2. How does it work?"]
     )
-    snapshot = make_valid_snapshot(0)
-    validate_analyzer_request(request, snapshot)
-
+    doc = make_document(50)
+    request = AnalyzerRequest(action=FeatureType.generate_answers, payload=payload, document=doc)
+    
+    # override to empty list to trigger validation
+    
+    request.payload.questions = []
+    with pytest.raises(ValueError, match="Questions list cannot be empty"):
+        validate_analyzer_request(request, usage_snapshot=None)

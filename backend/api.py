@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+load_dotenv() 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -22,6 +25,12 @@ app.include_router(
     prefix="/api/v1",
     tags=["v1"],
 )
+
+# Root endpoint (safe addition)
+
+@app.get("/", tags=["system"])
+def root():
+    return {"message": "AI Document Analyzer API is running"}
 
 # Health Check 
 

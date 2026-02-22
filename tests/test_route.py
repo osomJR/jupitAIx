@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch
 from src.schema import FeatureType
 from backend.route import router
-from backend.rate_limit import _requests  # <-- important
 
 # Test App Setup
 
@@ -12,15 +11,22 @@ app = FastAPI()
 app.include_router(router)
 client = TestClient(app)
 
-# TEST ISOLATION FIX
+# Patch rate_limit_ai for all route tests
+
+@pytest.fixture(autouse=True)
+def disable_rate_limit(monkeypatch):
+    """Patch rate_limit_ai to a no-op for all tests to prevent 429 errors."""
+    monkeypatch.setattr(
+        "backend.route.rate_limit_ai",
+        lambda *args, **kwargs: None  # no-op
+    )
+
+# Dummy autouse fixture for clearing rate limit store (optional)
 
 @pytest.fixture(autouse=True)
 def clear_rate_limit_store():
-    """
-    Ensures each test starts with a clean in-memory rate limit store.
-    Prevents cross-test contamination.
-    """
-    _requests.clear()
+    """Dummy fixture to satisfy autouse. No Redis clearing is done."""
+    yield
 
 # SUCCESS CASE
 
@@ -64,6 +70,7 @@ def test_generate_questions_requires_word_count():
     )
     assert response.status_code == 400
     assert "Word count required" in str(response.json()["detail"])
+
 def test_generate_answers_requires_questions():
     response = client.post(
         "/process",
@@ -74,6 +81,7 @@ def test_generate_answers_requires_questions():
     )
     assert response.status_code == 400
     assert "Questions required" in str(response.json()["detail"])
+
 def test_translate_requires_target_language():
     response = client.post(
         "/process",

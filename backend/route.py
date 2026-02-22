@@ -5,14 +5,14 @@ from src.schema import FeatureType
 from src.ai_processing import process_with_ai
 from src.ai_client import AIClient
 from src.ai_validation import validate_text_input
-from backend.rate_limit import rate_limit_ai
+from backend.rate_limit_anonymous_user import rate_limit_ai
 
 router = APIRouter()
 ai_client = AIClient()
 
 # Request / Response Models
 
-class AIProcessRequest(BaseModel):
+class AnalyzerRequest(BaseModel):
     text: str
     feature: FeatureType
 
@@ -34,7 +34,7 @@ class AIProcessResponse(BaseModel):
     "/process",
     response_model=AIProcessResponse
 )
-def process_document(request: Request, payload: AIProcessRequest):
+def process_document(request: Request, payload: AnalyzerRequest):
 
     # Step 0 — Rate limit first (cost protection)
    

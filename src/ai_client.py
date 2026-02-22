@@ -6,8 +6,8 @@ from src.validation import (
 )
 AI_MODEL = "gpt-4o-mini"
 MAX_COMPLETION_TOKENS = 1200
-AI_TIMEOUT_SECONDS = 12
-PROVIDER_TIMEOUT_SECONDS = 25
+AI_TIMEOUT_SECONDS = 45
+PROVIDER_TIMEOUT_SECONDS = 30
 
 # OpenAI client with provider-level timeout
 
@@ -19,7 +19,6 @@ class AIClient:
     - Send prompts to the AI model
     - Return raw model output
     - Handle provider-level failures
-
     This layer MUST NOT:
     - Modify prompts
     - Add business rules

@@ -7,7 +7,6 @@ from pydantic import BaseModel, Field, StringConstraints, field_validator
 MAX_FILE_SIZE_MB = 10
 MAX_WORD_COUNT = 1000
 MIN_WORD_COUNT = 1
-MAX_DAILY_ACTIONS_FREE = 5
 
 # SUPPORTED FORMATS (STRICTLY V1)
 
@@ -33,11 +32,6 @@ class FeatureType(str, Enum):
     explain = "explain"
     generate_questions = "generate_questions"
     generate_answers = "generate_answers"
-
-# USER TIER
-
-class UserTier(str, Enum):
-    free = "free"
 
 # DOCUMENT METADATA
 
@@ -100,7 +94,6 @@ class AnswerGenerationRequest(BaseModel):
 # UNIFIED REQUEST ENVELOPE (STATELESS)
 
 class AnalyzerRequest(BaseModel):
-    user_tier: UserTier
     action: FeatureType
     document: DocumentPayload
     payload: Optional[ConversionRequest|SummarizationRequest|GrammarCorrectionRequest|TranslationRequest
@@ -175,9 +168,3 @@ class NumberedListResponse(BaseModel):
             if not item.lstrip().startswith(f"{i}."):
                 raise ValueError("Items must be sequentially numbered starting at 1")
         return v
-
-# USAGE SNAPSHOT
-
-class UsageSnapshot(BaseModel):
-    user_tier: UserTier
-    actions_used_today: int = Field(..., ge=0)
