@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi import HTTPException
+from fastapi.middleware.cors import CORSMiddleware  # ← ADDED
 from backend.route import router as ai_router
 
 # Application Instance
@@ -16,6 +17,23 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
+)
+
+# CORS Middleware (ADDED — required for browser frontends)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",          # React / Next.js dev
+        "http://127.0.0.1:3000",
+        
+        # Add production frontend domain below
+        # "https://app.yourdomain.com",
+    
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # v1 router

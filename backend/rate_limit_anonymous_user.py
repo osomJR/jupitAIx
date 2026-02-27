@@ -29,6 +29,7 @@ def get_redis_client():
         raise RuntimeError("REDIS_URL must use rediss:// (TLS required for Upstash TCP)")
 
     return redis.from_url(redis_url)
+
 redis_client = get_redis_client()
 
 # Fail fast if credentials are wrong
@@ -64,6 +65,7 @@ def _fingerprint(request: Request) -> str:
         ip = forwarded.split(",")[0].strip()
     else:
         ip = request.client.host or ""
+
     headers = request.headers
     components = [
         ip,
@@ -72,12 +74,13 @@ def _fingerprint(request: Request) -> str:
         headers.get("accept-encoding", ""),
         headers.get("sec-ch-ua", ""),
     ]
+
     raw = "|".join(components)
     return hashlib.sha256(raw.encode()).hexdigest()
 
 # MAIN RATE LIMIT FUNCTION
 
-def rate_limit_ai(request: Request, feature: FeatureType, user_id: str | None = None) -> None:
+def rate_limit_ai(request: Request, feature: FeatureType) -> None:
     """
     SaaS MVP Rate Limiter
     - Distributed (Upstash)
@@ -85,13 +88,14 @@ def rate_limit_ai(request: Request, feature: FeatureType, user_id: str | None = 
     - Daily sliding window
     - Burst protection
     """
-    if user_id:
-        return  # Registered tier handled elsewhere
+
     now = int(time.time())
     limit = HEAVY_ANONYMOUS_DAILY_LIMIT if _is_heavy_feature(feature) else ANONYMOUS_DAILY_LIMIT
+
     fingerprint = _fingerprint(request)
     daily_key = f"rl:daily:{fingerprint}"
     burst_key = f"rl:burst:{fingerprint}"
+
     try:
 
         # DAILY LIMIT
@@ -100,10 +104,13 @@ def rate_limit_ai(request: Request, feature: FeatureType, user_id: str | None = 
         pipe.zremrangebyscore(daily_key, 0, now - SECONDS_IN_DAY)
         pipe.zcard(daily_key)
         results = pipe.execute()
+
         current_daily = results[1]
+
         if current_daily >= limit:
             oldest = redis_client.zrange(daily_key, 0, 0, withscores=True)
             retry_after = int(SECONDS_IN_DAY - (now - oldest[0][1])) if oldest else SECONDS_IN_DAY
+
             raise HTTPException(
                 status_code=429,
                 detail={
@@ -127,7 +134,9 @@ def rate_limit_ai(request: Request, feature: FeatureType, user_id: str | None = 
         pipe.zremrangebyscore(burst_key, 0, now - BURST_WINDOW_SECONDS)
         pipe.zcard(burst_key)
         results = pipe.execute()
+
         current_burst = results[1]
+
         if current_burst >= BURST_LIMIT:
             raise HTTPException(
                 status_code=429,
@@ -145,6 +154,7 @@ def rate_limit_ai(request: Request, feature: FeatureType, user_id: str | None = 
         pipe.zadd(burst_key, {str(now): now})
         pipe.expire(burst_key, BURST_WINDOW_SECONDS)
         pipe.execute()
+
     except redis.RedisError:
         
         # Fail-open for MVP

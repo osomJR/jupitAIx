@@ -52,7 +52,8 @@ def rate_limit_authenticated_user(request: Request, user_id: str) -> None:
     if not user_id:
         # This should never happen if your auth dependency is correct,
         # but keep it safe.
-        raise HTTPException(status_code=401, detail="Unauthorized")
+        raise HTTPException(status_code=401, detail={
+            "error": "unauthorized", "message": "Authentication required."})
     now = int(time.time())
     user_hash = _user_key(user_id)
     daily_key = f"rl:auth:daily:{user_hash}"
