@@ -1,6 +1,8 @@
-#docs
+# docs
 docs/product_contract.md
-#virtual environment
+# virtual environment
 venv/
-#environment
+# environment variables
 .env
+# tests
+tests/
