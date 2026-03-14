@@ -6,3 +6,6 @@ venv/
 .env
 # tests
 tests/
+# Python cache
+_ _pycache_ _/
+*.pyc

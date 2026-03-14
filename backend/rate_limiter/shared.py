@@ -609,8 +609,19 @@ AUTHENTICATED_FREE_POLICY = RateLimitPolicy(
     network_burst_window_seconds=int(os.getenv("AUTHENTICATED_FREE_DEVICE_BURST_WINDOW_SECONDS", "10")),
 )
 
-shared_rate_limiter = RateLimitShared()
+_shared_rate_limiter: RateLimitShared | None = None
 
+
+def get_shared_rate_limiter() -> RateLimitShared:
+    global _shared_rate_limiter
+    if _shared_rate_limiter is None:
+        try:
+            _shared_rate_limiter = RateLimitShared()
+        except Exception as exc:
+            raise RuntimeError(
+                "Rate limiter is not configured. Check REDIS_URL and RATE_LIMIT_HMAC_SECRET."
+            ) from exc
+    return _shared_rate_limiter
 
 __all__ = [
     "ANONYMOUS_ALLOWED_HEAVY_FEATURES",
@@ -628,5 +639,5 @@ __all__ = [
     "RateLimitShared",
     "RedisSlidingWindowLimiter",
     "get_redis_client",
-    "shared_rate_limiter",
+    "get_shared_rate_limiter",
 ]

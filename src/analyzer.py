@@ -87,11 +87,9 @@ class Analyzer:
     def analyze(
         self,
         request: Union[AnalyzerRequest, Mapping[str, Any]],
-        *,
-        usage_snapshot: Any = None,
     ) -> AnalyzerResponse:
         # 1) Deterministic request validation pipeline
-        req = validate_analyzer_request(request, usage_snapshot=usage_snapshot)
+        req = validate_analyzer_request(request)
 
         # 2) Route action -> result
         if req.action == FeatureType.convert:

@@ -20,7 +20,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Optional, Protocol
-import mimetypes
 
 from docx import Document
 from fpdf import FPDF
@@ -28,6 +27,7 @@ from fpdf import FPDF
 from src.storage.artifacts import (
     LocalArtifactStorage,
     StorageBackend,
+    guess_content_type
 )
 
 
@@ -114,7 +114,7 @@ class RealDocumentWriterBackend:
             stored = self.storage_backend.persist(
                 source_file_path=str(output_path),
                 artifact_name=output_path.name,
-                content_type=_guess_content_type(output_path),
+                content_type=guess_content_type(str(output_path))
             )
 
             stored_path = Path(stored.stored_path)
@@ -248,11 +248,6 @@ def _normalize_file_name(value: str) -> str:
     if not normalized:
         raise ValueError("output_name cannot be empty.")
     return normalized
-
-
-def _guess_content_type(path: Path) -> Optional[str]:
-    guessed, _ = mimetypes.guess_type(str(path))
-    return guessed
 
 
 def _get_file_size_mb(path: Path) -> float:

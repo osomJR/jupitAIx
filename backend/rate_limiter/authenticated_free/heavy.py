@@ -23,7 +23,7 @@ from backend.rate_limiter.shared import (
     AUTHENTICATED_FREE_ALLOWED_LIGHT_FEATURES,
     AUTHENTICATED_FREE_BLOCKED_FEATURES,
     AUTHENTICATED_FREE_POLICY,
-    shared_rate_limiter,
+    get_shared_rate_limiter,
 )
 
 
@@ -32,7 +32,7 @@ def rate_limit_authenticated_free_heavy(
     user_id: str,
     feature: FeatureType,
 ) -> None:
-    shared_rate_limiter.enforce_authenticated_free(
+    get_shared_rate_limiter.enforce_authenticated_free(
         request=request,
         user_id=user_id,
         feature=feature,

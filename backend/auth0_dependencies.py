@@ -405,33 +405,73 @@ class Auth0DependencyProvider:
             raise ValueError("scope must not be empty.")
         return normalized
 
-
-auth0 = Auth0DependencyProvider()
 bearer = HTTPBearer(auto_error=False)
+
+_auth0_provider: Auth0DependencyProvider | None = None
+
+
+def get_auth0_provider() -> Auth0DependencyProvider:
+    global _auth0_provider
+    if _auth0_provider is None:
+        _auth0_provider = Auth0DependencyProvider()
+    return _auth0_provider
 
 
 def get_current_user_optional(
     creds: HTTPAuthorizationCredentials | None = Depends(bearer),
 ) -> AuthenticatedUser | None:
-    return auth0.get_current_user_optional(creds)
+    if not creds or not creds.credentials:
+        return None
+    return get_auth0_provider().get_current_user_optional(creds)
 
 
 def get_current_user(
     creds: HTTPAuthorizationCredentials | None = Depends(bearer),
 ) -> AuthenticatedUser:
-    return auth0.get_current_user(creds)
+    if not creds or not creds.credentials:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": "authorization_required",
+                "message": "Authorization credentials are required.",
+            },
+        )
+    return get_auth0_provider().get_current_user(creds)
 
 
 def require_scopes(*required_scopes: str):
-    return auth0.require_scopes(*required_scopes)
+    def dependency(
+        current_user: AuthenticatedUser = Depends(get_current_user),
+    ) -> AuthenticatedUser:
+        provider = get_auth0_provider()
+        normalized_required_scopes = {
+            provider._normalize_scope(scope)
+            for scope in required_scopes
+            if str(scope).strip()
+        }
+        missing_scopes = normalized_required_scopes - current_user.scopes
+        if missing_scopes:
+            raise HTTPException(
+                status_code=403,
+                detail={
+                    "error": "insufficient_scope",
+                    "message": "Token does not include the required scopes.",
+                    "required_scopes": sorted(normalized_required_scopes),
+                    "granted_scopes": sorted(current_user.scopes),
+                    "missing_scopes": sorted(missing_scopes),
+                },
+            )
+        return current_user
+
+    return dependency
 
 
 __all__ = [
     "Auth0Config",
     "AuthenticatedUser",
     "Auth0DependencyProvider",
-    "auth0",
     "bearer",
+    "get_auth0_provider",
     "get_current_user_optional",
     "get_current_user",
     "require_scopes",
