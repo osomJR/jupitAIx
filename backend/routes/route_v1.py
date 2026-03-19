@@ -148,7 +148,7 @@ def convert_route(
 @router.post(
     "/summarize",
     response_model=AnalyzerResponse,
-    dependencies=[Depends(rate_limit_for_feature(FeatureType.summarize))],
+    # dependencies=[Depends(rate_limit_for_feature(FeatureType.summarize))],
 )
 def summarize_route(
     file: UploadFile | None = File(default=None),

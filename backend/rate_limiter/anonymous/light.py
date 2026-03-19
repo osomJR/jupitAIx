@@ -28,7 +28,7 @@ from backend.rate_limiter.shared import (
 
 
 def rate_limit_anonymous_light(request: Request, feature: FeatureType) -> None:
-    get_shared_rate_limiter.enforce_anonymous(
+    get_shared_rate_limiter().enforce_anonymous(
         request=request,
         feature=feature,
         policy=ANONYMOUS_POLICY,

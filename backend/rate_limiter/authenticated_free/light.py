@@ -35,7 +35,7 @@ def rate_limit_authenticated_free_light(
     user_id: str,
     feature: FeatureType,
 ) -> None:
-    get_shared_rate_limiter.enforce_authenticated_free(
+    get_shared_rate_limiter().enforce_authenticated_free(
         request=request,
         user_id=user_id,
         feature=feature,
