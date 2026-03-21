@@ -295,3 +295,444 @@ export const convertPageTranslations = {
     unknownFile: "Fichier inconnu",
   },
 };
+export const explainPageTranslations = {
+  en: {
+    badge: "Explain content clearly",
+    title: "Break down difficult content into simple explanations",
+    description:
+      "Upload a PDF or Word document, or paste inline text. Unsupported files like PNG are rejected automatically, and the output extension always matches the input extension.",
+
+    fileMode: "Upload file",
+    textMode: "Inline text",
+
+    uploadTitle: "Upload content to explain",
+    allowedFileInputs:
+      "Allowed: .pdf and .docx. Rejected automatically: .png, .jpg, and unsupported formats.",
+    outputExtensionWillBe: "Output extension will be",
+
+    pasteTextLabel: "Paste text to explain",
+    pasteTextPlaceholder: "Paste or type your text here...",
+    inlineTextTreatedAs:
+      "Inline text is treated as .txt, so the output extension will also be .txt.",
+
+    unsupportedFileType:
+      "Unsupported file type: {ext}. Only .pdf and .docx uploads are allowed. PNG and other image formats are rejected.",
+    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
+    explanationFailed: "Something went wrong while generating the explanation.",
+
+    generatingExplanation: "Generating explanation...",
+    outputFormatLabel: "Output format:",
+
+    policyTitle: "Format policy",
+    policySubtitle: "Strict input and output matching",
+    allowedUploadsLabel: "Allowed uploads:",
+    inlineInputLabel: "Inline input:",
+    rejectedAutomaticallyLabel: "Rejected automatically:",
+    outputRuleLabel: "Output rule:",
+    inlineInputValue: "treated as .txt",
+    rejectedAutomaticallyValue: ".png and all unsupported file types",
+    outputRuleValue: "output extension must always equal input extension",
+
+    explanationOutputTitle: "Explanation output",
+    previewEmpty:
+      "Your generated explanation will appear here. The output extension always mirrors the original input extension.",
+    outputExtensionLabel: "Output extension:",
+
+    inlineExplanationIntro: "Explanation generated from inline text.",
+    fileExplanationIntro: "Explanation generated from {filename}.",
+    rewrittenPreviewText:
+      "This content has been rewritten into a simpler explanation while keeping the same output format rule.",
+    previewLabel: "Preview:",
+    inputExtensionLabel: "Input extension:",
+    outputExtensionResultLabel: "Output extension:",
+    preservedExtensionMessage:
+      "The explanation output preserves the same extension as the original uploaded file.",
+  },
+  fr: {
+    badge: "Expliquer clairement le contenu",
+    title: "Décomposez les contenus difficiles en explications simples",
+    description:
+      "Téléversez un PDF ou un document Word, ou collez du texte inline. Les fichiers non pris en charge comme PNG sont rejetés automatiquement, et l’extension de sortie correspond toujours à l’extension d’entrée.",
+
+    fileMode: "Téléverser un fichier",
+    textMode: "Texte inline",
+
+    uploadTitle: "Téléverser un contenu à expliquer",
+    allowedFileInputs:
+      "Autorisés : .pdf et .docx. Rejetés automatiquement : .png, .jpg et les formats non pris en charge.",
+    outputExtensionWillBe: "L’extension de sortie sera",
+
+    pasteTextLabel: "Coller le texte à expliquer",
+    pasteTextPlaceholder: "Collez ou saisissez votre texte ici...",
+    inlineTextTreatedAs:
+      "Le texte inline est traité comme .txt, donc l’extension de sortie sera également .txt.",
+
+    unsupportedFileType:
+      "Type de fichier non pris en charge : {ext}. Seuls les fichiers .pdf et .docx sont autorisés. Les formats PNG et autres images sont rejetés.",
+    fileTooLarge:
+      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
+    explanationFailed:
+      "Une erreur s’est produite lors de la génération de l’explication.",
+
+    generatingExplanation: "Génération de l’explication...",
+    outputFormatLabel: "Format de sortie :",
+
+    policyTitle: "Règles de format",
+    policySubtitle: "Correspondance stricte entre entrée et sortie",
+    allowedUploadsLabel: "Téléversements autorisés :",
+    inlineInputLabel: "Entrée inline :",
+    rejectedAutomaticallyLabel: "Rejetés automatiquement :",
+    outputRuleLabel: "Règle de sortie :",
+    inlineInputValue: "traité comme .txt",
+    rejectedAutomaticallyValue:
+      ".png et tous les types de fichiers non pris en charge",
+    outputRuleValue:
+      "l’extension de sortie doit toujours être identique à l’extension d’entrée",
+
+    explanationOutputTitle: "Résultat de l’explication",
+    previewEmpty:
+      "Votre explication générée apparaîtra ici. L’extension de sortie reflète toujours l’extension d’entrée d’origine.",
+    outputExtensionLabel: "Extension de sortie :",
+
+    inlineExplanationIntro: "Explication générée à partir du texte inline.",
+    fileExplanationIntro: "Explication générée à partir de {filename}.",
+    rewrittenPreviewText:
+      "Ce contenu a été reformulé en une explication plus simple tout en conservant la même règle de format de sortie.",
+    previewLabel: "Aperçu :",
+    inputExtensionLabel: "Extension d’entrée :",
+    outputExtensionResultLabel: "Extension de sortie :",
+    preservedExtensionMessage:
+      "Le résultat de l’explication conserve la même extension que le fichier téléversé d’origine.",
+  },
+};
+export const summarizePageTranslations = {
+  en: {
+    badge: "Summarize content",
+    title: "Summarize documents or text with strict format rules",
+    description:
+      "Upload a PDF or Word document, or paste inline text. Unsupported files like PNG are automatically rejected, and the output extension always matches the input extension.",
+
+    fileMode: "Upload file",
+    textMode: "Inline text",
+
+    uploadTitle: "Upload a supported document",
+    allowedFileInputs:
+      "Allowed: .pdf and .docx. Rejected automatically: .png, .jpg, and all unsupported formats.",
+    outputExtensionWillBe: "Output extension will be",
+
+    pasteTextLabel: "Paste text to summarize",
+    pasteTextPlaceholder: "Paste or type your text here...",
+    inlineTextTreatedAs:
+      "Inline text is treated as .txt, so the output extension will also be .txt.",
+
+    unsupportedFileType:
+      "Unsupported file type: {ext}. Only .pdf and .docx uploads are allowed. PNG and other image formats are rejected.",
+    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
+    summaryFailed: "Something went wrong while generating the summary.",
+
+    generatingSummary: "Generating summary...",
+
+    policySubtitle: "Strict input and output matching",
+    allowedUploadsLabel: "Allowed uploads:",
+    inlineInputLabel: "Inline input:",
+    rejectedAutomaticallyLabel: "Rejected automatically:",
+    outputRuleLabel: "Output rule:",
+    inlineInputValue: "treated as .txt",
+    rejectedAutomaticallyValue: ".png and all unsupported file types",
+    outputRuleValue: "output extension must always equal input extension",
+
+    summaryOutputTitle: "Summary output",
+    previewEmpty:
+      "Your generated summary will appear here. The output extension will always mirror the original input extension.",
+    outputExtensionLabel: "Output extension:",
+
+    inlineSummaryIntro: "Summary generated from inline text.",
+    fileSummaryIntro: "Summary generated from {filename}.",
+    translatedPreviewLabel: "Preview:",
+    inputExtensionLabel: "Input extension:",
+    outputExtensionResultLabel: "Output extension:",
+    preservedExtensionMessage:
+      "The output format remains the same as the uploaded file format.",
+  },
+  fr: {
+    badge: "Résumer le contenu",
+    title:
+      "Résumez des documents ou du texte avec des règles de format strictes",
+    description:
+      "Téléversez un PDF ou un document Word, ou collez du texte inline. Les fichiers non pris en charge comme PNG sont automatiquement rejetés, et l’extension de sortie correspond toujours à l’extension d’entrée.",
+
+    fileMode: "Téléverser un fichier",
+    textMode: "Texte inline",
+
+    uploadTitle: "Téléverser un document pris en charge",
+    allowedFileInputs:
+      "Autorisés : .pdf et .docx. Rejetés automatiquement : .png, .jpg et tous les formats non pris en charge.",
+    outputExtensionWillBe: "L’extension de sortie sera",
+
+    pasteTextLabel: "Coller le texte à résumer",
+    pasteTextPlaceholder: "Collez ou saisissez votre texte ici...",
+    inlineTextTreatedAs:
+      "Le texte inline est traité comme .txt, donc l’extension de sortie sera également .txt.",
+
+    unsupportedFileType:
+      "Type de fichier non pris en charge : {ext}. Seuls les fichiers .pdf et .docx sont autorisés. Les formats PNG et autres images sont rejetés.",
+    fileTooLarge:
+      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
+    summaryFailed: "Une erreur s’est produite lors de la génération du résumé.",
+
+    generatingSummary: "Génération du résumé...",
+
+    policySubtitle: "Correspondance stricte entre entrée et sortie",
+    allowedUploadsLabel: "Téléversements autorisés :",
+    inlineInputLabel: "Entrée inline :",
+    rejectedAutomaticallyLabel: "Rejetés automatiquement :",
+    outputRuleLabel: "Règle de sortie :",
+    inlineInputValue: "traité comme .txt",
+    rejectedAutomaticallyValue:
+      ".png et tous les types de fichiers non pris en charge",
+    outputRuleValue:
+      "l’extension de sortie doit toujours être identique à l’extension d’entrée",
+
+    summaryOutputTitle: "Résultat du résumé",
+    previewEmpty:
+      "Votre résumé généré apparaîtra ici. L’extension de sortie reflétera toujours l’extension d’entrée d’origine.",
+    outputExtensionLabel: "Extension de sortie :",
+
+    inlineSummaryIntro: "Résumé généré à partir du texte inline.",
+    fileSummaryIntro: "Résumé généré à partir de {filename}.",
+    translatedPreviewLabel: "Aperçu :",
+    inputExtensionLabel: "Extension d’entrée :",
+    outputExtensionResultLabel: "Extension de sortie :",
+    preservedExtensionMessage:
+      "Le format de sortie reste identique à celui du fichier téléversé.",
+  },
+};
+
+export const translatePageTranslations = {
+  en: {
+    badge: "Translate content naturally",
+    title: "Translate documents or text while preserving format rules",
+    description:
+      "Upload a PDF or Word document, or paste inline text. Unsupported files like PNG are rejected automatically, and the output extension always matches the input extension.",
+
+    fileMode: "Upload file",
+    textMode: "Inline text",
+
+    targetLanguageLabel: "Translate to",
+    targetLanguagePlaceholder:
+      "Enter any target language, e.g. French, Yoruba, Japanese",
+    targetLanguageHelp:
+      "Enter any target language supported by the model instead of choosing from a limited dropdown.",
+
+    uploadTitle: "Upload content to translate",
+    allowedFileInputs:
+      "Allowed: .pdf and .docx. Rejected automatically: .png, .jpg, and unsupported formats.",
+    outputExtensionWillBe: "Output extension will be",
+
+    pasteTextLabel: "Paste text to translate",
+    pasteTextPlaceholder: "Paste or type your text here...",
+    inlineTextTreatedAs:
+      "Inline text is treated as .txt, so the output extension will also be .txt.",
+
+    unsupportedFileType:
+      "Unsupported file type: {ext}. Only .pdf and .docx uploads are allowed. PNG and other image formats are rejected.",
+    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
+    targetLanguageRequired: "Please enter a target language.",
+    translationFailed: "Something went wrong while generating the translation.",
+
+    generatingTranslation: "Generating translation...",
+
+    policySubtitle: "Strict input and output matching",
+    allowedUploadsLabel: "Allowed uploads:",
+    inlineInputLabel: "Inline input:",
+    rejectedAutomaticallyLabel: "Rejected automatically:",
+    outputRuleLabel: "Output rule:",
+    inlineInputValue: "treated as .txt",
+    rejectedAutomaticallyValue: ".png and all unsupported file types",
+    outputRuleValue: "output extension must always equal input extension",
+
+    translationOutputTitle: "Translation output",
+    previewEmpty:
+      "Your generated translation will appear here. The output extension always mirrors the original input extension.",
+    outputExtensionLabel: "Output extension:",
+
+    inlineTranslationIntro: "Translation generated from inline text.",
+    fileTranslationIntro: "Translation generated from {filename}.",
+    targetLanguageResultLabel: "Target language:",
+    translatedPreviewLabel: "Translated preview:",
+    inputExtensionLabel: "Input extension:",
+    outputExtensionResultLabel: "Output extension:",
+    preservedExtensionMessage:
+      "The translated output keeps the same extension as the uploaded input.",
+
+    languageSuggestions: [
+      "English",
+      "French",
+      "Spanish",
+      "German",
+      "Portuguese",
+      "Brazilian Portuguese",
+      "Arabic",
+      "Chinese",
+      "Simplified Chinese",
+      "Traditional Chinese",
+      "Japanese",
+      "Korean",
+      "Hindi",
+      "Yoruba",
+      "Hausa",
+      "Igbo",
+      "Swahili",
+      "Turkish",
+      "Russian",
+      "Italian",
+      "Dutch",
+    ],
+  },
+  fr: {
+    badge: "Traduire le contenu naturellement",
+    title:
+      "Traduisez des documents ou du texte tout en préservant les règles de format",
+    description:
+      "Téléversez un PDF ou un document Word, ou collez du texte inline. Les fichiers non pris en charge comme PNG sont automatiquement rejetés, et l’extension de sortie correspond toujours à l’extension d’entrée.",
+
+    fileMode: "Téléverser un fichier",
+    textMode: "Texte inline",
+
+    targetLanguageLabel: "Traduire vers",
+    targetLanguagePlaceholder:
+      "Saisissez une langue cible, par ex. français, yoruba, japonais",
+    targetLanguageHelp:
+      "Saisissez toute langue cible prise en charge par le modèle au lieu de choisir dans une liste limitée.",
+
+    uploadTitle: "Téléverser un contenu à traduire",
+    allowedFileInputs:
+      "Autorisés : .pdf et .docx. Rejetés automatiquement : .png, .jpg et les formats non pris en charge.",
+    outputExtensionWillBe: "L’extension de sortie sera",
+
+    pasteTextLabel: "Coller le texte à traduire",
+    pasteTextPlaceholder: "Collez ou saisissez votre texte ici...",
+    inlineTextTreatedAs:
+      "Le texte inline est traité comme .txt, donc l’extension de sortie sera également .txt.",
+
+    unsupportedFileType:
+      "Type de fichier non pris en charge : {ext}. Seuls les fichiers .pdf et .docx sont autorisés. Les formats PNG et autres images sont rejetés.",
+    fileTooLarge:
+      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
+    targetLanguageRequired: "Veuillez saisir une langue cible.",
+    translationFailed:
+      "Une erreur s’est produite lors de la génération de la traduction.",
+
+    generatingTranslation: "Génération de la traduction...",
+
+    policySubtitle: "Correspondance stricte entre entrée et sortie",
+    allowedUploadsLabel: "Téléversements autorisés :",
+    inlineInputLabel: "Entrée inline :",
+    rejectedAutomaticallyLabel: "Rejetés automatiquement :",
+    outputRuleLabel: "Règle de sortie :",
+    inlineInputValue: "traité comme .txt",
+    rejectedAutomaticallyValue:
+      ".png et tous les types de fichiers non pris en charge",
+    outputRuleValue:
+      "l’extension de sortie doit toujours être identique à l’extension d’entrée",
+
+    translationOutputTitle: "Résultat de la traduction",
+    previewEmpty:
+      "Votre traduction générée apparaîtra ici. L’extension de sortie reflète toujours l’extension d’entrée d’origine.",
+    outputExtensionLabel: "Extension de sortie :",
+
+    inlineTranslationIntro: "Traduction générée à partir du texte inline.",
+    fileTranslationIntro: "Traduction générée à partir de {filename}.",
+    targetLanguageResultLabel: "Langue cible :",
+    translatedPreviewLabel: "Aperçu traduit :",
+    inputExtensionLabel: "Extension d’entrée :",
+    outputExtensionResultLabel: "Extension de sortie :",
+    preservedExtensionMessage:
+      "Le résultat traduit conserve la même extension que l’entrée téléversée.",
+
+    languageSuggestions: [
+      "English",
+      "French",
+      "Spanish",
+      "German",
+      "Portuguese",
+      "Brazilian Portuguese",
+      "Arabic",
+      "Chinese",
+      "Simplified Chinese",
+      "Traditional Chinese",
+      "Japanese",
+      "Korean",
+      "Hindi",
+      "Yoruba",
+      "Hausa",
+      "Igbo",
+      "Swahili",
+      "Turkish",
+      "Russian",
+      "Italian",
+      "Dutch",
+    ],
+  },
+};
+export const transcribePageTranslations = {
+  en: {
+    title: "Transcribe Audio/Video",
+    submit: "Transcribe",
+    processing: "Processing...",
+    output: "Transcription Output",
+    noFile: "Please upload a file.",
+    invalidFileType: "Invalid file type. Allowed: .mp3, .mp4, .mkv, .mov",
+    error: "Something went wrong during transcription.",
+    noOutput: "No transcription result returned.",
+  },
+  fr: {
+    title: "Transcrire Audio/Vidéo",
+    submit: "Transcrire",
+    processing: "Traitement...",
+    output: "Résultat de transcription",
+    noFile: "Veuillez télécharger un fichier.",
+    invalidFileType:
+      "Type de fichier invalide. Autorisés : .mp3, .mp4, .mkv, .mov",
+    error: "Une erreur est survenue pendant la transcription.",
+    noOutput: "Aucun résultat de transcription retourné.",
+  },
+};
+export const grammarCorrectPageTranslations = {
+  en: {
+    title: "Grammar Correct",
+    submit: "Correct Grammar",
+    processing: "Processing...",
+    output: "Corrected Output",
+    noInput: "Please upload a file or enter text.",
+    invalidFileType:
+      "Invalid file type. Allowed: .pdf, .docx, or inline text only.",
+    error: "Something went wrong during grammar correction.",
+    noOutput: "No result returned.",
+    fileProcessed:
+      "Your file was processed successfully. The output format matches the input format.",
+    inlineTextLabel: "Inline Text (.txt)",
+    inlineTextPlaceholder: "Paste or type your text here...",
+    uploadLabel: "Upload File",
+    uploadHelp:
+      "Allowed file types: .pdf, .docx. Inline text is treated as .txt.",
+  },
+  fr: {
+    title: "Correction Grammaticale",
+    submit: "Corriger la grammaire",
+    processing: "Traitement...",
+    output: "Résultat corrigé",
+    noInput: "Veuillez télécharger un fichier ou saisir du texte.",
+    invalidFileType:
+      "Type de fichier invalide. Autorisés : .pdf, .docx ou texte en ligne uniquement.",
+    error: "Une erreur est survenue pendant la correction grammaticale.",
+    noOutput: "Aucun résultat retourné.",
+    fileProcessed:
+      "Votre fichier a été traité avec succès. Le format de sortie correspond au format d’entrée.",
+    inlineTextLabel: "Texte en ligne (.txt)",
+    inlineTextPlaceholder: "Collez ou saisissez votre texte ici...",
+    uploadLabel: "Téléverser un fichier",
+    uploadHelp:
+      "Types de fichiers autorisés : .pdf, .docx. Le texte en ligne est traité comme .txt.",
+  },
+};

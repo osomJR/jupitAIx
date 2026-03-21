@@ -1,21 +1,28 @@
 "use client";
-import { useLanguage } from "@/components/language_provider";
+
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/components/language_provider";
 import {
   ArrowLeft,
-  BookOpen,
   Upload,
   Sparkles,
   XCircle,
   CheckCircle2,
-  FileType,
-  Type,
-  Lightbulb,
+  FileText,
+  AlignLeft,
+  ShieldCheck,
+  BookOpen,
 } from "lucide-react";
+import {
+  commonTranslations,
+  explainPageTranslations,
+} from "@/lib/translations";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
+const REJECTED_EXTENSIONS = [".png", ".jpg", ".jpeg"];
 const MAX_FILE_SIZE_MB = 10;
+const INLINE_TEXT_EXTENSION = ".txt";
 
 function getFileExtension(filename = "") {
   const lastDot = filename.lastIndexOf(".");
@@ -30,43 +37,49 @@ function formatBytes(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+function replaceVars(template, vars = {}) {
+  return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? "");
+}
+
 export default function ExplainPage() {
   const router = useRouter();
   const fileInputRef = useRef(null);
+  const { language } = useLanguage();
 
-  const [mode, setMode] = useState("file"); // file | text
+  const common = commonTranslations[language] || commonTranslations.en;
+  const t = explainPageTranslations[language] || explainPageTranslations.en;
+
+  const [mode, setMode] = useState("file");
   const [selectedFile, setSelectedFile] = useState(null);
   const [inlineText, setInlineText] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [explanationResult, setExplanationResult] = useState("");
-  const [outputExtension, setOutputExtension] = useState("");
 
-  const derivedInputExtension = useMemo(() => {
-    if (mode === "text") return ".txt";
+  const inputExtension = useMemo(() => {
+    if (mode === "text") return INLINE_TEXT_EXTENSION;
     if (!selectedFile) return "";
     return getFileExtension(selectedFile.name);
   }, [mode, selectedFile]);
 
-  const isValidInlineText = mode === "text" && inlineText.trim().length > 0;
+  const outputExtension =
+    inputExtension || (mode === "text" ? INLINE_TEXT_EXTENSION : "");
 
   const isValidFile = useMemo(() => {
-    if (mode !== "file" || !selectedFile) return false;
-
+    if (!selectedFile) return false;
     const ext = getFileExtension(selectedFile.name);
     const isAccepted = ACCEPTED_EXTENSIONS.includes(ext);
     const isWithinLimit = selectedFile.size <= MAX_FILE_SIZE_MB * 1024 * 1024;
-
     return isAccepted && isWithinLimit;
-  }, [mode, selectedFile]);
+  }, [selectedFile]);
 
   const canSubmit =
-    !isSubmitting && ((mode === "file" && isValidFile) || isValidInlineText);
+    !isSubmitting &&
+    ((mode === "file" && selectedFile && isValidFile) ||
+      (mode === "text" && inlineText.trim().length > 0));
 
   function resetResultState() {
     setExplanationResult("");
-    setOutputExtension("");
   }
 
   function rejectFile(message) {
@@ -82,22 +95,25 @@ export default function ExplainPage() {
 
     if (!ACCEPTED_EXTENSIONS.includes(ext)) {
       rejectFile(
-        `Unsupported file type: ${ext || "unknown"}. Only .pdf and .docx uploads are allowed. PNG and other image formats are rejected.`,
+        replaceVars(t.unsupportedFileType, {
+          ext: ext || "unknown",
+        }),
       );
       return;
     }
 
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
       rejectFile(
-        `File is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB} MB.`,
+        replaceVars(t.fileTooLarge, {
+          maxSize: MAX_FILE_SIZE_MB,
+        }),
       );
       return;
     }
 
     setError("");
     setSelectedFile(file);
-    setOutputExtension(ext);
-    setExplanationResult("");
+    resetResultState();
   }
 
   function handleFileChange(event) {
@@ -108,7 +124,6 @@ export default function ExplainPage() {
   function handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
-
     const file = event.dataTransfer.files?.[0];
     handlePickedFile(file);
   }
@@ -118,68 +133,52 @@ export default function ExplainPage() {
     event.stopPropagation();
   }
 
-  function switchToFileMode() {
-    setMode("file");
-    setInlineText("");
-    setError("");
-    resetResultState();
-  }
-
-  function switchToTextMode() {
-    setMode("text");
-    setSelectedFile(null);
-    setError("");
-    setOutputExtension(".txt");
-    setExplanationResult("");
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  }
-
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!canSubmit) return;
+    if (mode === "file" && !selectedFile) {
+      setError(replaceVars(t.unsupportedFileType, { ext: "unknown" }));
+      return;
+    }
+
+    if (mode === "text" && !inlineText.trim()) {
+      setError(t.explanationFailed);
+      return;
+    }
 
     setIsSubmitting(true);
     setError("");
     resetResultState();
 
     try {
-      let payload;
-
-      if (mode === "text") {
-        payload = {
-          inputType: "text",
-          inputExtension: ".txt",
-          outputExtension: ".txt",
-          text: inlineText.trim(),
-        };
-      } else {
-        const ext = getFileExtension(selectedFile.name);
-
-        payload = {
-          inputType: "file",
-          inputExtension: ext,
-          outputExtension: ext,
-          filename: selectedFile.name,
-        };
-      }
-
-      // Replace with your real backend call.
       await new Promise((resolve) => setTimeout(resolve, 900));
 
-      const mockExplanation =
-        mode === "text"
-          ? `Explanation generated from inline text.\n\nOutput extension: ${payload.outputExtension}\n\nThis content has been rewritten into a simpler explanation while keeping the same output format rule.\n\nPreview:\n${inlineText
-              .trim()
-              .slice(0, 240)}${inlineText.trim().length > 240 ? "..." : ""}`
-          : `Explanation generated from ${selectedFile.name}.\n\nInput extension: ${payload.inputExtension}\nOutput extension: ${payload.outputExtension}\n\nThe explanation output preserves the same extension as the original uploaded file.`;
+      if (mode === "text") {
+        const mockResult = `${t.inlineExplanationIntro}
 
-      setExplanationResult(mockExplanation);
-      setOutputExtension(payload.outputExtension);
+${t.outputExtensionResultLabel} ${INLINE_TEXT_EXTENSION}
+
+${t.previewLabel}
+${t.rewrittenPreviewText}`;
+
+        setExplanationResult(mockResult);
+      } else {
+        const mockResult = `${replaceVars(t.fileExplanationIntro, {
+          filename: selectedFile.name,
+        })}
+
+${t.inputExtensionLabel} ${inputExtension}
+${t.outputExtensionResultLabel} ${outputExtension}
+
+${t.preservedExtensionMessage}
+
+${t.previewLabel}
+${t.rewrittenPreviewText}`;
+
+        setExplanationResult(mockResult);
+      }
     } catch (submitError) {
-      setError("Something went wrong while generating the explanation.");
+      setError(t.explanationFailed);
     } finally {
       setIsSubmitting(false);
     }
@@ -197,23 +196,21 @@ export default function ExplainPage() {
             className="mb-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {common.back}
           </button>
 
           <section className="mb-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
               <Sparkles className="h-4 w-4" />
-              Explain content clearly
+              {t.badge}
             </div>
 
             <div className="mt-6 max-w-3xl">
               <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                Break down difficult content into simple explanations
+                {t.title}
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
-                Upload a PDF or Word document, or paste inline text. Unsupported
-                files like PNG are rejected automatically, and the output
-                extension always matches the input extension.
+                {t.description}
               </p>
             </div>
           </section>
@@ -226,36 +223,43 @@ export default function ExplainPage() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
 
               <div className="relative">
-                <div className="mb-6 flex flex-wrap gap-3">
+                <div className="mb-6 inline-flex rounded-2xl border border-white/10 bg-white/5 p-1">
                   <button
                     type="button"
-                    onClick={switchToFileMode}
-                    className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium transition ${
+                    onClick={() => {
+                      setMode("file");
+                      setError("");
+                      resetResultState();
+                    }}
+                    className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                       mode === "file"
-                        ? "bg-white text-slate-900"
-                        : "border border-white/10 bg-white/10 text-white/75 hover:bg-white/15 hover:text-white"
+                        ? "bg-white text-slate-900 shadow-sm"
+                        : "text-white/70 hover:bg-white/10 hover:text-white"
                     }`}
                   >
-                    <FileType className="h-4 w-4" />
-                    Upload file
+                    {t.fileMode}
                   </button>
 
                   <button
                     type="button"
-                    onClick={switchToTextMode}
-                    className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-medium transition ${
+                    onClick={() => {
+                      setMode("text");
+                      setSelectedFile(null);
+                      setError("");
+                      resetResultState();
+                    }}
+                    className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                       mode === "text"
-                        ? "bg-white text-slate-900"
-                        : "border border-white/10 bg-white/10 text-white/75 hover:bg-white/15 hover:text-white"
+                        ? "bg-white text-slate-900 shadow-sm"
+                        : "text-white/70 hover:bg-white/10 hover:text-white"
                     }`}
                   >
-                    <Type className="h-4 w-4" />
-                    Inline text
+                    {t.textMode}
                   </button>
                 </div>
 
                 {mode === "file" ? (
-                  <div className="space-y-4">
+                  <>
                     <div
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
@@ -266,14 +270,16 @@ export default function ExplainPage() {
                       </div>
 
                       <h2 className="text-lg font-semibold text-white">
-                        Upload content to explain
+                        {t.uploadTitle}
                       </h2>
                       <p className="mt-2 text-sm leading-6 text-white/65">
-                        Allowed:{" "}
-                        <span className="font-medium text-white">.pdf</span> and{" "}
-                        <span className="font-medium text-white">.docx</span>.
-                        Rejected automatically: .png, .jpg, and unsupported
-                        formats.
+                        {t.allowedFileInputs}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-white/55">
+                        {t.outputExtensionWillBe}{" "}
+                        <span className="font-medium text-white">
+                          {inputExtension || ".pdf / .docx"}
+                        </span>
                       </p>
 
                       <input
@@ -289,39 +295,35 @@ export default function ExplainPage() {
                         onClick={() => fileInputRef.current?.click()}
                         className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
                       >
-                        Choose file
+                        {common.chooseFile}
                       </button>
                     </div>
 
                     {selectedFile && isValidFile && (
-                      <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                      <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
                         <div className="flex items-start gap-3">
                           <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
                           <div>
                             <p className="font-medium text-emerald-100">
-                              File accepted
+                              {common.fileAccepted}
                             </p>
                             <p className="mt-1 text-sm text-emerald-100/80">
                               {selectedFile.name} •{" "}
                               {formatBytes(selectedFile.size)}
                             </p>
                             <p className="mt-1 text-sm text-emerald-100/80">
-                              Output extension will be{" "}
-                              <span className="font-semibold">
-                                {getFileExtension(selectedFile.name)}
-                              </span>
-                              .
+                              {t.outputFormatLabel} {outputExtension}
                             </p>
                           </div>
                         </div>
                       </div>
                     )}
-                  </div>
+                  </>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="rounded-3xl border border-white/15 bg-white/5 p-5">
                     <label className="block">
                       <span className="mb-3 block text-sm font-medium text-white/80">
-                        Paste text to explain
+                        {t.pasteTextLabel}
                       </span>
                       <textarea
                         value={inlineText}
@@ -329,22 +331,16 @@ export default function ExplainPage() {
                           setInlineText(e.target.value);
                           setError("");
                           resetResultState();
-                          setOutputExtension(".txt");
                         }}
-                        rows={14}
-                        placeholder="Paste or type your text here..."
-                        className="w-full rounded-3xl border border-white/10 bg-white/5 px-5 py-4 text-sm leading-7 text-white outline-none placeholder:text-white/35 transition focus:border-cyan-300/40 focus:bg-white/10"
+                        placeholder={t.pasteTextPlaceholder}
+                        rows={10}
+                        className="w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/30 focus:border-cyan-300/40"
                       />
                     </label>
 
-                    <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4">
-                      <p className="text-sm text-cyan-100">
-                        Inline text is treated as{" "}
-                        <span className="font-semibold">.txt</span>, so the
-                        output extension will also be{" "}
-                        <span className="font-semibold">.txt</span>.
-                      </p>
-                    </div>
+                    <p className="mt-3 text-sm leading-6 text-white/55">
+                      {t.inlineTextTreatedAs}
+                    </p>
                   </div>
                 )}
 
@@ -367,13 +363,13 @@ export default function ExplainPage() {
                         : "cursor-not-allowed bg-white/10 text-white/40"
                     }`}
                   >
-                    {isSubmitting ? "Generating explanation..." : "Explain"}
+                    {isSubmitting ? common.explaining : common.explain}
                   </button>
 
                   <div className="text-sm text-white/55">
-                    Output format:{" "}
+                    {common.outputFormat}{" "}
                     <span className="font-medium text-white/85">
-                      {derivedInputExtension || "—"}
+                      {outputExtension || "—"}
                     </span>
                   </div>
                 </div>
@@ -384,76 +380,104 @@ export default function ExplainPage() {
               <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                    <Lightbulb className="h-5 w-5 text-cyan-300" />
+                    <ShieldCheck className="h-5 w-5 text-cyan-300" />
                   </div>
                   <div>
                     <h2 className="text-lg font-semibold text-white">
-                      Format policy
+                      {common.formatPolicy}
                     </h2>
-                    <p className="text-sm text-white/55">
-                      Strict input and output matching
-                    </p>
+                    <p className="text-sm text-white/55">{t.policySubtitle}</p>
                   </div>
                 </div>
 
                 <div className="space-y-3 text-sm leading-6 text-white/70">
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p>
-                      <span className="font-semibold text-white">
-                        Allowed uploads:
-                      </span>{" "}
-                      .pdf, .docx
+                    <p className="font-semibold text-white">
+                      {t.allowedUploadsLabel}
+                    </p>
+                    <p className="mt-1 text-white/65">.pdf, .docx</p>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="font-semibold text-white">
+                      {t.inlineInputLabel}
+                    </p>
+                    <p className="mt-1 text-white/65">{t.inlineInputValue}</p>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="font-semibold text-white">
+                      {t.rejectedAutomaticallyLabel}
+                    </p>
+                    <p className="mt-1 text-white/65">
+                      {t.rejectedAutomaticallyValue}
                     </p>
                   </div>
+
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p>
-                      <span className="font-semibold text-white">
-                        Inline input:
-                      </span>{" "}
-                      treated as .txt
+                    <p className="font-semibold text-white">
+                      {t.outputRuleLabel}
                     </p>
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p>
-                      <span className="font-semibold text-white">
-                        Rejected automatically:
-                      </span>{" "}
-                      .png and all unsupported file types
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p>
-                      <span className="font-semibold text-white">
-                        Output rule:
-                      </span>{" "}
-                      output extension must always equal input extension
-                    </p>
+                    <p className="mt-1 text-white/65">{t.outputRuleValue}</p>
                   </div>
                 </div>
               </div>
 
               <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <h2 className="text-lg font-semibold text-white">
-                  Explanation output
-                </h2>
-                <p className="mt-1 text-sm text-white/55">Preview area</p>
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                    <FileText className="h-5 w-5 text-cyan-300" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">
+                      {t.explanationOutputTitle}
+                    </h2>
+                    <p className="text-sm text-white/55">
+                      {common.previewArea}
+                    </p>
+                  </div>
+                </div>
 
-                <div className="mt-4 rounded-2xl border border-white/10 bg-[#081120] p-4">
+                <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
                   {explanationResult ? (
-                    <>
-                      <div className="mb-3 text-xs uppercase tracking-[0.18em] text-cyan-300/90">
-                        Output extension: {outputExtension}
-                      </div>
-                      <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
-                        {explanationResult}
-                      </pre>
-                    </>
+                    <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
+                      {explanationResult}
+                    </pre>
                   ) : (
                     <p className="text-sm leading-6 text-white/45">
-                      Your generated explanation will appear here. The output
-                      extension always mirrors the original input extension.
+                      {t.previewEmpty}
                     </p>
                   )}
+                </div>
+
+                <div className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/75">
+                  <BookOpen className="h-4 w-4 text-cyan-300" />
+                  {t.outputExtensionLabel}{" "}
+                  <span className="font-medium text-white">
+                    {outputExtension || "—"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
+                <h2 className="text-lg font-semibold text-white">
+                  {t.policyTitle}
+                </h2>
+                <p className="mt-1 text-sm text-white/55">{t.policySubtitle}</p>
+
+                <div className="mt-4 space-y-3 text-sm leading-6 text-white/70">
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <FileText className="h-4 w-4 text-cyan-300" />
+                    <span>.pdf / .docx</span>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <AlignLeft className="h-4 w-4 text-cyan-300" />
+                    <span>{t.inlineInputValue}</span>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <XCircle className="h-4 w-4 text-cyan-300" />
+                    <span>{REJECTED_EXTENSIONS.join(", ")}</span>
+                  </div>
                 </div>
               </div>
             </aside>

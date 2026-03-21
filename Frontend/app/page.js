@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/language_provider";
 import ActionCard from "@/components/ActionCard";
 import { useRouter } from "next/navigation";
+import AuthControls from "@/components/auth_controls";
 import {
   FileText,
   Sparkles,
@@ -28,6 +29,50 @@ const actionIcons = {
 export default function HomePage() {
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
+  const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProfile() {
+      try {
+        const res = await fetch("/auth/profile", {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+        });
+
+        if (!res.ok) {
+          if (!cancelled) {
+            setUser(null);
+            setAuthChecked(true);
+          }
+          return;
+        }
+
+        const data = await res.json();
+
+        if (!cancelled) {
+          setUser(data);
+          setAuthChecked(true);
+        }
+      } catch {
+        if (!cancelled) {
+          setUser(null);
+          setAuthChecked(true);
+        }
+      }
+    }
+
+    loadProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const isSignedIn = !!user;
 
   const t = useMemo(
     () => homePageTranslations[language] || homePageTranslations.en,
@@ -140,29 +185,22 @@ export default function HomePage() {
                   <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300/90">
                     {t.unlockMoreEyebrow}
                   </p>
+
                   <h3 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-                    {t.unlockMoreTitle}
+                    {isSignedIn
+                      ? "Advanced features unlocked"
+                      : t.unlockMoreTitle}
                   </h3>
+
                   <p className="mt-3 text-sm leading-6 text-white/65 md:text-base">
-                    {t.unlockMoreDescription}
+                    {isSignedIn
+                      ? "You can now access transcription, question generation, and other protected tools."
+                      : t.unlockMoreDescription}
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => router.push("/signin")}
-                    className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
-                  >
-                    {t.signIn}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => router.push("/signup")}
-                    className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15"
-                  >
-                    {t.signUp}
-                  </button>
+                  <AuthControls />
                 </div>
               </div>
             </div>
@@ -175,7 +213,11 @@ export default function HomePage() {
                   {t.advancedFeaturesTitle}
                 </h2>
                 <p className="mt-1 text-sm text-white/50">
-                  {t.advancedFeaturesDescription}
+                  {authChecked
+                    ? isSignedIn
+                      ? "Available now."
+                      : t.advancedFeaturesDescription
+                    : "Checking account status..."}
                 </p>
               </div>
             </div>
@@ -185,7 +227,10 @@ export default function HomePage() {
                 <ActionCard
                   key={`${language}-${action.route}`}
                   action={action}
-                  locked
+                  locked={!isSignedIn}
+                  onClick={
+                    isSignedIn ? () => router.push(action.route) : undefined
+                  }
                 />
               ))}
             </div>

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const ALLOWED_FEATURES = [
   "convert",
   "summarize",
-  "grammar-correct",
+  "grammar_correct",
   "translate",
   "transcribe",
   "explain",
