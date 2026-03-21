@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-
+from backend.auth0_dependencies import AuthenticatedUser, get_current_user
 from src.analyzer import Analyzer
 from src.extraction import build_inline_text_payload
 from src.schema import (
@@ -238,6 +238,7 @@ def translate_route(
     dependencies=[Depends(rate_limit_for_feature(FeatureType.transcribe))],
 )
 def transcribe_route(
+    current_user: AuthenticatedUser = Depends(get_current_user),
     file: UploadFile = File(...),
     media_type: MediaType = Form(...),
     duration_seconds: int = Form(...),
@@ -308,9 +309,10 @@ def explain_route(
 @router.post(
     "/generate-questions",
     response_model=AnalyzerResponse,
-    dependencies=[Depends(rate_limit_for_feature(FeatureType.generate_questions))],
+    #dependencies=[Depends(rate_limit_for_feature(FeatureType.generate_questions))],
 )
 def generate_questions_route(
+    current_user: AuthenticatedUser = Depends(get_current_user),
     file: UploadFile | None = File(default=None),
     text: str | None = Form(default=None),
     ui_language: UILanguage = Form(UILanguage.english),
