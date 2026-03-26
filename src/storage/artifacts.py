@@ -7,13 +7,16 @@ Purpose:
 - persist generated downloadable artifacts produced by:
   - conversion_processing/convert.py
   - writer.py for AI document actions
+  - data_protection/redaction/redact.py
+  - data_protection/data_masking/data_mask.py
 - provide a stable storage location/key for persisted files
 - optionally expose a download URL placeholder
 - support cleanup of expired artifacts based on retention policy
 
 Design notes:
 - schema-agnostic: this module stores files only
-- does not perform conversion, writing, LLM, ASR, or analyzer orchestration
+- does not perform conversion, writing, LLM, ASR, analyzer orchestration,
+  redaction, or data masking
 - local filesystem implementation is the default MVP backend
 - cloud/object-storage backends can be added later behind the same protocol
 """
@@ -41,6 +44,8 @@ class StoredArtifact:
 
     storage_key: str
     stored_path: str
+    original_artifact_name: str
+    content_type: Optional[str] = None
     download_url: Optional[str] = None
 
 
@@ -92,13 +97,13 @@ class LocalArtifactStorage:
         artifact_name: str,
         content_type: Optional[str] = None,
     ) -> StoredArtifact:
-        del content_type
-
         source_path = Path(_normalize_source_file_path(source_file_path))
         if not source_path.exists():
             raise FileNotFoundError(f"Generated artifact not found: {source_path}")
 
         normalized_artifact_name = _normalize_artifact_name(artifact_name)
+        resolved_content_type = content_type or guess_content_type(str(source_path))
+
         storage_key = self._build_storage_key(normalized_artifact_name)
         destination = self.base_dir / storage_key
         destination.parent.mkdir(parents=True, exist_ok=True)
@@ -107,11 +112,13 @@ class LocalArtifactStorage:
 
         download_url = None
         if self.download_base_url:
-            download_url = f"{self.download_base_url}/{storage_key.replace(os.sep, '/')}"
+            download_url = f"{self.download_base_url}/{storage_key.replace(os.sep, '/')}" 
 
         return StoredArtifact(
             storage_key=storage_key.replace(os.sep, "/"),
             stored_path=str(destination),
+            original_artifact_name=normalized_artifact_name,
+            content_type=resolved_content_type,
             download_url=download_url,
         )
 
@@ -133,13 +140,13 @@ class LocalArtifactStorage:
 
     def resolve_storage_key(self, storage_key: str) -> Path:
         normalized_key = _normalize_storage_key(storage_key)
-        
+
         resolved = (self.base_dir / normalized_key).resolve()
         base_resolved = self.base_dir.resolve()
 
         if not str(resolved).startswith(str(base_resolved)):
             raise ValueError("Resolved storage key escaped the artifact base directory.")
-        
+
         return resolved
 
     def exists(self, storage_key: str) -> bool:
@@ -196,7 +203,7 @@ def _normalize_artifact_name(value: str) -> str:
 def _normalize_storage_key(value: str) -> str:
     if not isinstance(value, str):
         raise TypeError("storage_key must be a string.")
-    
+
     normalized = value.strip().replace("\\", "/")
     if not normalized:
         raise ValueError("storage_key cannot be empty.")
@@ -213,6 +220,7 @@ def _normalize_storage_key(value: str) -> str:
         raise ValueError("storage_key contains invalid path segments.")
 
     return str(candidate)
+
 
 def _safe_file_name(value: str) -> str:
     raw = value.strip()

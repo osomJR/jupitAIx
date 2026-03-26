@@ -1,44 +1,98 @@
 from __future__ import annotations
 
-
 from pathlib import Path
-from typing import Optional
+from typing import Iterable, Optional, Sequence
+
 import cv2
-import numpy as np
 import fitz  # PyMuPDF
+import numpy as np
 import docx  # python-docx
 import pytesseract
 from PIL import Image
 
 from .schema import (
+    DOC_ACTIONS_REQUIRING_WORDCOUNT_ONLY,
+    MAX_FILE_SIZE_MB,
+    MAX_WORD_COUNT,
+    TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT,
     DocumentInputFormat,
     DocumentMetadata,
     DocumentPayload,
     FeatureType,
-    MAX_FILE_SIZE_MB,
-    MAX_WORD_COUNT,
 )
 
-OCR_LANG = "eng+fra+osd"
+# OCR configuration
+# -----------------
+# Translation supports any source language -> any target language.
+# To avoid artificially restricting OCR for scanned files, the default OCR
+# language bundle is built from all Tesseract languages available at runtime.
 OCR_CONFIG = "--oem 3 --psm 6"
 
-AI_DOC_ACTIONS = {
-    FeatureType.summarize,
-    FeatureType.grammar_correct,
-    FeatureType.translate,
-    FeatureType.explain,
-    FeatureType.generate_questions,
-    FeatureType.generate_answers,
+# Common BCP-47 / language-name aliases -> Tesseract traineddata codes.
+# This is only used when callers supply explicit OCR language hints.
+_TESSERACT_LANG_ALIASES: dict[str, str] = {
+    "ar": "ara",
+    "arabic": "ara",
+    "de": "deu",
+    "german": "deu",
+    "en": "eng",
+    "english": "eng",
+    "es": "spa",
+    "spanish": "spa",
+    "fa": "fas",
+    "farsi": "fas",
+    "fr": "fra",
+    "french": "fra",
+    "ha": "hau",
+    "hausa": "hau",
+    "hi": "hin",
+    "hindi": "hin",
+    "ig": "ibo",
+    "igbo": "ibo",
+    "it": "ita",
+    "italian": "ita",
+    "ja": "jpn",
+    "japanese": "jpn",
+    "ko": "kor",
+    "korean": "kor",
+    "nl": "nld",
+    "dutch": "nld",
+    "pl": "pol",
+    "polish": "pol",
+    "pt": "por",
+    "pt-br": "por",
+    "portuguese": "por",
+    "ru": "rus",
+    "russian": "rus",
+    "sw": "swa",
+    "swahili": "swa",
+    "tr": "tur",
+    "turkish": "tur",
+    "uk": "ukr",
+    "ukrainian": "ukr",
+    "yo": "yor",
+    "yoruba": "yor",
+    "zh": "chi_sim",
+    "zh-cn": "chi_sim",
+    "zh-hans": "chi_sim",
+    "zh-tw": "chi_tra",
+    "zh-hant": "chi_tra",
 }
 
-CONVERSION_ACTIONS = {
-    FeatureType.convert,
-}
+CONVERSION_ACTIONS = {FeatureType.convert}
 
-AI_DOC_INPUT_FORMATS = {
+TEXT_AI_DOC_INPUT_FORMATS = {
     DocumentInputFormat.pdf,
     DocumentInputFormat.docx,
     DocumentInputFormat.txt,
+}
+
+REDACTION_MASKING_INPUT_FORMATS = {
+    DocumentInputFormat.pdf,
+    DocumentInputFormat.docx,
+    DocumentInputFormat.jpg,
+    DocumentInputFormat.jpeg,
+    DocumentInputFormat.png,
 }
 
 CONVERSION_INPUT_FORMATS = {
@@ -48,6 +102,62 @@ CONVERSION_INPUT_FORMATS = {
     DocumentInputFormat.jpeg,
     DocumentInputFormat.png,
 }
+
+
+# ----------------------------
+# OCR helpers
+# ----------------------------
+def get_available_tesseract_languages() -> list[str]:
+    """Returns installed Tesseract language codes, excluding utility packs."""
+    languages = pytesseract.get_languages(config="")
+    return sorted(lang for lang in languages if lang not in {"osd", "equ"})
+
+
+def _normalize_ocr_language_token(token: str) -> str:
+    normalized = token.strip().lower().replace("_", "-")
+    if not normalized:
+        raise ValueError("OCR language token cannot be empty.")
+    return _TESSERACT_LANG_ALIASES.get(normalized, normalized)
+
+
+def resolve_ocr_lang(ocr_languages: Optional[Sequence[str]] = None) -> str:
+    """
+    Resolves the Tesseract language bundle.
+
+    Behavior:
+    - if caller supplies OCR language hints, normalize and validate them
+    - otherwise, use all installed OCR languages to maximize scanned-document
+      translation coverage
+    - include osd when present for orientation/script detection support
+    """
+    available = set(get_available_tesseract_languages())
+    raw_available = set(pytesseract.get_languages(config=""))
+
+    if ocr_languages:
+        requested: list[str] = []
+        for item in ocr_languages:
+            code = _normalize_ocr_language_token(item)
+            if code not in available:
+                raise ValueError(
+                    f"Requested OCR language '{item}' resolved to '{code}', "
+                    "but that traineddata is not installed in Tesseract."
+                )
+            if code not in requested:
+                requested.append(code)
+        selected = requested
+    else:
+        selected = sorted(available)
+
+    if not selected:
+        raise ValueError(
+            "No OCR languages are installed in Tesseract. Install traineddata files "
+            "for the languages you need before processing scanned documents."
+        )
+
+    if "osd" in raw_available:
+        selected = [*selected, "osd"]
+
+    return "+".join(selected)
 
 
 # ----------------------------
@@ -61,29 +171,20 @@ def preprocess_for_ocr(image: Image.Image) -> Image.Image:
     - denoise
     - adaptive threshold
     """
-
-    # convert PIL → OpenCV
     img = np.array(image)
-
-    # grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-
-    # noise reduction
     gray = cv2.medianBlur(gray, 3)
-
-    # adaptive threshold (handles uneven lighting)
     thresh = cv2.adaptiveThreshold(
         gray,
         255,
         cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY,
         31,
-        2
+        2,
     )
-
-    # return back to PIL
     return Image.fromarray(thresh)
-    
+
+
 def get_file_size_mb(file_path: Path) -> float:
     size_bytes = file_path.stat().st_size
     size_mb = size_bytes / (1024 * 1024)
@@ -107,7 +208,6 @@ def detect_format(file_path: Path) -> DocumentInputFormat:
 # ----------------------------
 # Text extraction
 # ----------------------------
-
 def extract_text_from_txt(file_path: Path) -> str:
     try:
         return file_path.read_text(encoding="utf-8").strip()
@@ -120,10 +220,10 @@ def extract_text_from_docx(file_path: Path) -> str:
     return "\n".join(p.text for p in document.paragraphs).strip()
 
 
-def extract_text_from_image(file_path: Path) -> str:
+def extract_text_from_image(file_path: Path, *, ocr_lang: str) -> str:
     image = Image.open(file_path).convert("RGB")
     processed = preprocess_for_ocr(image)
-    return pytesseract.image_to_string(processed, lang=OCR_LANG, config=OCR_CONFIG).strip()
+    return pytesseract.image_to_string(processed, lang=ocr_lang, config=OCR_CONFIG).strip()
 
 
 def extract_text_from_pdf_text(file_path: Path) -> str:
@@ -139,7 +239,7 @@ def _pixmap_to_pil(pix: fitz.Pixmap) -> Image.Image:
     return Image.frombytes(mode, (pix.width, pix.height), pix.samples)
 
 
-def extract_text_from_pdf_ocr(file_path: Path, *, zoom: float = 4.0) -> str:
+def extract_text_from_pdf_ocr(file_path: Path, *, ocr_lang: str, zoom: float = 4.0) -> str:
     matrix = fitz.Matrix(zoom, zoom)
     chunks: list[str] = []
 
@@ -148,12 +248,17 @@ def extract_text_from_pdf_ocr(file_path: Path, *, zoom: float = 4.0) -> str:
             pix = page.get_pixmap(matrix=matrix)
             image = _pixmap_to_pil(pix).convert("RGB")
             processed = preprocess_for_ocr(image)
-            chunks.append(pytesseract.image_to_string(processed, lang=OCR_LANG, config=OCR_CONFIG))
+            chunks.append(pytesseract.image_to_string(processed, lang=ocr_lang, config=OCR_CONFIG))
 
     return "\n".join(chunks).strip()
 
 
-def extract_text_by_format(file_path: Path, fmt: DocumentInputFormat) -> tuple[str, bool]:
+def extract_text_by_format(
+    file_path: Path,
+    fmt: DocumentInputFormat,
+    *,
+    ocr_languages: Optional[Sequence[str]] = None,
+) -> tuple[str, bool]:
     """
     Returns:
         (text, ocr_used)
@@ -162,6 +267,10 @@ def extract_text_by_format(file_path: Path, fmt: DocumentInputFormat) -> tuple[s
     - txt/docx => ocr_used=False
     - pdf => OCR fallback only if native extraction is empty
     - images => OCR always used if text extraction is requested
+
+    Translation consideration:
+    - when OCR is needed, use all installed OCR languages by default so scanned
+      documents can be translated from any supported source language.
     """
     if fmt == DocumentInputFormat.txt:
         return extract_text_from_txt(file_path), False
@@ -169,14 +278,16 @@ def extract_text_by_format(file_path: Path, fmt: DocumentInputFormat) -> tuple[s
     if fmt == DocumentInputFormat.docx:
         return extract_text_from_docx(file_path), False
 
+    ocr_lang = resolve_ocr_lang(ocr_languages)
+
     if fmt == DocumentInputFormat.pdf:
         text = extract_text_from_pdf_text(file_path)
         if text:
             return text, False
-        return extract_text_from_pdf_ocr(file_path), True
+        return extract_text_from_pdf_ocr(file_path, ocr_lang=ocr_lang), True
 
     if fmt in (DocumentInputFormat.jpg, DocumentInputFormat.jpeg, DocumentInputFormat.png):
-        return extract_text_from_image(file_path), True
+        return extract_text_from_image(file_path, ocr_lang=ocr_lang), True
 
     raise ValueError(f"Unsupported file format: {fmt.value}")
 
@@ -184,7 +295,6 @@ def extract_text_by_format(file_path: Path, fmt: DocumentInputFormat) -> tuple[s
 # ----------------------------
 # Word-count helpers
 # ----------------------------
-
 def count_words(text: str) -> int:
     return len(text.split())
 
@@ -199,7 +309,6 @@ def enforce_word_limit(word_count: int) -> None:
 # ----------------------------
 # Payload builders
 # ----------------------------
-
 def build_inline_text_payload(
     text: str,
     *,
@@ -254,14 +363,18 @@ def build_conversion_document_payload(file_path: str) -> DocumentPayload:
         input_format=fmt,
         file_size_mb=get_file_size_mb(path),
         extracted_word_count=None,
-        ocr_used=False,  # conversion path does not need OCR/text extraction
+        ocr_used=False,
     )
-    return DocumentPayload(text=None, metadata=metadata)
+    return DocumentPayload(text=None, metadata=metadata, filename=path.name)
 
 
-def build_ai_document_payload(file_path: str) -> DocumentPayload:
+def build_text_ai_document_payload(
+    file_path: str,
+    *,
+    ocr_languages: Optional[Sequence[str]] = None,
+) -> DocumentPayload:
     """
-    Build a DocumentPayload for AI document actions:
+    Build a DocumentPayload for text AI document actions:
     summarize, grammar_correct, translate, explain, generate_questions, generate_answers
 
     Contract alignment:
@@ -275,11 +388,11 @@ def build_ai_document_payload(file_path: str) -> DocumentPayload:
         raise FileNotFoundError("File not found.")
 
     fmt = detect_format(path)
-    if fmt not in AI_DOC_INPUT_FORMATS:
-        raise ValueError("AI document actions only support input formats: pdf, docx, txt.")
+    if fmt not in TEXT_AI_DOC_INPUT_FORMATS:
+        raise ValueError("Text AI document actions only support input formats: pdf, docx, txt.")
 
     file_size_mb = get_file_size_mb(path)
-    text, ocr_used = extract_text_by_format(path, fmt)
+    text, ocr_used = extract_text_by_format(path, fmt, ocr_languages=ocr_languages)
 
     normalized = text.strip()
     if not normalized:
@@ -294,7 +407,48 @@ def build_ai_document_payload(file_path: str) -> DocumentPayload:
         extracted_word_count=word_count,
         ocr_used=ocr_used,
     )
-    return DocumentPayload(text=normalized, metadata=metadata)
+    return DocumentPayload(text=normalized, metadata=metadata, filename=path.name)
+
+
+def build_redaction_or_masking_document_payload(
+    file_path: str,
+    *,
+    ocr_languages: Optional[Sequence[str]] = None,
+) -> DocumentPayload:
+    """
+    Build a DocumentPayload for redact/data_mask.
+
+    Contract alignment:
+    - accepts pdf/docx/jpg/jpeg/png
+    - requires extracted_word_count for document limit enforcement
+    - text is optional in schema, but extracting and carrying it is useful for downstream processing
+    - detected_language is omitted; analyzer/server handles detection
+    """
+    path = Path(file_path)
+    if not path.exists():
+        raise FileNotFoundError("File not found.")
+
+    fmt = detect_format(path)
+    if fmt not in REDACTION_MASKING_INPUT_FORMATS:
+        raise ValueError("redact/data_mask only support: pdf, docx, jpg, jpeg, png.")
+
+    file_size_mb = get_file_size_mb(path)
+    text, ocr_used = extract_text_by_format(path, fmt, ocr_languages=ocr_languages)
+
+    normalized = text.strip()
+    if not normalized:
+        raise ValueError("Document text could not be extracted.")
+
+    word_count = count_words(normalized)
+    enforce_word_limit(word_count)
+
+    metadata = DocumentMetadata(
+        input_format=fmt,
+        file_size_mb=file_size_mb,
+        extracted_word_count=word_count,
+        ocr_used=ocr_used,
+    )
+    return DocumentPayload(text=normalized, metadata=metadata, filename=path.name)
 
 
 def build_document_payload_for_action(
@@ -302,19 +456,24 @@ def build_document_payload_for_action(
     action: FeatureType,
     file_path: Optional[str] = None,
     inline_text: Optional[str] = None,
+    ocr_languages: Optional[Sequence[str]] = None,
 ) -> DocumentPayload:
     """
     Runtime-aware normalization entrypoint.
 
     Rules:
-    - inline_text path => txt payload for AI document actions only
+    - inline_text path => txt payload for text AI document actions only
     - upload path + convert => metadata-only payload
-    - upload path + AI doc action => extracted-text payload
+    - upload path + text AI action => extracted-text payload
+    - upload path + redact/data_mask => extracted-text payload with word-count enforcement
+
+    OCR note:
+    - if ocr_languages is omitted, all installed Tesseract languages are used when OCR is needed
     """
     if inline_text is not None:
         if file_path is not None:
             raise ValueError("Provide either file_path or inline_text, not both.")
-        if action not in AI_DOC_ACTIONS:
+        if action not in TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT:
             raise ValueError(f"{action.value} does not support inline text through this extraction path.")
         return build_inline_text_payload(inline_text)
 
@@ -324,7 +483,10 @@ def build_document_payload_for_action(
     if action in CONVERSION_ACTIONS:
         return build_conversion_document_payload(file_path)
 
-    if action in AI_DOC_ACTIONS:
-        return build_ai_document_payload(file_path)
+    if action in TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT:
+        return build_text_ai_document_payload(file_path, ocr_languages=ocr_languages)
+
+    if action in DOC_ACTIONS_REQUIRING_WORDCOUNT_ONLY:
+        return build_redaction_or_masking_document_payload(file_path, ocr_languages=ocr_languages)
 
     raise ValueError(f"Unsupported document action for extraction: {action.value}")

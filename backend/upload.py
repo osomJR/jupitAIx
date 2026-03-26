@@ -29,8 +29,8 @@ import uuid
 from fastapi import UploadFile
 
 from src.extraction import (
-    build_ai_document_payload,
     build_conversion_document_payload,
+    build_document_payload_for_action,
     get_file_size_mb,
 )
 from src.schema import (
@@ -47,8 +47,14 @@ UPLOAD_BASE_DIR = Path("uploads")
 DOCUMENT_UPLOAD_DIR = UPLOAD_BASE_DIR / "documents"
 MEDIA_UPLOAD_DIR = UPLOAD_BASE_DIR / "media"
 
+# Broad document/media whitelists at the ingestion layer.
 ALLOWED_DOCUMENT_SUFFIXES = {".pdf", ".docx", ".txt", ".jpg", ".jpeg", ".png"}
 ALLOWED_MEDIA_SUFFIXES = {".mp3", ".mp4", ".mkv", ".mov"}
+
+# Action-specific document rules from the product contract / feature handlers.
+CONVERSION_DOCUMENT_SUFFIXES = {".pdf", ".docx", ".jpg", ".jpeg", ".png"}
+TEXT_AI_DOCUMENT_SUFFIXES = {".pdf", ".docx", ".txt"}
+PRIVACY_DOCUMENT_SUFFIXES = {".pdf", ".docx", ".jpg", ".jpeg", ".png"}
 
 
 @dataclass(frozen=True)
@@ -149,15 +155,26 @@ def build_uploaded_document_payload(
     - grammar_correct
     - translate
     - explain
+    - redact
+    - data_mask
     - generate_questions
     - generate_answers
     """
+    _validate_document_action(action)
+
+    original_filename = (upload.filename or "").strip()
+    suffix = Path(original_filename).suffix.strip().lower()
+    _validate_document_suffix_for_action(action=action, suffix=suffix)
+
     saved = save_uploaded_file(upload, category="documents")
 
     if action == FeatureType.convert:
         payload = build_conversion_document_payload(saved.stored_path)
     else:
-        payload = build_ai_document_payload(saved.stored_path)
+        payload = build_document_payload_for_action(
+            action=action,
+            file_path=saved.stored_path,
+        )
 
     payload.filename = saved.stored_path
     return payload
@@ -211,6 +228,57 @@ def _validate_upload_suffix(*, suffix: str, category: str) -> str:
     return normalized
 
 
+def _validate_document_action(action: FeatureType) -> None:
+    allowed_actions = {
+        FeatureType.convert,
+        FeatureType.summarize,
+        FeatureType.grammar_correct,
+        FeatureType.translate,
+        FeatureType.explain,
+        FeatureType.redact,
+        FeatureType.data_mask,
+        FeatureType.generate_questions,
+        FeatureType.generate_answers,
+    }
+    if action not in allowed_actions:
+        raise UploadError(f"Unsupported document upload action: {action.value}.")
+
+
+def _allowed_document_suffixes_for_action(action: FeatureType) -> set[str]:
+    if action == FeatureType.convert:
+        return CONVERSION_DOCUMENT_SUFFIXES
+
+    if action in {
+        FeatureType.summarize,
+        FeatureType.grammar_correct,
+        FeatureType.translate,
+        FeatureType.explain,
+        FeatureType.generate_questions,
+        FeatureType.generate_answers,
+    }:
+        return TEXT_AI_DOCUMENT_SUFFIXES
+
+    if action in {FeatureType.redact, FeatureType.data_mask}:
+        return PRIVACY_DOCUMENT_SUFFIXES
+
+    raise UploadError(f"Unsupported document upload action: {action.value}.")
+
+
+def _validate_document_suffix_for_action(*, action: FeatureType, suffix: str) -> str:
+    normalized = suffix.strip().lower()
+    if not normalized.startswith("."):
+        raise UploadError("Uploaded file must include a valid extension.")
+
+    allowed = _allowed_document_suffixes_for_action(action)
+    if normalized not in allowed:
+        allowed_text = ", ".join(sorted(allowed))
+        raise UploadError(
+            f"Unsupported file extension for action '{action.value}': {normalized}. "
+            f"Allowed: {allowed_text}"
+        )
+    return normalized
+
+
 def _safe_original_filename(value: str) -> str:
     raw = value.strip()
     if not raw:
@@ -245,6 +313,9 @@ __all__ = [
     "MEDIA_UPLOAD_DIR",
     "ALLOWED_DOCUMENT_SUFFIXES",
     "ALLOWED_MEDIA_SUFFIXES",
+    "CONVERSION_DOCUMENT_SUFFIXES",
+    "TEXT_AI_DOCUMENT_SUFFIXES",
+    "PRIVACY_DOCUMENT_SUFFIXES",
     "SavedUpload",
     "UploadError",
     "ensure_upload_directories",

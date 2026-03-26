@@ -3,12 +3,16 @@ import { NextResponse } from "next/server";
 const ALLOWED_FEATURES = [
   "convert",
   "summarize",
-  "grammar_correct",
+  "grammar correct",
   "translate",
   "transcribe",
   "explain",
-  "generate-questions",
-  "generate-answers",
+  "generate questions",
+  "generate answers",
+  "redact",
+  "data mask",
+  "compliance",
+  "structured extraction",
 ];
 
 export async function GET() {

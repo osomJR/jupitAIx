@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/language_provider";
 import ActionCard from "@/components/ActionCard";
@@ -13,9 +12,12 @@ import {
   PenTool,
   Mic,
   HelpCircle,
+  EyeOff,
+  EyeClosed,
+  ShieldCheck,
+  FileBraces,
 } from "lucide-react";
 import { homePageTranslations } from "@/lib/translations";
-
 const actionIcons = {
   convert: FileText,
   summarize: Sparkles,
@@ -24,6 +26,10 @@ const actionIcons = {
   explain: BookOpen,
   transcribe: Mic,
   questions: HelpCircle,
+  redact: EyeOff,
+  mask: EyeClosed,
+  compliance: ShieldCheck,
+  extraction: FileBraces,
 };
 
 export default function HomePage() {

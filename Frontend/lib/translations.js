@@ -115,6 +115,30 @@ export const homePageTranslations = {
         route: "/questions",
         description: "Create smart questions from notes, text, or topics.",
       },
+      {
+        key: "redact",
+        name: "Redact",
+        route: "/redact",
+        description: "XYZ",
+      },
+      {
+        key: "mask",
+        name: "Data Mask",
+        route: "/mask",
+        description: "XYZ",
+      },
+      {
+        key: "compliance",
+        name: "Compliance",
+        route: "/compliance",
+        description: "XYZ",
+      },
+      {
+        key: "extraction",
+        name: "Structured Extraction",
+        route: "/extraction",
+        description: "XYZ",
+      },
     ],
   },
   fr: {
@@ -155,7 +179,7 @@ export const homePageTranslations = {
       },
       {
         key: "grammar",
-        name: "Corriger la grammaire",
+        name: "Corriger La Grammaire",
         route: "/grammar",
         description:
           "Améliorez votre écriture avec des corrections claires et sûres.",
@@ -183,10 +207,34 @@ export const homePageTranslations = {
       },
       {
         key: "questions",
-        name: "Générer des questions",
+        name: "Générer Des questions",
         route: "/questions",
         description:
           "Créez des questions intelligentes à partir de notes, de texte ou de sujets.",
+      },
+      {
+        key: "redact",
+        name: "Caviarder",
+        route: "/redact",
+        description: "XYZ",
+      },
+      {
+        key: "mask",
+        name: "Masquage Des Données",
+        route: "/mask",
+        description: "XYZ",
+      },
+      {
+        key: "compliance",
+        name: "Conformité",
+        route: "/compliance",
+        description: "XYZ",
+      },
+      {
+        key: "extraction",
+        name: "Extraction Structurée",
+        route: "/extraction",
+        description: "XYZ",
       },
     ],
   },

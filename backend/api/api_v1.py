@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from backend.errors import install_error_handlers
 from backend.routes.route_v1 import router as analyzer_router
 
 API_V1_PREFIX = "/api/v1"
@@ -30,6 +30,7 @@ def create_app() -> FastAPI:
         version="1.0.0",
         lifespan=lifespan,
     )
+    install_error_handlers(app)
 
     app.add_middleware(
         CORSMiddleware,

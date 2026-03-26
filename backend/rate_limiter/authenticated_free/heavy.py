@@ -8,6 +8,8 @@ Allowed heavy features:
 - generate_questions
 - generate_answers
 - transcribe
+- redact
+- data_mask
 
 Tier policy:
 - total requests per day: 7
