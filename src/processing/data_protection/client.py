@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import re
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional, Sequence
@@ -40,13 +39,11 @@ def _import_dlp_v2():
 
 class GoogleSDPClient:
     """
-    Shared Google Sensitive Data Protection wrapper for both redaction and data masking.
+    Shared Google Sensitive Data Protection wrapper for text inspection and
+    plain-text de-identification helpers.
 
-    Responsibilities:
-    - create/hold the underlying google-cloud-dlp client
-    - store project_id and location
-    - expose the Google parent resource string
-    - expose reusable text inspection helpers shared by redact.py and data_mask.py
+    For structure-preserving DOCX and PDF workflows, use this client for
+    detection and then apply document-native edits in redact.py/data_mask.py.
     """
 
     def __init__(
@@ -102,6 +99,80 @@ class GoogleSDPClient:
             review_exclusions=review_exclusions,
             min_likelihood=min_likelihood or self.min_likelihood,
         )
+
+    def deidentify_text_redact(
+        self,
+        *,
+        text: str,
+        targets: Sequence[SensitiveDataType],
+        min_likelihood: Optional[str] = None,
+    ) -> str:
+        info_types = _google_info_types_for_targets(targets)
+        if not info_types:
+            return text
+
+        response = self.client.deidentify_content(
+            request={
+                "parent": self.parent,
+                "inspect_config": {
+                    "info_types": info_types,
+                    "min_likelihood": min_likelihood or self.min_likelihood,
+                },
+                "deidentify_config": {
+                    "info_type_transformations": {
+                        "transformations": [
+                            {
+                                "primitive_transformation": {
+                                    "redact_config": {}
+                                }
+                            }
+                        ]
+                    }
+                },
+                "item": {"value": text},
+            }
+        )
+        return response.item.value
+
+    def deidentify_text_mask(
+        self,
+        *,
+        text: str,
+        targets: Sequence[SensitiveDataType],
+        masking_character: str = "X",
+        number_to_mask: Optional[int] = None,
+        min_likelihood: Optional[str] = None,
+    ) -> str:
+        info_types = _google_info_types_for_targets(targets)
+        if not info_types:
+            return text
+
+        mask_config: dict[str, Any] = {"masking_character": masking_character}
+        if number_to_mask is not None:
+            mask_config["number_to_mask"] = number_to_mask
+
+        response = self.client.deidentify_content(
+            request={
+                "parent": self.parent,
+                "inspect_config": {
+                    "info_types": info_types,
+                    "min_likelihood": min_likelihood or self.min_likelihood,
+                },
+                "deidentify_config": {
+                    "info_type_transformations": {
+                        "transformations": [
+                            {
+                                "primitive_transformation": {
+                                    "character_mask_config": mask_config
+                                }
+                            }
+                        ]
+                    }
+                },
+                "item": {"value": text},
+            }
+        )
+        return response.item.value
 
 
 def build_google_sdp_client(
@@ -161,6 +232,41 @@ def _dedupe_findings(findings: Iterable[TextFinding]) -> list[TextFinding]:
             continue
         result.append(finding)
     return result
+
+
+def merge_overlapping_findings(
+    findings: Sequence[TextFinding],
+    *,
+    original_text: str | None = None,
+) -> list[TextFinding]:
+    ordered = sorted(findings, key=lambda item: (item.start, item.end, item.label, item.source))
+    if not ordered:
+        return []
+
+    merged: list[TextFinding] = []
+    current = ordered[0]
+
+    for finding in ordered[1:]:
+        if finding.start < current.end:
+            start = min(current.start, finding.start)
+            end = max(current.end, finding.end)
+            if current.label == finding.label:
+                label = current.label
+            else:
+                label = "sensitive_data"
+            if current.source == finding.source:
+                source = current.source
+            else:
+                source = "merged"
+
+            quote = original_text[start:end] if original_text is not None else current.quote
+            current = TextFinding(start=start, end=end, quote=quote, label=label, source=source)
+        else:
+            merged.append(current)
+            current = finding
+
+    merged.append(current)
+    return merged
 
 
 _GOOGLE_INFOTYPES: dict[SensitiveDataType, list[str]] = {
@@ -398,4 +504,5 @@ __all__ = [
     "build_google_sdp_client",
     "inspect_sensitive_text",
     "preview_candidates_from_text",
+    "merge_overlapping_findings",
 ]

@@ -1,53 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-export default function AuthControls() {
-  const [user, setUser] = useState(undefined);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadProfile() {
-      try {
-        const res = await fetch("/auth/profile", {
-          method: "GET",
-          credentials: "include",
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          if (!cancelled) {
-            setUser(null);
-            setLoading(false);
-          }
-          return;
-        }
-
-        const data = await res.json();
-
-        if (!cancelled) {
-          setUser(data);
-          setLoading(false);
-        }
-      } catch {
-        if (!cancelled) {
-          setUser(null);
-          setLoading(false);
-        }
-      }
-    }
-
-    loadProfile();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  if (loading) {
-    return <div className="text-sm text-white/60">Loading...</div>;
+export default function AuthControls({
+  user,
+  authChecked,
+  signInLabel = "Sign In",
+  signUpLabel = "Sign Up",
+  loadingLabel = "Loading...",
+  signedInAsLabel = "Signed in as",
+  logoutLabel = "Logout",
+}) {
+  if (!authChecked) {
+    return <div className="text-sm text-white/60">{loadingLabel}</div>;
   }
 
   if (!user) {
@@ -57,14 +20,14 @@ export default function AuthControls() {
           href="/auth/login?returnTo=/"
           className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
         >
-          Sign In
+          {signInLabel}
         </a>
 
         <a
           href="/auth/login?screen_hint=signup&prompt=login&returnTo=/"
           className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
         >
-          Sign Up
+          {signUpLabel}
         </a>
       </div>
     );
@@ -73,7 +36,7 @@ export default function AuthControls() {
   return (
     <div className="flex items-center gap-3">
       <div className="text-sm text-white/80">
-        Signed in as{" "}
+        {signedInAsLabel}{" "}
         <span className="font-semibold">
           {user.name || user.email || user.nickname}
         </span>
@@ -83,7 +46,7 @@ export default function AuthControls() {
         href="/auth/logout"
         className="rounded-2xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
       >
-        Logout
+        {logoutLabel}
       </a>
     </div>
   );

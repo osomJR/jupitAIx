@@ -19,19 +19,19 @@ Design notes:
 
 from dataclasses import dataclass
 from pathlib import Path
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, NamedTemporaryFile
 from typing import Optional, Protocol
 import mimetypes
+import os
 import shutil
 import subprocess
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from docx import Document
 from docx.shared import Inches
 
 from src.storage.artifacts import (
     StorageBackend,
-    StoredArtifact,
     LocalArtifactStorage,
 )
 
@@ -124,7 +124,7 @@ class RealConversionBackend:
     ) -> ConversionArtifact:
         normalized_input = _normalize_format(input_format)
         normalized_output = _normalize_format(output_format)
-        source_path = Path(_normalize_source_reference(source_reference))
+        source_path = Path(_normalize_source_reference(source_reference)).resolve()
 
         if not source_path.exists():
             raise FileNotFoundError(f"Source file not found: {source_path}")
@@ -132,7 +132,7 @@ class RealConversionBackend:
         planned_name = _normalize_file_name(planned_output_name)
 
         with TemporaryDirectory(prefix="convert-work-") as workdir:
-            output_path = Path(workdir) / planned_name
+            output_path = (Path(workdir) / planned_name).resolve()
 
             if normalized_input == "pdf" and normalized_output == "docx":
                 self._convert_pdf_to_docx(source_path, output_path)
@@ -171,7 +171,9 @@ class RealConversionBackend:
 
     def _convert_pdf_to_docx(self, source_path: Path, output_path: Path) -> None:
         if PDFToDOCXConverter is None:
-            raise RuntimeError("pdf2docx is required for pdf -> docx conversion but is not installed.")
+            raise RuntimeError(
+                "pdf2docx is required for pdf -> docx conversion but is not installed."
+            )
 
         converter = PDFToDOCXConverter(str(source_path))
         try:
@@ -180,39 +182,62 @@ class RealConversionBackend:
             converter.close()
 
     def _convert_docx_to_pdf(self, source_path: Path, output_path: Path) -> None:
-        if shutil.which("soffice") is None:
-            raise RuntimeError("LibreOffice not found on PATH. Expected 'soffice' command for docx -> pdf conversion.")
+        soffice_bin = (
+            os.getenv("SOFFICE_PATH")
+            or shutil.which("soffice")
+            or shutil.which("soffice.exe")
+        )
+        if not soffice_bin:
+            raise RuntimeError(
+                "LibreOffice not found. Set SOFFICE_PATH or add soffice/soffice.exe to PATH."
+            )
+
+        source_path = source_path.resolve()
+        output_path = output_path.resolve()
+        output_dir = output_path.parent.resolve()
+
+        if not source_path.exists():
+            raise FileNotFoundError(f"Source DOCX not found: {source_path}")
 
         with TemporaryDirectory(prefix="libreoffice-profile-") as profile_dir:
             profile_uri = Path(profile_dir).resolve().as_uri()
 
             cmd = [
-                "soffice",
+                soffice_bin,
                 "--headless",
                 "--nologo",
                 "--nodefault",
                 "--nolockcheck",
                 "--nofirststartwizard",
-                f"--env:UserInstallation={profile_uri}",
+                f"-env:UserInstallation={profile_uri}",
                 "--convert-to",
-                "pdf",
+                "pdf:writer_pdf_Export",
                 "--outdir",
-                str(output_path.parent),
+                str(output_dir),
                 str(source_path),
             ]
-            try:
-                subprocess.run(
-                    cmd,
-                    check=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
-            except subprocess.CalledProcessError as exc:
-                raise RuntimeError("LibreOffice failed while converting docx to pdf.") from exc
 
-        default_output = output_path.parent / f"{source_path.stem}.pdf"
+            result = subprocess.run(
+                cmd,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        if result.returncode != 0:
+            raise RuntimeError(
+                "LibreOffice failed while converting docx to pdf.\n"
+                f"command: {' '.join(cmd)}\n"
+                f"stdout: {result.stdout}\n"
+                f"stderr: {result.stderr}"
+            )
+
+        default_output = output_dir / f"{source_path.stem}.pdf"
         if not default_output.exists():
-            raise RuntimeError("LibreOffice completed without producing a PDF output file.")
+            raise RuntimeError(
+                "LibreOffice completed without producing a PDF output file.\n"
+                f"Expected output path: {default_output}"
+            )
 
         if default_output != output_path:
             default_output.replace(output_path)
@@ -223,9 +248,34 @@ class RealConversionBackend:
             rgb.save(output_path, "PDF", resolution=100.0)
 
     def _convert_image_to_docx(self, source_path: Path, output_path: Path) -> None:
-        document = Document()
-        document.add_picture(str(source_path), width=Inches(6))
-        document.save(output_path)
+        source_path = Path(source_path)
+        output_path = Path(output_path)
+
+        if not source_path.exists():
+            raise FileNotFoundError(f"Source file not found: {source_path}")
+        if source_path.stat().st_size == 0:
+            raise ValueError(f"Source image is empty: {source_path}")
+
+        try:
+            with Image.open(source_path) as image:
+                image.load()
+                rgb = image.convert("RGB")
+                with NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                    normalized_path = Path(tmp.name)
+                try:
+                    rgb.save(normalized_path, format="PNG")
+                    document = Document()
+                    document.add_picture(str(normalized_path), width=Inches(6))
+                    document.save(output_path)
+                finally:
+                    if normalized_path.exists():
+                        normalized_path.unlink(missing_ok=True)
+        except UnidentifiedImageError as e:
+            with open(source_path, "rb") as f:
+                header = f.read(32)
+            raise ValueError(
+                f"Uploaded file is not a readable image. path={source_path}, header={header!r}"
+            ) from e
 
     def _convert_png_to_jpeg_family(self, source_path: Path, output_path: Path) -> None:
         with Image.open(source_path) as image:

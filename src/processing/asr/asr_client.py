@@ -163,18 +163,33 @@ class ASRClient:
             )
 
         payload = response.json()
+
+        results = payload.get("results") or {}
+        utterances = results.get("utterances") or []
+        channels = results.get("channels") or []
+        alt_transcript = ""
+
+        if channels:
+            alternatives = channels[0].get("alternatives") or []
+            if alternatives:
+                alt_transcript = str(alternatives[0].get("transcript") or "").strip()
+                
         transcript = self._extract_transcript(payload, diarize_speakers=diarize_speakers)
 
-        if not transcript:
+        if len(transcript.strip()) < 80:
             raise HTTPException(
-                status_code=502,
-                detail="ASR provider returned null or unreadable transcript content.",
+                status_code=422,
+                detail={
+                    "error": "insufficient_speech_detected",
+                    "message": "The uploaded media appears to contain little or no intelligible spoken content.",
+                },
             )
-
         return transcript
 
     def _extract_transcript(self, payload: dict[str, Any], *, diarize_speakers: bool) -> str:
         results = payload.get("results") or {}
+
+        diarized_text = ""
         if diarize_speakers:
             utterances = results.get("utterances") or []
             speaker_lines: list[str] = []
@@ -189,19 +204,19 @@ class ASRClient:
                 else:
                     speaker_lines.append(f"Speaker {speaker}: {transcript}")
 
-            joined = "\n".join(speaker_lines).strip()
-            if joined:
-                return joined
+            diarized_text = "\n".join(speaker_lines).strip()
 
+        channel_text = ""
         channels = results.get("channels") or []
         if channels:
             alternatives = channels[0].get("alternatives") or []
             if alternatives:
-                transcript = str(alternatives[0].get("transcript") or "").strip()
-                if transcript:
-                    return transcript
+                channel_text = str(alternatives[0].get("transcript") or "").strip()
 
-        return ""
+        if diarized_text and channel_text:
+            return diarized_text if len(diarized_text) >= len(channel_text) else channel_text
+
+        return diarized_text or channel_text or ""
 
     @staticmethod
     def _safe_json_or_text(response: requests.Response) -> Any:

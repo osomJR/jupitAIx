@@ -54,6 +54,7 @@ export default function SummarizePage() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [summaryResult, setSummaryResult] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   const inputExtension = useMemo(() => {
     if (mode === "text") return INLINE_TEXT_EXTENSION;
@@ -79,6 +80,7 @@ export default function SummarizePage() {
 
   function resetResultState() {
     setSummaryResult("");
+    setDownloadUrl("");
   }
 
   function rejectFile(message) {
@@ -136,16 +138,12 @@ export default function SummarizePage() {
     event.preventDefault();
 
     if (mode === "file" && !selectedFile) {
-      setError(
-        replaceVars(t.unsupportedFileType, {
-          ext: "unknown",
-        }),
-      );
+      setError("Please choose a file.");
       return;
     }
 
     if (mode === "text" && !inlineText.trim()) {
-      setError(t.summaryFailed);
+      setError("Please enter text to summarize.");
       return;
     }
 
@@ -154,38 +152,73 @@ export default function SummarizePage() {
     resetResultState();
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      const formData = new FormData();
 
-      if (mode === "text") {
-        const mockResult = `${t.inlineSummaryIntro}
-
-${t.outputExtensionResultLabel} ${INLINE_TEXT_EXTENSION}
-
-${t.translatedPreviewLabel}
-• Main idea captured clearly
-• Key points reduced into shorter form
-• Important details preserved in concise structure`;
-
-        setSummaryResult(mockResult);
+      if (mode === "file") {
+        formData.append("file", selectedFile);
       } else {
-        const mockResult = `${replaceVars(t.fileSummaryIntro, {
-          filename: selectedFile.name,
-        })}
-
-${t.inputExtensionLabel} ${inputExtension}
-${t.outputExtensionResultLabel} ${outputExtension}
-
-${t.preservedExtensionMessage}
-
-${t.translatedPreviewLabel}
-• Main sections condensed
-• Core arguments preserved
-• Format compatibility maintained`;
-
-        setSummaryResult(mockResult);
+        formData.append("text", inlineText.trim());
       }
-    } catch (submitError) {
-      setError(t.summaryFailed);
+
+      formData.append("system_language", "english");
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/v1/analyzer/summarize",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      if (!response.ok) {
+        const message =
+          data?.detail?.message ||
+          data?.detail ||
+          "Summarization request failed.";
+        throw new Error(message);
+      }
+
+      const result = data?.result;
+      if (!result) {
+        throw new Error("Backend returned no result.");
+      }
+
+      // txt input => inline text result
+      if (
+        result.output_format === "txt" &&
+        typeof result.content === "string"
+      ) {
+        setSummaryResult(result.content);
+        return;
+      }
+
+      // pdf/docx input => downloadable file result
+      const downloadUrl =
+        result.download_url ||
+        (result.storage_key
+          ? `http://127.0.0.1:8000/api/v1/analyzer/artifacts/${result.storage_key}`
+          : null);
+
+      setSummaryResult(
+        [
+          `Summary generated successfully.`,
+          `Filename: ${result.filename || "unknown"}`,
+          `Output format: .${result.output_format || "unknown"}`,
+          `File size: ${result.file_size_mb ?? "unknown"} MB`,
+          downloadUrl ? `Download: ${downloadUrl}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n\n"),
+      );
+    } catch (error) {
+      setError(error.message || t.summaryFailed);
     } finally {
       setIsSubmitting(false);
     }
@@ -456,6 +489,16 @@ ${t.translatedPreviewLabel}
                     </p>
                   )}
                 </div>
+                {downloadUrl && (
+                  <a
+                    href={downloadUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900"
+                  >
+                    Download summarized file
+                  </a>
+                )}
 
                 <div className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/75">
                   <FileText className="h-4 w-4 text-cyan-300" />

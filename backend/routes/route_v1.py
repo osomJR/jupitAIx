@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 import os
 from typing import Any, Mapping, Union
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from backend.errors import to_http_exception
+from fastapi.responses import FileResponse
+
 from backend.auth0_dependencies import AuthenticatedUser, get_current_user
+from backend.errors import to_http_exception
 from backend.rate_limiter.dependencies import rate_limit_for_feature
 from backend.upload import (
     UploadError,
@@ -14,9 +17,16 @@ from backend.upload import (
 )
 from src.analyzer import Analyzer
 from src.extraction import build_inline_text_payload
+from src.processing.conversion.convert import convert_document
+from src.processing.data_protection.data_masking.data_mask import (
+    preview_data_mask_candidates,
+)
 from src.processing.data_protection.orchestration import (
     ProtectedArtifactResult,
     process_privacy_action_and_persist,
+)
+from src.processing.data_protection.redaction.redact import (
+    preview_redaction_candidates,
 )
 from src.schema import (
     AnalyzerRequest,
@@ -39,6 +49,7 @@ from src.schema import (
     TranscriptionRequest,
     TranslationRequest,
 )
+from src.storage.artifacts import LocalArtifactStorage
 
 API_V1_ANALYZER_PREFIX = "/analyzer"
 
@@ -166,7 +177,116 @@ def _run_privacy_request(
         )
     except HTTPException as exc:
         raise to_http_exception(exc) from exc
-    
+
+
+def _privacy_payload_kwargs(
+    *,
+    feature: FeatureType,
+    document_type: RedactionMaskingDocumentType | None,
+    target_data: list[SensitiveDataType] | None,
+    review_exclusions: list[str] | None,
+) -> dict[str, Any]:
+    payload_kwargs: dict[str, Any] = {"feature": feature}
+    if document_type is not None:
+        payload_kwargs["document_type"] = document_type
+    if target_data:
+        payload_kwargs["target_data"] = target_data
+    if review_exclusions:
+        payload_kwargs["review_exclusions"] = [
+            item.strip() for item in review_exclusions if item and item.strip()
+        ]
+    return payload_kwargs
+
+
+def _build_privacy_request(
+    *,
+    action: FeatureType,
+    file: UploadFile,
+    document_type: RedactionMaskingDocumentType | None,
+    target_data: list[SensitiveDataType] | None,
+    review_exclusions: list[str] | None,
+    system_language: SystemLanguage,
+) -> tuple[Any, AnalyzerRequest]:
+    try:
+        input_payload = build_uploaded_document_payload(
+            action=action,
+            upload=file,
+        )
+    except UploadError as exc:
+        raise _bad_request(str(exc)) from exc
+    except ValueError as exc:
+        raise _bad_request(str(exc)) from exc
+
+    payload_kwargs = _privacy_payload_kwargs(
+        feature=action,
+        document_type=document_type,
+        target_data=target_data,
+        review_exclusions=review_exclusions,
+    )
+
+    payload = (
+        RedactionRequest(**payload_kwargs)
+        if action == FeatureType.redact
+        else DataMaskingRequest(**payload_kwargs)
+    )
+
+    request = AnalyzerRequest(
+        action=action,
+        input=input_payload,
+        payload=payload,
+        policy=_policy_for_action(action),
+        system_language=system_language,
+    )
+    return input_payload, request
+
+
+def _serialize_candidates(candidates: list[Any]) -> list[dict[str, Any]]:
+    serialized: list[dict[str, Any]] = []
+    for index, candidate in enumerate(candidates):
+        serialized.append(
+            {
+                "id": f"{candidate.label}|{candidate.source}|{candidate.quote}|{index}",
+                "label": candidate.label,
+                "quote": candidate.quote,
+                "occurrences": candidate.occurrences,
+                "source": candidate.source,
+            }
+        )
+    return serialized
+
+
+def _build_docx_preview_artifact(processed: ProtectedArtifactResult) -> dict[str, Any] | None:
+    original_name = processed.artifact.original_artifact_name.lower()
+    if not original_name.endswith(".docx"):
+        return None
+
+    preview = convert_document(
+        input_format="docx",
+        output_format="pdf",
+        source_reference=processed.artifact.stored_path,
+        source_name_hint=processed.artifact.original_artifact_name,
+    )
+
+    preview_storage_key = preview.storage_key
+    preview_download_url = preview.download_url
+    if not preview_download_url and preview_storage_key:
+        preview_download_url = f"/api/v1/analyzer/artifacts/{preview_storage_key}"
+
+    return {
+        "filename": preview.file_name,
+        "storage_key": preview_storage_key,
+        "download_url": preview_download_url,
+        "content_type": "application/pdf",
+    }
+
+
+def _serialize_processed_result(processed: ProtectedArtifactResult) -> dict[str, Any]:
+    return {
+        "analyzer_response": processed.analyzer_response.model_dump(mode="python"),
+        "artifact": asdict(processed.artifact),
+        "generated_output_path": processed.generated_output_path,
+        "preview_artifact": _build_docx_preview_artifact(processed),
+    }
 
 
 @router.post(
@@ -356,10 +476,9 @@ def explain_route(
 @router.post(
     "/generate-questions",
     response_model=AnalyzerResponse,
-    # dependencies=[Depends(rate_limit_for_feature(FeatureType.generate_questions))],
+    dependencies=[Depends(rate_limit_for_feature(FeatureType.generate_questions))],
 )
 def generate_questions_route(
-    current_user: AuthenticatedUser = Depends(get_current_user),
     file: UploadFile | None = File(default=None),
     text: str | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
@@ -372,9 +491,7 @@ def generate_questions_route(
     request = AnalyzerRequest(
         action=FeatureType.generate_questions,
         input=input_payload,
-        payload=QuestionGenerationRequest(
-            feature=FeatureType.generate_questions,
-        ),
+        payload=QuestionGenerationRequest(feature=FeatureType.generate_questions),
         policy=_policy_for_action(FeatureType.generate_questions),
         system_language=system_language,
     )
@@ -387,37 +504,99 @@ def generate_questions_route(
     dependencies=[Depends(rate_limit_for_feature(FeatureType.generate_answers))],
 )
 def generate_answers_route(
-    questions: list[str] = Form(...),
     file: UploadFile | None = File(default=None),
     text: str | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
-    generate_questions_token: str | None = Form(default=None),
-    generate_questions_completed: bool = Form(False),
 ) -> AnalyzerResponse:
     input_payload = _build_document_input(
         action=FeatureType.generate_answers,
         file=file,
         text=text,
     )
+    request = AnalyzerRequest(
+        action=FeatureType.generate_answers,
+        input=input_payload,
+        payload=AnswerGenerationRequest(feature=FeatureType.generate_answers),
+        policy=_policy_for_action(FeatureType.generate_answers),
+        system_language=system_language,
+    )
+    return _run_request(request)
 
-    request_data: dict[str, Any] = {
-        "action": FeatureType.generate_answers,
-        "input": input_payload.model_dump(mode="python"),
-        "payload": AnswerGenerationRequest(
-            feature=FeatureType.generate_answers,
-            questions=questions,
-        ).model_dump(mode="python"),
-        "policy": _policy_for_action(FeatureType.generate_answers).model_dump(mode="python"),
-        "system_language": system_language,
+
+@router.post(
+    "/redact/review",
+    dependencies=[Depends(rate_limit_for_feature(FeatureType.redact))],
+)
+def redact_review_route(
+    current_user: AuthenticatedUser = Depends(get_current_user),
+    file: UploadFile = File(...),
+    document_type: RedactionMaskingDocumentType | None = Form(default=None),
+    target_data: list[SensitiveDataType] | None = Form(default=None),
+    review_exclusions: list[str] | None = Form(default=None),
+    system_language: SystemLanguage = Form(SystemLanguage.english),
+) -> dict[str, Any]:
+    input_payload, request = _build_privacy_request(
+        action=FeatureType.redact,
+        file=file,
+        document_type=document_type,
+        target_data=target_data,
+        review_exclusions=review_exclusions,
+        system_language=system_language,
+    )
+
+    processed = _run_privacy_request(
+        request,
+        source_path=_privacy_source_path(input_payload),
+    )
+
+    candidates = preview_redaction_candidates(
+        request,
+        project_id=_google_sdp_project_id(),
+        location=DEFAULT_GOOGLE_SDP_LOCATION,
+    )
+
+    return {
+        **_serialize_processed_result(processed),
+        "candidates": _serialize_candidates(candidates),
     }
 
-    if generate_questions_token is not None and generate_questions_token.strip():
-        request_data["generate_questions_token"] = generate_questions_token.strip()
 
-    if generate_questions_completed:
-        request_data["workflow"] = {"generate_questions_completed": True}
+@router.post(
+    "/data-mask/review",
+    dependencies=[Depends(rate_limit_for_feature(FeatureType.data_mask))],
+)
+def data_mask_review_route(
+    current_user: AuthenticatedUser = Depends(get_current_user),
+    file: UploadFile = File(...),
+    document_type: RedactionMaskingDocumentType | None = Form(default=None),
+    target_data: list[SensitiveDataType] | None = Form(default=None),
+    review_exclusions: list[str] | None = Form(default=None),
+    system_language: SystemLanguage = Form(SystemLanguage.english),
+) -> dict[str, Any]:
+    input_payload, request = _build_privacy_request(
+        action=FeatureType.data_mask,
+        file=file,
+        document_type=document_type,
+        target_data=target_data,
+        review_exclusions=review_exclusions,
+        system_language=system_language,
+    )
 
-    return _run_request(request_data)
+    processed = _run_privacy_request(
+        request,
+        source_path=_privacy_source_path(input_payload),
+    )
+
+    candidates = preview_data_mask_candidates(
+        request,
+        project_id=_google_sdp_project_id(),
+        location=DEFAULT_GOOGLE_SDP_LOCATION,
+    )
+
+    return {
+        **_serialize_processed_result(processed),
+        "candidates": _serialize_candidates(candidates),
+    }
 
 
 @router.post(
@@ -431,36 +610,21 @@ def redact_route(
     target_data: list[SensitiveDataType] | None = Form(default=None),
     review_exclusions: list[str] | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
-) -> ProtectedArtifactResult:
-    try:
-        input_payload = build_uploaded_document_payload(
-            action=FeatureType.redact,
-            upload=file,
-        )
-    except UploadError as exc:
-        raise _bad_request(str(exc)) from exc
-    except ValueError as exc:
-        raise _bad_request(str(exc)) from exc
-
-    payload_kwargs: dict[str, Any] = {"feature": FeatureType.redact}
-    if document_type is not None:
-        payload_kwargs["document_type"] = document_type
-    if target_data:
-        payload_kwargs["target_data"] = target_data
-    if review_exclusions:
-        payload_kwargs["review_exclusions"] = [item.strip() for item in review_exclusions if item and item.strip()]
-
-    request = AnalyzerRequest(
+) -> dict[str, Any]:
+    input_payload, request = _build_privacy_request(
         action=FeatureType.redact,
-        input=input_payload,
-        payload=RedactionRequest(**payload_kwargs),
-        policy=_policy_for_action(FeatureType.redact),
+        file=file,
+        document_type=document_type,
+        target_data=target_data,
+        review_exclusions=review_exclusions,
         system_language=system_language,
     )
-    return _run_privacy_request(
+
+    processed = _run_privacy_request(
         request,
         source_path=_privacy_source_path(input_payload),
     )
+    return _serialize_processed_result(processed)
 
 
 @router.post(
@@ -474,36 +638,35 @@ def data_mask_route(
     target_data: list[SensitiveDataType] | None = Form(default=None),
     review_exclusions: list[str] | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
-) -> ProtectedArtifactResult:
-    try:
-        input_payload = build_uploaded_document_payload(
-            action=FeatureType.data_mask,
-            upload=file,
-        )
-    except UploadError as exc:
-        raise _bad_request(str(exc)) from exc
-    except ValueError as exc:
-        raise _bad_request(str(exc)) from exc
-
-    payload_kwargs: dict[str, Any] = {"feature": FeatureType.data_mask}
-    if document_type is not None:
-        payload_kwargs["document_type"] = document_type
-    if target_data:
-        payload_kwargs["target_data"] = target_data
-    if review_exclusions:
-        payload_kwargs["review_exclusions"] = [item.strip() for item in review_exclusions if item and item.strip()]
-
-    request = AnalyzerRequest(
+) -> dict[str, Any]:
+    input_payload, request = _build_privacy_request(
         action=FeatureType.data_mask,
-        input=input_payload,
-        payload=DataMaskingRequest(**payload_kwargs),
-        policy=_policy_for_action(FeatureType.data_mask),
+        file=file,
+        document_type=document_type,
+        target_data=target_data,
+        review_exclusions=review_exclusions,
         system_language=system_language,
     )
-    return _run_privacy_request(
+
+    processed = _run_privacy_request(
         request,
         source_path=_privacy_source_path(input_payload),
     )
+    return _serialize_processed_result(processed)
+
+
+@router.get("/artifacts/{storage_key:path}")
+def download_artifact(storage_key: str):
+    storage = LocalArtifactStorage()
+    try:
+        path = storage.resolve_storage_key(storage_key)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Artifact not found.")
+
+    return FileResponse(path=str(path), filename=path.name)
 
 
 __all__ = ["router", "API_V1_ANALYZER_PREFIX"]

@@ -193,20 +193,26 @@ export default function HomePage() {
                   </p>
 
                   <h3 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
-                    {isSignedIn
-                      ? "Advanced features unlocked"
-                      : t.unlockMoreTitle}
+                    {isSignedIn ? t.unlockedSignedInTitle : t.unlockMoreTitle}
                   </h3>
 
                   <p className="mt-3 text-sm leading-6 text-white/65 md:text-base">
                     {isSignedIn
-                      ? "You can now access transcription, question generation, and other protected tools."
+                      ? t.unlockedSignedInDescription
                       : t.unlockMoreDescription}
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <AuthControls />
+                  <AuthControls
+                    user={user}
+                    authChecked={authChecked}
+                    signInLabel={t.signIn}
+                    signUpLabel={t.signUp}
+                    loadingLabel={t.loading}
+                    signedInAsLabel={t.signedInAs}
+                    logoutLabel={t.logout}
+                  />
                 </div>
               </div>
             </div>
@@ -221,9 +227,9 @@ export default function HomePage() {
                 <p className="mt-1 text-sm text-white/50">
                   {authChecked
                     ? isSignedIn
-                      ? "Available now."
+                      ? t.advancedFeaturesSignedInDescription
                       : t.advancedFeaturesDescription
-                    : "Checking account status..."}
+                    : t.checkingAccountStatus}
                 </p>
               </div>
             </div>

@@ -552,6 +552,8 @@ class FileResult(BaseModel):
     filename: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
     output_format: FileOutputFormat
     file_size_mb: float = Field(..., ge=0)
+    storage_key: Optional[str] = None
+    download_url: Optional[str] = None
     meta: DeterminismMetadata
 
 class QuestionScaleMetadata(BaseModel):

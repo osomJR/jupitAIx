@@ -323,6 +323,9 @@ class TranscribeProcessor:
             diarize_speakers=normalized_diarize_speakers,
         )
 
+        print("RAW TRANSCRIPT LENGTH:", len(raw_transcript))
+        print("RAW TRANSCRIPT PREVIEW:", repr(raw_transcript[:500]))
+
         finalized = self.post_processor.finalize(
             transcript_text=_normalize_text(raw_transcript),
             preserve_filler_words=normalized_preserve_filler_words,

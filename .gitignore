@@ -9,3 +9,7 @@ tests/
 # Python cache
 _ _pycache_ _/
 *.pyc
+# uploads
+uploads/
+# artifacts
+artifacts/

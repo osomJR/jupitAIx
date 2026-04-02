@@ -68,10 +68,6 @@ class StorageBackend(Protocol):
 class LocalArtifactStorage:
     """
     Local filesystem storage backend for MVP use.
-
-    Files are copied into a stable base directory and kept for a configurable
-    retention period. Each persisted file gets a unique storage key to avoid
-    collisions across repeated conversions/writes with the same output name.
     """
 
     def __init__(
@@ -79,7 +75,7 @@ class LocalArtifactStorage:
         base_dir: str = "artifacts",
         *,
         retention_hours: int = DEFAULT_RETENTION_HOURS,
-        download_base_url: Optional[str] = DEFAULT_DOWNLOAD_BASE_URL,
+        download_base_url: Optional[str] = None,
     ) -> None:
         self.base_dir = Path(base_dir)
         self.base_dir.mkdir(parents=True, exist_ok=True)
@@ -88,7 +84,18 @@ class LocalArtifactStorage:
             raise ValueError("retention_hours must be >= 1.")
 
         self.retention_hours = retention_hours
-        self.download_base_url = download_base_url.rstrip("/") if download_base_url else None
+
+        resolved_download_base_url = (
+            download_base_url
+            if download_base_url is not None
+            else os.getenv("ARTIFACT_DOWNLOAD_BASE_URL")
+        )
+
+        self.download_base_url = (
+            resolved_download_base_url.rstrip("/")
+            if resolved_download_base_url
+            else None
+        )
 
     def persist(
         self,
@@ -112,7 +119,7 @@ class LocalArtifactStorage:
 
         download_url = None
         if self.download_base_url:
-            download_url = f"{self.download_base_url}/{storage_key.replace(os.sep, '/')}" 
+            download_url = f"{self.download_base_url}/{storage_key.replace(os.sep, '/')}"
 
         return StoredArtifact(
             storage_key=storage_key.replace(os.sep, "/"),

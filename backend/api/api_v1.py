@@ -1,7 +1,9 @@
 from __future__ import annotations
+from pathlib import Path
 from dotenv import load_dotenv
-load_dotenv()
 import os
+ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(dotenv_path=ENV_PATH)
 from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI

@@ -1,9 +1,8 @@
 from __future__ import annotations
-
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
-
 import docx
 import fitz  # PyMuPDF
 import pytesseract
@@ -18,6 +17,7 @@ from src.processing.data_protection.client import (
     TextFinding,
     build_google_sdp_client,
     inspect_sensitive_text,
+    merge_overlapping_findings,
     preview_candidates_from_text,
 )
 from src.schema import (
@@ -64,6 +64,25 @@ class OCRWord:
     end: int
 
 
+@dataclass(frozen=True)
+class RunSpan:
+    start: int
+    end: int
+    text: str
+    rpr_xml: Any
+
+
+@dataclass(frozen=True)
+class PDFWord:
+    start: int
+    end: int
+    text: str
+    rect: fitz.Rect
+    block_no: int
+    line_no: int
+    word_no: int
+
+
 def _ocr_words_from_image(image: Image.Image, *, ocr_lang: Optional[str] = None) -> tuple[str, list[OCRWord]]:
     processed = preprocess_for_ocr(image.convert("RGB"))
     data = pytesseract.image_to_data(
@@ -105,6 +124,7 @@ def _ocr_words_from_image(image: Image.Image, *, ocr_lang: Optional[str] = None)
 
 def _normalize_text_for_compare(value: str) -> str:
     import re
+
     return re.sub(r"\s+", " ", value.strip()).casefold()
 
 
@@ -131,6 +151,7 @@ def _boxes_for_text_spans(findings: Sequence[TextFinding], words: Sequence[OCRWo
         x1 = max(w.bbox[2] for w in matched)
         y1 = max(w.bbox[3] for w in matched)
         boxes.append((x0, y0, x1, y1))
+
     unique: list[tuple[int, int, int, int]] = []
     seen: set[tuple[int, int, int, int]] = set()
     for box in boxes:
@@ -163,16 +184,6 @@ def _iter_document_paragraphs(document: docx.Document):
             yield paragraph
         for table in section.footer.tables:
             yield from _iter_table_paragraphs(table)
-
-
-def _clear_paragraph_runs(paragraph: Any) -> None:
-    for run in list(paragraph.runs):
-        paragraph._element.remove(run._element)
-
-
-def _set_paragraph_text_preserving_block(paragraph: Any, text: str) -> None:
-    _clear_paragraph_runs(paragraph)
-    paragraph.add_run(text)
 
 
 def _output_path(source_path: Path, output_dir: Path, suffix: str = "_masked") -> Path:
@@ -288,10 +299,19 @@ def mask_value_by_target(label: str, quote: str) -> str:
     return _mask_alpha(_mask_digits(quote, keep_last=2), keep_first=1)
 
 
+def _same_length_mask_value(label: str, quote: str) -> str:
+    masked = mask_value_by_target(label, quote)
+    if len(masked) == len(quote):
+        return masked
+    if len(masked) < len(quote):
+        return masked + ("X" * (len(quote) - len(masked)))
+    return masked[: len(quote)]
+
+
 def mask_text_with_findings(text: str, findings: Sequence[TextFinding]) -> str:
     result = text
     for finding in sorted(findings, key=lambda item: item.start, reverse=True):
-        replacement = mask_value_by_target(finding.label, finding.quote)
+        replacement = _same_length_mask_value(finding.label, finding.quote)
         result = result[:finding.start] + replacement + result[finding.end:]
     return result
 
@@ -366,6 +386,211 @@ def preview_data_mask_candidates(
     )
 
 
+def _paragraph_run_spans(paragraph: Any) -> tuple[str, list[RunSpan]]:
+    spans: list[RunSpan] = []
+    parts: list[str] = []
+    cursor = 0
+
+    for run in paragraph.runs:
+        text = run.text or ""
+        if not text:
+            continue
+        start = cursor
+        end = start + len(text)
+        parts.append(text)
+        spans.append(
+            RunSpan(
+                start=start,
+                end=end,
+                text=text,
+                rpr_xml=deepcopy(run._r.rPr) if run._r.rPr is not None else None,
+            )
+        )
+        cursor = end
+
+    return "".join(parts), spans
+
+
+def _copy_rpr(dst_run: Any, rpr_xml: Any) -> None:
+    if dst_run._r.rPr is not None:
+        dst_run._r.remove(dst_run._r.rPr)
+    if rpr_xml is not None:
+        dst_run._r.insert(0, deepcopy(rpr_xml))
+
+
+def _rewrite_paragraph_from_fragments(paragraph: Any, fragments: list[tuple[Any, str]]) -> None:
+    for run in list(paragraph.runs):
+        paragraph._p.remove(run._r)
+
+    for rpr_xml, text in fragments:
+        if not text:
+            continue
+        new_run = paragraph.add_run()
+        _copy_rpr(new_run, rpr_xml)
+        new_run.text = text
+
+
+def _run_span_for_offset(spans: Sequence[RunSpan], offset: int) -> RunSpan:
+    for span in spans:
+        if span.start <= offset < span.end:
+            return span
+    return spans[-1]
+
+
+def mask_paragraph_runs(paragraph: Any, findings: Sequence[TextFinding]) -> None:
+    full_text, spans = _paragraph_run_spans(paragraph)
+    if not full_text or not spans or not findings:
+        return
+
+    merged = merge_overlapping_findings(findings, original_text=full_text)
+
+    boundaries = {0, len(full_text)}
+    for span in spans:
+        boundaries.add(span.start)
+        boundaries.add(span.end)
+    for finding in merged:
+        boundaries.add(finding.start)
+        boundaries.add(finding.end)
+
+    cuts = sorted(boundaries)
+    fragments: list[tuple[Any, str]] = []
+
+    for a, b in zip(cuts, cuts[1:]):
+        if a == b:
+            continue
+
+        owner = _run_span_for_offset(spans, a)
+        covering = next((f for f in merged if f.start <= a and b <= f.end), None)
+
+        if covering is None:
+            text = full_text[a:b]
+        else:
+            masked_full = _same_length_mask_value(covering.label, covering.quote)
+            rel_start = a - covering.start
+            rel_end = b - covering.start
+            text = masked_full[rel_start:rel_end]
+
+        fragments.append((owner.rpr_xml, text))
+
+    _rewrite_paragraph_from_fragments(paragraph, fragments)
+
+
+def _page_words_with_offsets(page: fitz.Page) -> tuple[str, list[PDFWord]]:
+    raw = page.get_text("words", sort=True)
+    words: list[PDFWord] = []
+    parts: list[str] = []
+    cursor = 0
+    prev_line: tuple[int, int] | None = None
+
+    for x0, y0, x1, y1, token, block_no, line_no, word_no in raw:
+        token = (token or "").strip()
+        if not token:
+            continue
+
+        current_line = (block_no, line_no)
+        if parts:
+            separator = "\n" if prev_line != current_line else " "
+            parts.append(separator)
+            cursor += len(separator)
+
+        start = cursor
+        parts.append(token)
+        cursor += len(token)
+        end = cursor
+
+        words.append(
+            PDFWord(
+                start=start,
+                end=end,
+                text=token,
+                rect=fitz.Rect(x0, y0, x1, y1),
+                block_no=block_no,
+                line_no=line_no,
+                word_no=word_no,
+            )
+        )
+        prev_line = current_line
+
+    return "".join(parts), words
+
+
+def _pdf_rects_for_findings(
+    findings: Sequence[TextFinding],
+    words: Sequence[PDFWord],
+    *,
+    original_text: str,
+) -> list[fitz.Rect]:
+    rects: list[fitz.Rect] = []
+    merged = merge_overlapping_findings(findings, original_text=original_text)
+
+    for finding in merged:
+        matched = [w for w in words if not (w.end <= finding.start or w.start >= finding.end)]
+        if not matched:
+            continue
+
+        by_line: dict[tuple[int, int], list[PDFWord]] = {}
+        for word in matched:
+            by_line.setdefault((word.block_no, word.line_no), []).append(word)
+
+        for line_words in by_line.values():
+            rect = line_words[0].rect
+            for word in line_words[1:]:
+                rect = rect | word.rect
+            rects.append(rect)
+
+    unique: list[fitz.Rect] = []
+    seen: set[tuple[float, float, float, float]] = set()
+    for rect in rects:
+        key = (round(rect.x0, 3), round(rect.y0, 3), round(rect.x1, 3), round(rect.y1, 3))
+        if key not in seen:
+            seen.add(key)
+            unique.append(rect)
+    return unique
+
+
+def _masked_rect_specs(
+    findings: Sequence[TextFinding],
+    words: Sequence[PDFWord],
+    *,
+    original_text: str,
+) -> list[tuple[fitz.Rect, str]]:
+    specs: list[tuple[fitz.Rect, str]] = []
+    merged = merge_overlapping_findings(findings, original_text=original_text)
+
+    for finding in merged:
+        matched = [w for w in words if not (w.end <= finding.start or w.start >= finding.end)]
+        if not matched:
+            continue
+
+        lines = {(w.block_no, w.line_no) for w in matched}
+        if len(lines) != 1:
+            continue
+
+        rect = matched[0].rect
+        for word in matched[1:]:
+            rect = rect | word.rect
+
+        specs.append((rect, mask_value_by_target(finding.label, finding.quote)))
+
+    return specs
+
+
+def _apply_page_redactions(page: fitz.Page, *, image_mode: str) -> None:
+    kwargs: dict[str, Any] = {}
+
+    if image_mode == "none" and hasattr(fitz, "PDF_REDACT_IMAGE_NONE"):
+        kwargs["images"] = fitz.PDF_REDACT_IMAGE_NONE
+    elif image_mode == "pixels" and hasattr(fitz, "PDF_REDACT_IMAGE_PIXELS"):
+        kwargs["images"] = fitz.PDF_REDACT_IMAGE_PIXELS
+
+    if hasattr(fitz, "PDF_REDACT_LINE_ART_NONE"):
+        kwargs["graphics"] = fitz.PDF_REDACT_LINE_ART_NONE
+    if hasattr(fitz, "PDF_REDACT_TEXT_REMOVE"):
+        kwargs["text"] = fitz.PDF_REDACT_TEXT_REMOVE
+
+    page.apply_redactions(**kwargs)
+
+
 def _mask_docx(
     *,
     source_path: Path,
@@ -375,17 +600,20 @@ def _mask_docx(
 ) -> None:
     document = docx.Document(source_path)
     for paragraph in _iter_document_paragraphs(document):
-        original = paragraph.text or ""
-        if not original.strip():
+        full_text, _ = _paragraph_run_spans(paragraph)
+        if not full_text.strip():
             continue
+
         findings = inspect_sensitive_text(
             sdp=sdp,
-            text=original,
+            text=full_text,
             targets=payload.target_data,
             review_exclusions=payload.review_exclusions,
         )
+
         if findings:
-            _set_paragraph_text_preserving_block(paragraph, mask_text_with_findings(original, findings))
+            mask_paragraph_runs(paragraph, findings)
+
     document.save(output_path)
 
 
@@ -420,27 +648,67 @@ def _mask_pdf(
     ocr_languages: Optional[Sequence[str]] = None,
     render_scale: float = DEFAULT_PDF_RENDER_SCALE,
 ) -> None:
-    src = fitz.open(source_path)
-    rendered_pages = []
+    doc = fitz.open(source_path)
     try:
-        for page in src:
-            pix = page.get_pixmap(matrix=fitz.Matrix(render_scale, render_scale))
-            image = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
-            page_text, words = _ocr_words_from_image(image, ocr_lang=resolve_ocr_lang(ocr_languages))
-            findings = inspect_sensitive_text(
-                sdp=sdp,
-                text=page_text,
-                targets=payload.target_data,
-                review_exclusions=payload.review_exclusions,
-            )
-            boxes = _boxes_for_text_spans(findings, words)
-            rendered_pages.append(pixelate_boxes(image, boxes))
-        if not rendered_pages:
-            raise ValueError("PDF contains no pages.")
-        first, *rest = rendered_pages
-        first.save(output_path, save_all=True, append_images=rest, format="PDF", resolution=144.0)
+        for page in doc:
+            page_text, words = _page_words_with_offsets(page)
+
+            if words:
+                findings = inspect_sensitive_text(
+                    sdp=sdp,
+                    text=page_text,
+                    targets=payload.target_data,
+                    review_exclusions=payload.review_exclusions,
+                )
+
+                specs = _masked_rect_specs(findings, words, original_text=page_text)
+                used_rects: set[tuple[float, float, float, float]] = set()
+
+                for rect, masked in specs:
+                    key = (round(rect.x0, 3), round(rect.y0, 3), round(rect.x1, 3), round(rect.y1, 3))
+                    used_rects.add(key)
+                    page.add_redact_annot(
+                        rect,
+                        text=masked,
+                        fontname="helv",
+                        fontsize=8,
+                        fill=(1, 1, 1),
+                        text_color=(0, 0, 0),
+                        cross_out=False,
+                    )
+
+                for rect in _pdf_rects_for_findings(findings, words, original_text=page_text):
+                    key = (round(rect.x0, 3), round(rect.y0, 3), round(rect.x1, 3), round(rect.y1, 3))
+                    if key not in used_rects:
+                        page.add_redact_annot(rect, fill=(1, 1, 1), cross_out=False)
+
+                _apply_page_redactions(page, image_mode="none")
+            else:
+                pix = page.get_pixmap(matrix=fitz.Matrix(render_scale, render_scale))
+                image = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+                page_text, ocr_words = _ocr_words_from_image(image, ocr_lang=resolve_ocr_lang(ocr_languages))
+                findings = inspect_sensitive_text(
+                    sdp=sdp,
+                    text=page_text,
+                    targets=payload.target_data,
+                    review_exclusions=payload.review_exclusions,
+                )
+                boxes = _boxes_for_text_spans(findings, ocr_words)
+
+                for x0, y0, x1, y1 in boxes:
+                    scaled = fitz.Rect(
+                        x0 / render_scale,
+                        y0 / render_scale,
+                        x1 / render_scale,
+                        y1 / render_scale,
+                    )
+                    page.add_redact_annot(scaled, fill=(1, 1, 1), cross_out=False)
+
+                _apply_page_redactions(page, image_mode="pixels")
+
+        doc.save(output_path, garbage=4, deflate=True, clean=True)
     finally:
-        src.close()
+        doc.close()
 
 
 def apply_data_mask(
@@ -498,5 +766,6 @@ __all__ = [
     "mask_value_by_target",
     "mask_text_with_findings",
     "pixelate_boxes",
+    "mask_paragraph_runs",
     "apply_data_mask",
 ]

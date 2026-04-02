@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-
+import { auth0 } from "@/lib/auth0";
 const ALLOWED_FEATURES = [
   "convert",
   "summarize",
@@ -39,13 +39,29 @@ export async function POST(req, context) {
 
   const formData = await req.formData();
 
+  let accessToken = "";
+  try {
+    const session = await auth0.getSession();
+
+    if (session) {
+      const tokenSet = await auth0.getAccessToken();
+      accessToken =
+        typeof tokenSet === "string" ? tokenSet : tokenSet?.token || "";
+    }
+  } catch {
+    accessToken = "";
+  }
+
+  const headers = {};
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+
   const backendRes = await fetch(
     `${process.env.BACKEND_URL}/api/v1/analyzer/${feature}`,
     {
       method: "POST",
-      headers: {
-        Authorization: req.headers.get("authorization") || "",
-      },
+      headers,
       body: formData,
     },
   );

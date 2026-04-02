@@ -36,6 +36,7 @@ from .schema import (
     QuestionGenerationFileResult,
     AnswerGenerationInlineResult,
     AnswerGenerationFileResult,
+     DeterminismMetadata
 )
 from .validation import (
     validate_analyzer_request,
@@ -142,11 +143,17 @@ class Analyzer:
             source_reference=source_reference,
             source_name_hint=source_name_hint,
         )
-        return build_file_result(
+        return FileResult(
             filename=artifact.file_name,
             output_format=_conversion_to_file_output(artifact.file_extension),
             file_size_mb=artifact.file_size_mb,
+            storage_key=artifact.storage_key,
+            download_url=artifact.download_url,
+            meta=DeterminismMetadata(
+            deterministic=True,
+            contract_version="v1",
             algorithm_version=self.config.algorithm_version,
+            ),
         )
 
     def _handle_transcribe(self, req: AnalyzerRequest) -> InlineTextResult:
@@ -330,12 +337,18 @@ class Analyzer:
                 output_format=out_fmt.value,
                 output_name=filename,
             )
-            return build_file_result(
-                filename=written.file_name,
-                output_format=out_fmt,
-                file_size_mb=written.file_size_mb,
-                algorithm_version=self.config.algorithm_version,
-            )
+            return FileResult(
+    filename=written.file_name,
+    output_format=out_fmt,
+    file_size_mb=written.file_size_mb,
+    storage_key=written.storage_key,
+    download_url=written.download_url,
+    meta=DeterminismMetadata(
+        deterministic=True,
+        contract_version="v1",
+        algorithm_version=self.config.algorithm_version,
+    ),
+)
 
         raise ValueError(f"{req.action.value} only supports input formats: pdf, docx, txt (strict v1 contract).")
 

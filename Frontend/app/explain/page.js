@@ -55,6 +55,7 @@ export default function ExplainPage() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [explanationResult, setExplanationResult] = useState("");
+  const [downloadInfo, setDownloadInfo] = useState(null);
 
   const inputExtension = useMemo(() => {
     if (mode === "text") return INLINE_TEXT_EXTENSION;
@@ -80,6 +81,7 @@ export default function ExplainPage() {
 
   function resetResultState() {
     setExplanationResult("");
+    setDownloadInfo(null);
   }
 
   function rejectFile(message) {
@@ -151,39 +153,73 @@ export default function ExplainPage() {
     resetResultState();
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      const formData = new FormData();
 
-      if (mode === "text") {
-        const mockResult = `${t.inlineExplanationIntro}
-
-${t.outputExtensionResultLabel} ${INLINE_TEXT_EXTENSION}
-
-${t.previewLabel}
-${t.rewrittenPreviewText}`;
-
-        setExplanationResult(mockResult);
+      if (mode === "file") {
+        formData.append("file", selectedFile);
       } else {
-        const mockResult = `${replaceVars(t.fileExplanationIntro, {
-          filename: selectedFile.name,
-        })}
-
-${t.inputExtensionLabel} ${inputExtension}
-${t.outputExtensionResultLabel} ${outputExtension}
-
-${t.preservedExtensionMessage}
-
-${t.previewLabel}
-${t.rewrittenPreviewText}`;
-
-        setExplanationResult(mockResult);
+        formData.append("text", inlineText.trim());
       }
-    } catch (submitError) {
-      setError(t.explanationFailed);
+
+      formData.append(
+        "system_language",
+        language === "fr" ? "french" : "english",
+      );
+      formData.append("allow_external_knowledge", "false");
+
+      const backendBase = process.env.NEXT_PUBLIC_API_BASE_URL;
+      if (!backendBase) {
+        throw new Error("NEXT_PUBLIC_API_BASE_URL is not set.");
+      }
+      const res = await fetch(`${backendBase}/api/v1/analyzer/explain`, {
+        method: "POST",
+        body: formData,
+      });
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok) {
+        throw new Error(
+          data?.detail?.message ||
+            data?.detail ||
+            data?.message ||
+            "Explain request failed.",
+        );
+      }
+
+      const result = data?.result;
+
+      if (result?.content) {
+        setExplanationResult(result.content);
+        setDownloadInfo(null);
+      } else if (
+        result?.filename ||
+        result?.storage_key ||
+        result?.download_url
+      ) {
+        setExplanationResult("");
+        setDownloadInfo({
+          filename: result.filename,
+          outputFormat: result.output_format,
+          fileSizeMb: result.file_size_mb,
+          url:
+            result.download_url ||
+            `${backendBase}/api/v1/analyzer/artifacts/${result.storage_key}`,
+        });
+      } else {
+        throw new Error("Unexpected response shape from backend.");
+      }
+    } catch (err) {
+      setError(err.message || t.explanationFailed);
     } finally {
       setIsSubmitting(false);
     }
   }
-
   return (
     <main className="min-h-screen bg-[#07111f] text-white">
       <div className="relative isolate overflow-hidden">
@@ -438,23 +474,54 @@ ${t.rewrittenPreviewText}`;
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
-                  {explanationResult ? (
+                {explanationResult && (
+                  <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
                     <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
                       {explanationResult}
                     </pre>
-                  ) : (
+                  </div>
+                )}
+
+                {downloadInfo && (
+                  <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
+                    <div className="space-y-2 text-sm text-white/80">
+                      <p>
+                        <span className="font-medium text-white">File:</span>{" "}
+                        {downloadInfo.filename}
+                      </p>
+                      <p>
+                        <span className="font-medium text-white">Format:</span>{" "}
+                        {downloadInfo.outputFormat}
+                      </p>
+                      <p>
+                        <span className="font-medium text-white">Size:</span>{" "}
+                        {downloadInfo.fileSizeMb} MB
+                      </p>
+                    </div>
+
+                    <a
+                      href={downloadInfo.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-5 inline-flex rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                    >
+                      Download explained file
+                    </a>
+                  </div>
+                )}
+                {!explanationResult && !downloadInfo && (
+                  <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
                     <p className="text-sm leading-6 text-white/45">
                       {t.previewEmpty}
                     </p>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 <div className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/75">
                   <BookOpen className="h-4 w-4 text-cyan-300" />
                   {t.outputExtensionLabel}{" "}
                   <span className="font-medium text-white">
-                    {outputExtension || "—"}
+                    {downloadInfo?.outputFormat || outputExtension || "—"}
                   </span>
                 </div>
               </div>

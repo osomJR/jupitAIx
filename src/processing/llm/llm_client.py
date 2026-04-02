@@ -25,7 +25,6 @@ from typing import Optional
 from fastapi import HTTPException
 from openai import OpenAI
 
-
 DEFAULT_MODEL = os.getenv("AI_MODEL", "gpt-4o-mini")
 DEFAULT_MAX_OUTPUT_TOKENS = int(os.getenv("AI_MAX_OUTPUT_TOKENS", "1200"))
 DEFAULT_REQUEST_TIMEOUT_SECONDS = float(os.getenv("AI_TIMEOUT_SECONDS", "45"))

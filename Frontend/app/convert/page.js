@@ -14,6 +14,7 @@ import {
   FileText,
   Image as ImageIcon,
   Repeat,
+  Download,
 } from "lucide-react";
 import {
   commonTranslations,
@@ -27,6 +28,12 @@ function getFileExtension(filename = "") {
   const lastDot = filename.lastIndexOf(".");
   if (lastDot === -1) return "";
   return filename.slice(lastDot).toLowerCase();
+}
+
+function getFileStem(filename = "") {
+  const lastDot = filename.lastIndexOf(".");
+  if (lastDot === -1) return filename || "converted-file";
+  return filename.slice(0, lastDot) || "converted-file";
 }
 
 function formatBytes(bytes) {
@@ -64,6 +71,91 @@ function replaceVars(template, vars = {}) {
   return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? "");
 }
 
+function pickFirstString(values = []) {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+  return "";
+}
+
+function buildOutputFilename(filename = "", outputExtension = "") {
+  const safeExtension = outputExtension
+    ? outputExtension.startsWith(".")
+      ? outputExtension
+      : `.${outputExtension}`
+    : "";
+
+  return `${getFileStem(filename)}${safeExtension}`;
+}
+
+function extractArtifactMetadata(responseData) {
+  const candidates = [
+    responseData?.artifact,
+    responseData?.output_artifact,
+    responseData?.result?.artifact,
+    responseData?.data?.artifact,
+    responseData?.result,
+    responseData?.data,
+    responseData,
+  ].filter(Boolean);
+
+  let downloadUrl = "";
+  let storageKey = "";
+  let artifactName = "";
+  let contentType = "";
+
+  for (const candidate of candidates) {
+    downloadUrl ||= pickFirstString([
+      candidate?.download_url,
+      candidate?.downloadUrl,
+      candidate?.url,
+      candidate?.href,
+    ]);
+
+    storageKey ||= pickFirstString([
+      candidate?.storage_key,
+      candidate?.storageKey,
+      candidate?.key,
+    ]);
+
+    artifactName ||= pickFirstString([
+      candidate?.original_artifact_name,
+      candidate?.artifact_name,
+      candidate?.artifactName,
+      candidate?.filename,
+      candidate?.name,
+    ]);
+
+    contentType ||= pickFirstString([
+      candidate?.content_type,
+      candidate?.contentType,
+      candidate?.mime_type,
+      candidate?.mimeType,
+    ]);
+  }
+
+  return {
+    downloadUrl,
+    storageKey,
+    artifactName,
+    contentType,
+  };
+}
+
+function extractResponseMessage(responseData, fallbackMessage = "") {
+  return (
+    pickFirstString([
+      responseData?.detail?.message,
+      responseData?.detail?.error,
+      responseData?.message,
+      responseData?.result?.message,
+      responseData?.data?.message,
+    ]) || fallbackMessage
+  );
+}
+
 export default function ConvertPage() {
   const router = useRouter();
   const fileInputRef = useRef(null);
@@ -72,11 +164,21 @@ export default function ConvertPage() {
   const common = commonTranslations[language] || commonTranslations.en;
   const t = convertPageTranslations[language] || convertPageTranslations.en;
 
+  const downloadLabel = common.download || "Download output";
+  const convertedFileLabel = t.convertedFile || "Converted file";
+  const downloadReadyLabel = t.downloadReady || "Download ready";
+  const outputReadyText =
+    t.outputReadyText || "Your converted file is ready to download.";
+  const missingDownloadUrlText =
+    t.missingDownloadUrl ||
+    "Conversion finished, but the backend did not return a download URL.";
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [targetExtension, setTargetExtension] = useState("");
   const [conversionResult, setConversionResult] = useState("");
+  const [downloadInfo, setDownloadInfo] = useState(null);
 
   const inputExtension = useMemo(() => {
     if (!selectedFile) return "";
@@ -107,6 +209,7 @@ export default function ConvertPage() {
 
   function resetResultState() {
     setConversionResult("");
+    setDownloadInfo(null);
   }
 
   function rejectFile(message) {
@@ -144,7 +247,7 @@ export default function ConvertPage() {
     setError("");
     setSelectedFile(file);
     setTargetExtension(outputs[0] || "");
-    setConversionResult("");
+    resetResultState();
   }
 
   function handleFileChange(event) {
@@ -163,6 +266,19 @@ export default function ConvertPage() {
   function handleDragOver(event) {
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  function handleDownload() {
+    if (!downloadInfo?.url) return;
+
+    const link = document.createElement("a");
+    link.href = downloadInfo.url;
+    link.download = downloadInfo.filename || "converted-file";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   async function handleSubmit(event) {
@@ -190,27 +306,66 @@ export default function ConvertPage() {
         outputExtension: targetExtension,
       };
 
-      // Replace with your real backend call.
-      // Example:
-      // const formData = new FormData();
-      // formData.append("file", selectedFile);
-      // formData.append("inputExtension", payload.inputExtension);
-      // formData.append("outputExtension", payload.outputExtension);
-      // await fetch("/api/convert", { method: "POST", body: formData });
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("output_format", targetExtension.replace(".", ""));
+      formData.append(
+        "system_language",
+        language === "fr" ? "french" : "english",
+      );
 
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      const response = await fetch("/api/analyzer/convert", {
+        method: "POST",
+        body: formData,
+      });
 
-      const mockResult = `${t.conversionCompleted}
+      const responseData = await response.json().catch(() => ({}));
 
-${t.inputFile}: ${selectedFile.name}
-${t.inputExtension}: ${payload.inputExtension}
-${t.outputExtension}: ${payload.outputExtension}
+      if (!response.ok) {
+        throw new Error(
+          extractResponseMessage(responseData, t.conversionFailed),
+        );
+      }
 
-${t.conversionMatchesRules}`;
+      const artifact = extractArtifactMetadata(responseData);
+      const resolvedArtifactName =
+        artifact.artifactName ||
+        buildOutputFilename(selectedFile.name, payload.outputExtension);
+      const backendMessage = extractResponseMessage(responseData);
 
-      setConversionResult(mockResult);
+      if (artifact.downloadUrl) {
+        setDownloadInfo({
+          url: artifact.downloadUrl,
+          filename: resolvedArtifactName,
+          contentType: artifact.contentType,
+          storageKey: artifact.storageKey,
+        });
+      }
+
+      const previewLines = [
+        t.conversionCompleted,
+        "",
+        `${t.inputFile}: ${selectedFile.name}`,
+        `${t.inputExtension}: ${payload.inputExtension}`,
+        `${t.outputExtension}: ${payload.outputExtension}`,
+        `${convertedFileLabel}: ${resolvedArtifactName}`,
+      ];
+
+      if (artifact.downloadUrl) {
+        previewLines.push("", outputReadyText);
+      } else {
+        previewLines.push("", missingDownloadUrlText);
+      }
+
+      if (backendMessage) {
+        previewLines.push("", backendMessage);
+      } else {
+        previewLines.push("", t.conversionMatchesRules);
+      }
+
+      setConversionResult(previewLines.join("\n"));
     } catch (submitError) {
-      setError(t.conversionFailed);
+      setError(submitError?.message || t.conversionFailed);
     } finally {
       setIsSubmitting(false);
     }
@@ -391,6 +546,17 @@ ${t.conversionMatchesRules}`;
                     {isSubmitting ? common.converting : common.convert}
                   </button>
 
+                  {downloadInfo?.url && (
+                    <button
+                      type="button"
+                      onClick={handleDownload}
+                      className="inline-flex items-center gap-2 rounded-2xl border border-cyan-300/30 bg-cyan-400/10 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/15"
+                    >
+                      <Download className="h-4 w-4" />
+                      {downloadLabel}
+                    </button>
+                  )}
+
                   <div className="text-sm text-white/55">
                     {t.conversionLabel}{" "}
                     <span className="font-medium text-white/85">
@@ -402,6 +568,53 @@ ${t.conversionMatchesRules}`;
             </form>
 
             <aside className="space-y-6">
+              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl lg:sticky lg:top-6">
+                <h2 className="text-lg font-semibold text-white">
+                  {t.conversionOutput}
+                </h2>
+                <p className="mt-1 text-sm text-white/55">
+                  {common.previewArea}
+                </p>
+
+                <div className="mt-4 rounded-2xl border border-white/10 bg-[#081120] p-4">
+                  {conversionResult ? (
+                    <div className="space-y-4">
+                      <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
+                        {conversionResult}
+                      </pre>
+
+                      {downloadInfo?.url && (
+                        <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                          <div className="flex items-start gap-3">
+                            <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
+                            <div>
+                              <p className="font-medium text-emerald-100">
+                                {downloadReadyLabel}
+                              </p>
+                              <p className="mt-1 text-sm text-emerald-100/80">
+                                {downloadInfo.filename}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={handleDownload}
+                                className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                              >
+                                <Download className="h-4 w-4" />
+                                {downloadLabel}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-sm leading-6 text-white/45">
+                      {t.previewText}
+                    </p>
+                  )}
+                </div>
+              </div>
+
               <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
@@ -464,27 +677,6 @@ ${t.conversionMatchesRules}`;
                     <ImageIcon className="h-4 w-4 text-cyan-300" />
                     <span>.png</span>
                   </div>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <h2 className="text-lg font-semibold text-white">
-                  {t.conversionOutput}
-                </h2>
-                <p className="mt-1 text-sm text-white/55">
-                  {common.previewArea}
-                </p>
-
-                <div className="mt-4 rounded-2xl border border-white/10 bg-[#081120] p-4">
-                  {conversionResult ? (
-                    <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
-                      {conversionResult}
-                    </pre>
-                  ) : (
-                    <p className="text-sm leading-6 text-white/45">
-                      {t.previewText}
-                    </p>
-                  )}
                 </div>
               </div>
             </aside>
