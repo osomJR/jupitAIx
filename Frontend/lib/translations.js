@@ -84,6 +84,11 @@ export const homePageTranslations = {
     languageLabel: "Language",
     english: "English",
     french: "Français",
+    settings: "Settings",
+    appearance: "Appearance",
+    light: "Light",
+    dark: "Dark",
+    systemDefault: "System Default",
     enabledActions: [
       {
         key: "convert",
@@ -184,6 +189,11 @@ export const homePageTranslations = {
     languageLabel: "Langue",
     english: "English",
     french: "Français",
+    settings: "Paramètres",
+    appearance: "Apparence",
+    light: "Clair",
+    dark: "Sombre",
+    systemDefault: "Par défaut du système",
     enabledActions: [
       {
         key: "convert",

@@ -1,8 +1,51 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #07111f;
+  --foreground: #ffffff;
+
+  --app-bg: #07111f;
+  --app-bg-soft: #0a1426;
+  --app-surface: rgba(255, 255, 255, 0.08);
+  --app-surface-strong: rgba(255, 255, 255, 0.1);
+  --app-border: rgba(255, 255, 255, 0.1);
+  --app-text: #ffffff;
+  --app-text-muted: rgba(255, 255, 255, 0.7);
+  --app-text-soft: rgba(255, 255, 255, 0.6);
+  --app-button-text: #0f172a;
+  --app-button-bg: #ffffff;
+}
+
+html.light {
+  --background: #f5f7fb;
+  --foreground: #0f172a;
+
+  --app-bg: #f5f7fb;
+  --app-bg-soft: #ffffff;
+  --app-surface: rgba(15, 23, 42, 0.04);
+  --app-surface-strong: rgba(15, 23, 42, 0.06);
+  --app-border: rgba(15, 23, 42, 0.12);
+  --app-text: #0f172a;
+  --app-text-muted: rgba(15, 23, 42, 0.72);
+  --app-text-soft: rgba(15, 23, 42, 0.6);
+  --app-button-text: #ffffff;
+  --app-button-bg: #0f172a;
+}
+
+html.dark {
+  --background: #07111f;
+  --foreground: #ffffff;
+
+  --app-bg: #07111f;
+  --app-bg-soft: #0a1426;
+  --app-surface: rgba(255, 255, 255, 0.08);
+  --app-surface-strong: rgba(255, 255, 255, 0.1);
+  --app-border: rgba(255, 255, 255, 0.1);
+  --app-text: #ffffff;
+  --app-text-muted: rgba(255, 255, 255, 0.7);
+  --app-text-soft: rgba(255, 255, 255, 0.6);
+  --app-button-text: #0f172a;
+  --app-button-bg: #ffffff;
 }
 
 @theme inline {
@@ -12,15 +55,40 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.app-shell {
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.app-surface {
+  background: var(--app-surface);
+  border-color: var(--app-border);
+}
+
+.app-surface-strong {
+  background: var(--app-surface-strong);
+  border-color: var(--app-border);
+}
+
+.app-border {
+  border-color: var(--app-border);
+}
+
+.app-text {
+  color: var(--app-text);
+}
+
+.app-text-muted {
+  color: var(--app-text-muted);
+}
+
+.app-text-soft {
+  color: var(--app-text-soft);
 }

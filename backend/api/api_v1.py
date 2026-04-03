@@ -5,7 +5,7 @@ import os
 ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(dotenv_path=ENV_PATH)
 from contextlib import asynccontextmanager
-
+from backend.routes.account import router as account_router
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.errors import install_error_handlers
@@ -45,6 +45,7 @@ def create_app() -> FastAPI:
 
     v1_router = APIRouter(prefix=API_V1_PREFIX)
     v1_router.include_router(analyzer_router)
+    v1_router.include_router(account_router)
     app.include_router(v1_router)
 
     @app.get("/", tags=["system"])

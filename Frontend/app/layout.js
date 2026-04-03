@@ -29,7 +29,7 @@ export default async function RootLayout({ children }) {
   );
 
   return (
-    <html lang={language}>
+    <html lang={language} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

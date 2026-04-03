@@ -221,7 +221,7 @@ export default function ExplainPage() {
     }
   }
   return (
-    <main className="min-h-screen bg-[#07111f] text-white">
+    <main className="app-shel">
       <div className="relative isolate overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 

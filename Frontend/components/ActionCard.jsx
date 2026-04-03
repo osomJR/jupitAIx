@@ -16,8 +16,8 @@ export default function ActionCard({ action, onClick, locked = false }) {
       disabled={locked}
       className={`group relative overflow-hidden rounded-3xl border text-left transition-all duration-300 ${
         locked
-          ? "cursor-not-allowed border-white/10 bg-white/5 opacity-80"
-          : "cursor-pointer border-white/15 bg-white/10 hover:-translate-y-1 hover:border-white/25 hover:bg-white/15 hover:shadow-2xl"
+          ? "cursor-not-allowed app-surface opacity-80"
+          : "cursor-pointer app-surface-strong hover:-translate-y-1 hover:bg-[var(--app-surface)] hover:shadow-2xl"
       }`}
     >
       <div
@@ -33,8 +33,8 @@ export default function ActionCard({ action, onClick, locked = false }) {
           <div
             className={`flex h-14 w-14 items-center justify-center rounded-2xl border ${
               locked
-                ? "border-white/10 bg-white/5 text-white/50"
-                : "border-white/20 bg-white/10 text-white"
+                ? "app-surface text-[var(--app-text-soft)]"
+                : "app-surface-strong app-text"
             }`}
           >
             <Icon className="h-6 w-6" />
@@ -46,7 +46,7 @@ export default function ActionCard({ action, onClick, locked = false }) {
               {t.accountRequired}
             </div>
           ) : (
-            <div className="flex items-center gap-1 text-sm font-medium text-white/70 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+            <div className="flex items-center gap-1 text-sm font-medium app-text-muted transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[var(--app-text)]">
               {t.open}
               <ArrowRight className="h-4 w-4" />
             </div>
@@ -56,14 +56,14 @@ export default function ActionCard({ action, onClick, locked = false }) {
         <div className="space-y-2">
           <h3
             className={`text-xl font-semibold tracking-tight ${
-              locked ? "text-white/75" : "text-white"
+              locked ? "app-text-muted" : "app-text"
             }`}
           >
             {action.name}
           </h3>
           <p
             className={`text-sm leading-6 ${
-              locked ? "text-white/45" : "text-white/70"
+              locked ? "app-text-soft" : "app-text-muted"
             }`}
           >
             {action.description}

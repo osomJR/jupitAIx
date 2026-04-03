@@ -1,16 +1,22 @@
 "use client";
 
+import ProfileMenu from "@/components/profile_menu";
+
 export default function AuthControls({
   user,
   authChecked,
   signInLabel = "Sign In",
   signUpLabel = "Sign Up",
   loadingLabel = "Loading...",
-  signedInAsLabel = "Signed in as",
   logoutLabel = "Logout",
+  settingsLabel = "Settings",
+  appearanceLabel = "Appearance",
+  lightLabel = "Light",
+  darkLabel = "Dark",
+  systemLabel = "System Default",
 }) {
   if (!authChecked) {
-    return <div className="text-sm text-white/60">{loadingLabel}</div>;
+    return <div className="text-sm app-text-soft">{loadingLabel}</div>;
   }
 
   if (!user) {
@@ -18,14 +24,14 @@ export default function AuthControls({
       <div className="flex flex-wrap gap-3">
         <a
           href="/auth/login?returnTo=/"
-          className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+          className="rounded-2xl bg-[var(--app-button-bg)] px-5 py-3 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
         >
           {signInLabel}
         </a>
 
         <a
           href="/auth/login?screen_hint=signup&prompt=login&returnTo=/"
-          className="rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
+          className="rounded-2xl border app-surface px-5 py-3 text-sm font-semibold app-text transition hover:bg-[var(--app-surface-strong)]"
         >
           {signUpLabel}
         </a>
@@ -34,20 +40,14 @@ export default function AuthControls({
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="text-sm text-white/80">
-        {signedInAsLabel}{" "}
-        <span className="font-semibold">
-          {user.name || user.email || user.nickname}
-        </span>
-      </div>
-
-      <a
-        href="/auth/logout"
-        className="rounded-2xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
-      >
-        {logoutLabel}
-      </a>
-    </div>
+    <ProfileMenu
+      user={user}
+      settingsLabel={settingsLabel}
+      logoutLabel={logoutLabel}
+      appearanceLabel={appearanceLabel}
+      lightLabel={lightLabel}
+      darkLabel={darkLabel}
+      systemLabel={systemLabel}
+    />
   );
 }
