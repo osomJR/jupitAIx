@@ -719,14 +719,14 @@ def get_shared_rate_limiter() -> SharedRateLimiter:
 
 ANONYMOUS_POLICY = RateLimitPolicy(
     tier_name="anonymous",
-    total_limit=1000,
-    heavy_limit=500,
+    total_limit=4,
+    heavy_limit=2,
 )
 
 AUTHENTICATED_FREE_POLICY = RateLimitPolicy(
     tier_name="authenticated_free",
-    total_limit=1000,
-    heavy_limit=500,
+    total_limit=7,
+    heavy_limit=3,
 )
 
 
