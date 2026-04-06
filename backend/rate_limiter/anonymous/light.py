@@ -10,7 +10,7 @@ Allowed features:
 - grammar_correct
 
 Tier policy:
-- total requests per day: 4
+- total requests per day: 5
 - heavy requests per day: 2 (tracked globally in shared policy, though light endpoints do not consume it)
 - burst protection: 2 requests / 10 seconds
 """

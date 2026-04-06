@@ -14,7 +14,7 @@ Blocked for anonymous users:
 - data_mask
 
 Tier policy:
-- total requests per day: 4
+- total requests per day: 5
 - heavy requests per day: 2
 - burst protection: 2 requests / 10 seconds
 """

@@ -11,8 +11,6 @@ import time
 from fastapi import HTTPException, Request
 
 from src.schema import FeatureType
-
-
 logger = logging.getLogger(__name__)
 
 SECONDS_IN_DAY = 24 * 60 * 60
@@ -719,7 +717,7 @@ def get_shared_rate_limiter() -> SharedRateLimiter:
 
 ANONYMOUS_POLICY = RateLimitPolicy(
     tier_name="anonymous",
-    total_limit=4,
+    total_limit=5,
     heavy_limit=2,
 )
 
