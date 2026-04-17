@@ -1,31 +1,27 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Optional, Sequence, Union
 
 import cv2
+import docx  # python-docx
 import fitz  # PyMuPDF
 import numpy as np
-import docx  # python-docx
 import pytesseract
 from PIL import Image
 
 from .schema import (
-    DOC_ACTIONS_REQUIRING_WORDCOUNT_ONLY,
-    MAX_FILE_SIZE_MB,
-    MAX_WORD_COUNT,
-    TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT,
     DocumentInputFormat,
     DocumentMetadata,
     DocumentPayload,
+    DocumentSetPayload,
     FeatureType,
+    MAX_FILE_SIZE_MB,
+    TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT,
+    classify_word_count,
 )
 
 # OCR configuration
-# -----------------
-# Translation supports any source language -> any target language.
-# To avoid artificially restricting OCR for scanned files, the default OCR
-# language bundle is built from all Tesseract languages available at runtime.
 OCR_CONFIG = "--oem 3 --psm 6"
 
 # Common BCP-47 / language-name aliases -> Tesseract traineddata codes.
@@ -95,6 +91,22 @@ REDACTION_MASKING_INPUT_FORMATS = {
     DocumentInputFormat.png,
 }
 
+STRUCTURED_EXTRACTION_INPUT_FORMATS = {
+    DocumentInputFormat.pdf,
+    DocumentInputFormat.docx,
+    DocumentInputFormat.jpg,
+    DocumentInputFormat.jpeg,
+    DocumentInputFormat.png,
+}
+
+COMPLIANCE_INPUT_FORMATS = {
+    DocumentInputFormat.pdf,
+    DocumentInputFormat.docx,
+    DocumentInputFormat.jpg,
+    DocumentInputFormat.jpeg,
+    DocumentInputFormat.png,
+}
+
 CONVERSION_INPUT_FORMATS = {
     DocumentInputFormat.pdf,
     DocumentInputFormat.docx,
@@ -103,14 +115,41 @@ CONVERSION_INPUT_FORMATS = {
     DocumentInputFormat.png,
 }
 
+OPTIONAL_TEXT_DOCUMENT_ACTIONS = {
+    FeatureType.redact,
+    FeatureType.data_mask,
+    FeatureType.structured_extract,
+    FeatureType.compliance,
+}
+
+DOCUMENT_SET_ACTIONS = {
+    FeatureType.structured_extract,
+    FeatureType.compliance,
+}
+
+_ALLOWED_INPUT_FORMATS_BY_ACTION: dict[FeatureType, set[DocumentInputFormat]] = {
+    FeatureType.convert: CONVERSION_INPUT_FORMATS,
+    FeatureType.summarize: TEXT_AI_DOC_INPUT_FORMATS,
+    FeatureType.grammar_correct: TEXT_AI_DOC_INPUT_FORMATS,
+    FeatureType.translate: TEXT_AI_DOC_INPUT_FORMATS,
+    FeatureType.explain: TEXT_AI_DOC_INPUT_FORMATS,
+    FeatureType.generate_questions: TEXT_AI_DOC_INPUT_FORMATS,
+    FeatureType.generate_answers: TEXT_AI_DOC_INPUT_FORMATS,
+    FeatureType.redact: REDACTION_MASKING_INPUT_FORMATS,
+    FeatureType.data_mask: REDACTION_MASKING_INPUT_FORMATS,
+    FeatureType.structured_extract: STRUCTURED_EXTRACTION_INPUT_FORMATS,
+    FeatureType.compliance: COMPLIANCE_INPUT_FORMATS,
+}
+
 
 # ----------------------------
 # OCR helpers
 # ----------------------------
 def get_available_tesseract_languages() -> list[str]:
-    """Returns installed Tesseract language codes, excluding utility packs."""
+    """Return installed Tesseract language codes, excluding utility packs."""
     languages = pytesseract.get_languages(config="")
     return sorted(lang for lang in languages if lang not in {"osd", "equ"})
+
 
 
 def _normalize_ocr_language_token(token: str) -> str:
@@ -120,14 +159,14 @@ def _normalize_ocr_language_token(token: str) -> str:
     return _TESSERACT_LANG_ALIASES.get(normalized, normalized)
 
 
+
 def resolve_ocr_lang(ocr_languages: Optional[Sequence[str]] = None) -> str:
     """
-    Resolves the Tesseract language bundle.
+    Resolve the Tesseract language bundle.
 
     Behavior:
     - if caller supplies OCR language hints, normalize and validate them
-    - otherwise, use all installed OCR languages to maximize scanned-document
-      translation coverage
+    - otherwise, use all installed OCR languages to maximize scanned-document coverage
     - include osd when present for orientation/script detection support
     """
     available = set(get_available_tesseract_languages())
@@ -185,6 +224,7 @@ def preprocess_for_ocr(image: Image.Image) -> Image.Image:
     return Image.fromarray(thresh)
 
 
+
 def get_file_size_mb(file_path: Path) -> float:
     size_bytes = file_path.stat().st_size
     size_mb = size_bytes / (1024 * 1024)
@@ -195,6 +235,7 @@ def get_file_size_mb(file_path: Path) -> float:
         raise ValueError(f"File exceeds maximum allowed size of {MAX_FILE_SIZE_MB} MB.")
 
     return round(size_mb, 4)
+
 
 
 def detect_format(file_path: Path) -> DocumentInputFormat:
@@ -215,15 +256,18 @@ def extract_text_from_txt(file_path: Path) -> str:
         raise ValueError("TXT file must be valid UTF-8.") from exc
 
 
+
 def extract_text_from_docx(file_path: Path) -> str:
     document = docx.Document(file_path)
     return "\n".join(p.text for p in document.paragraphs).strip()
+
 
 
 def extract_text_from_image(file_path: Path, *, ocr_lang: str) -> str:
     image = Image.open(file_path).convert("RGB")
     processed = preprocess_for_ocr(image)
     return pytesseract.image_to_string(processed, lang=ocr_lang, config=OCR_CONFIG).strip()
+
 
 
 def extract_text_from_pdf_text(file_path: Path) -> str:
@@ -234,9 +278,11 @@ def extract_text_from_pdf_text(file_path: Path) -> str:
     return "\n".join(chunks).strip()
 
 
+
 def _pixmap_to_pil(pix: fitz.Pixmap) -> Image.Image:
     mode = "RGBA" if pix.alpha else "RGB"
     return Image.frombytes(mode, (pix.width, pix.height), pix.samples)
+
 
 
 def extract_text_from_pdf_ocr(file_path: Path, *, ocr_lang: str, zoom: float = 4.0) -> str:
@@ -253,6 +299,7 @@ def extract_text_from_pdf_ocr(file_path: Path, *, ocr_lang: str, zoom: float = 4
     return "\n".join(chunks).strip()
 
 
+
 def extract_text_by_format(
     file_path: Path,
     fmt: DocumentInputFormat,
@@ -260,17 +307,12 @@ def extract_text_by_format(
     ocr_languages: Optional[Sequence[str]] = None,
 ) -> tuple[str, bool]:
     """
-    Returns:
-        (text, ocr_used)
+    Return (text, ocr_used).
 
     Contract alignment:
     - txt/docx => ocr_used=False
     - pdf => OCR fallback only if native extraction is empty
-    - images => OCR always used if text extraction is requested
-
-    Translation consideration:
-    - when OCR is needed, use all installed OCR languages by default so scanned
-      documents can be translated from any supported source language.
+    - images => OCR always used when text extraction is attempted
     """
     if fmt == DocumentInputFormat.txt:
         return extract_text_from_txt(file_path), False
@@ -299,11 +341,11 @@ def count_words(text: str) -> int:
     return len(text.split())
 
 
-def enforce_word_limit(word_count: int) -> None:
+
+def enforce_text_ai_word_contract(word_count: int) -> None:
     if word_count < 1:
         raise ValueError("Document contains no words.")
-    if word_count > MAX_WORD_COUNT:
-        raise ValueError(f"Document exceeds maximum allowed word count of {MAX_WORD_COUNT}.")
+    classify_word_count(word_count)
 
 
 # ----------------------------
@@ -321,6 +363,7 @@ def build_inline_text_payload(
     - Inline text is represented as txt input.
     - detected_language is intentionally omitted because request-side validation
       forbids client-supplied detected_language; analyzer/server handles detection.
+    - The strict 1..1000 word-count contract is enforced only for text AI actions.
     """
     normalized = text.strip()
     if not normalized:
@@ -330,7 +373,7 @@ def build_inline_text_payload(
         raise ValueError("Inline text payload must use input_format='txt'.")
 
     word_count = count_words(normalized)
-    enforce_word_limit(word_count)
+    enforce_text_ai_word_contract(word_count)
 
     metadata = DocumentMetadata(
         input_format=DocumentInputFormat.txt,
@@ -341,31 +384,78 @@ def build_inline_text_payload(
     return DocumentPayload(text=normalized, metadata=metadata)
 
 
+
+def _build_document_payload(
+    file_path: str,
+    *,
+    allowed_formats: set[DocumentInputFormat],
+    require_text: bool,
+    enforce_text_ai_range: bool,
+    ocr_languages: Optional[Sequence[str]] = None,
+) -> DocumentPayload:
+    path = Path(file_path)
+    if not path.exists():
+        raise FileNotFoundError("File not found.")
+
+    fmt = detect_format(path)
+    if fmt not in allowed_formats:
+        allowed = ", ".join(item.value for item in sorted(allowed_formats, key=lambda x: x.value))
+        raise ValueError(f"Unsupported input format for this action. Allowed formats: {allowed}.")
+
+    file_size_mb = get_file_size_mb(path)
+
+    text: Optional[str] = None
+    extracted_word_count: Optional[int] = None
+    ocr_used = False
+
+    # Conversion does not require extracted text or word count.
+    if fmt != DocumentInputFormat.txt or require_text or enforce_text_ai_range:
+        if fmt in {
+            DocumentInputFormat.txt,
+            DocumentInputFormat.docx,
+            DocumentInputFormat.pdf,
+            DocumentInputFormat.jpg,
+            DocumentInputFormat.jpeg,
+            DocumentInputFormat.png,
+        }:
+            extracted_text, ocr_used = extract_text_by_format(path, fmt, ocr_languages=ocr_languages)
+            normalized = extracted_text.strip()
+            if normalized:
+                text = normalized
+                extracted_word_count = count_words(normalized)
+
+    if require_text and not text:
+        raise ValueError("Document text could not be extracted.")
+
+    if text and enforce_text_ai_range:
+        enforce_text_ai_word_contract(extracted_word_count or 0)
+
+    metadata = DocumentMetadata(
+        input_format=fmt,
+        file_size_mb=file_size_mb,
+        extracted_word_count=extracted_word_count,
+        ocr_used=ocr_used,
+    )
+    return DocumentPayload(text=text, metadata=metadata, filename=path.name)
+
+
+
 def build_conversion_document_payload(file_path: str) -> DocumentPayload:
     """
     Build a DocumentPayload for the convert action.
 
     Contract alignment:
     - convert accepts pdf/docx/jpg/jpeg/png
-    - text is optional for convert
-    - extracted_word_count is optional for convert
-    - no language detection is attached here
+    - text is optional
+    - extracted_word_count is optional
     """
-    path = Path(file_path)
-    if not path.exists():
-        raise FileNotFoundError("File not found.")
-
-    fmt = detect_format(path)
-    if fmt not in CONVERSION_INPUT_FORMATS:
-        raise ValueError("convert only supports: pdf, docx, jpg, jpeg, png.")
-
-    metadata = DocumentMetadata(
-        input_format=fmt,
-        file_size_mb=get_file_size_mb(path),
-        extracted_word_count=None,
-        ocr_used=False,
+    return _build_document_payload(
+        file_path,
+        allowed_formats=CONVERSION_INPUT_FORMATS,
+        require_text=False,
+        enforce_text_ai_range=False,
     )
-    return DocumentPayload(text=None, metadata=metadata, filename=path.name)
+
 
 
 def build_text_ai_document_payload(
@@ -375,39 +465,21 @@ def build_text_ai_document_payload(
 ) -> DocumentPayload:
     """
     Build a DocumentPayload for text AI document actions:
-    summarize, grammar_correct, translate, explain, generate_questions, generate_answers
+    summarize, grammar_correct, translate, explain, generate_questions, generate_answers.
 
     Contract alignment:
     - only pdf/docx/txt are allowed
     - extracted text is required
-    - extracted_word_count is required
-    - detected_language is omitted; analyzer/server handles detection
+    - extracted_word_count is required and must fit the 1..1000 contract range
     """
-    path = Path(file_path)
-    if not path.exists():
-        raise FileNotFoundError("File not found.")
-
-    fmt = detect_format(path)
-    if fmt not in TEXT_AI_DOC_INPUT_FORMATS:
-        raise ValueError("Text AI document actions only support input formats: pdf, docx, txt.")
-
-    file_size_mb = get_file_size_mb(path)
-    text, ocr_used = extract_text_by_format(path, fmt, ocr_languages=ocr_languages)
-
-    normalized = text.strip()
-    if not normalized:
-        raise ValueError("Document text could not be extracted.")
-
-    word_count = count_words(normalized)
-    enforce_word_limit(word_count)
-
-    metadata = DocumentMetadata(
-        input_format=fmt,
-        file_size_mb=file_size_mb,
-        extracted_word_count=word_count,
-        ocr_used=ocr_used,
+    return _build_document_payload(
+        file_path,
+        allowed_formats=TEXT_AI_DOC_INPUT_FORMATS,
+        require_text=True,
+        enforce_text_ai_range=True,
+        ocr_languages=ocr_languages,
     )
-    return DocumentPayload(text=normalized, metadata=metadata, filename=path.name)
+
 
 
 def build_redaction_or_masking_document_payload(
@@ -420,35 +492,71 @@ def build_redaction_or_masking_document_payload(
 
     Contract alignment:
     - accepts pdf/docx/jpg/jpeg/png
-    - requires extracted_word_count for document limit enforcement
-    - text is optional in schema, but extracting and carrying it is useful for downstream processing
-    - detected_language is omitted; analyzer/server handles detection
+    - text is optional in schema
+    - extracted_word_count may be present, but is not capped at 1000 here
     """
-    path = Path(file_path)
-    if not path.exists():
-        raise FileNotFoundError("File not found.")
-
-    fmt = detect_format(path)
-    if fmt not in REDACTION_MASKING_INPUT_FORMATS:
-        raise ValueError("redact/data_mask only support: pdf, docx, jpg, jpeg, png.")
-
-    file_size_mb = get_file_size_mb(path)
-    text, ocr_used = extract_text_by_format(path, fmt, ocr_languages=ocr_languages)
-
-    normalized = text.strip()
-    if not normalized:
-        raise ValueError("Document text could not be extracted.")
-
-    word_count = count_words(normalized)
-    enforce_word_limit(word_count)
-
-    metadata = DocumentMetadata(
-        input_format=fmt,
-        file_size_mb=file_size_mb,
-        extracted_word_count=word_count,
-        ocr_used=ocr_used,
+    return _build_document_payload(
+        file_path,
+        allowed_formats=REDACTION_MASKING_INPUT_FORMATS,
+        require_text=False,
+        enforce_text_ai_range=False,
+        ocr_languages=ocr_languages,
     )
-    return DocumentPayload(text=normalized, metadata=metadata, filename=path.name)
+
+
+
+def build_structured_extraction_or_compliance_document_payload(
+    file_path: str,
+    *,
+    action: FeatureType,
+    ocr_languages: Optional[Sequence[str]] = None,
+) -> DocumentPayload:
+    """
+    Build a single-document payload for structured_extract or compliance.
+
+    Contract alignment:
+    - accepts pdf/docx/jpg/jpeg/png
+    - text is optional in schema
+    - extracted_word_count may be present, but is not capped at 1000 here
+    """
+    if action not in DOCUMENT_SET_ACTIONS:
+        raise ValueError("This builder only supports structured_extract and compliance actions.")
+
+    allowed_formats = _ALLOWED_INPUT_FORMATS_BY_ACTION[action]
+    return _build_document_payload(
+        file_path,
+        allowed_formats=allowed_formats,
+        require_text=False,
+        enforce_text_ai_range=False,
+        ocr_languages=ocr_languages,
+    )
+
+
+
+def build_document_set_payload(
+    file_paths: Sequence[str],
+    *,
+    action: FeatureType,
+    ocr_languages: Optional[Sequence[str]] = None,
+) -> DocumentSetPayload:
+    """
+    Build a DocumentSetPayload for structured_extract or compliance.
+    """
+    if action not in DOCUMENT_SET_ACTIONS:
+        raise ValueError("Document sets are only supported for structured_extract and compliance.")
+    if not file_paths:
+        raise ValueError("file_paths cannot be empty.")
+
+    documents = [
+        build_structured_extraction_or_compliance_document_payload(
+            file_path,
+            action=action,
+            ocr_languages=ocr_languages,
+        )
+        for file_path in file_paths
+    ]
+    return DocumentSetPayload(documents=documents)
+
 
 
 def build_document_payload_for_action(
@@ -459,16 +567,13 @@ def build_document_payload_for_action(
     ocr_languages: Optional[Sequence[str]] = None,
 ) -> DocumentPayload:
     """
-    Runtime-aware normalization entrypoint.
+    Runtime-aware normalization entrypoint for single-document actions.
 
     Rules:
-    - inline_text path => txt payload for text AI document actions only
-    - upload path + convert => metadata-only payload
-    - upload path + text AI action => extracted-text payload
-    - upload path + redact/data_mask => extracted-text payload with word-count enforcement
-
-    OCR note:
-    - if ocr_languages is omitted, all installed Tesseract languages are used when OCR is needed
+    - inline_text => txt payload for text AI document actions only
+    - convert => text optional
+    - text AI actions => extracted text + extracted_word_count required
+    - redact/data_mask/structured_extract/compliance => extracted text optional
     """
     if inline_text is not None:
         if file_path is not None:
@@ -486,7 +591,88 @@ def build_document_payload_for_action(
     if action in TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT:
         return build_text_ai_document_payload(file_path, ocr_languages=ocr_languages)
 
-    if action in DOC_ACTIONS_REQUIRING_WORDCOUNT_ONLY:
+    if action in {FeatureType.redact, FeatureType.data_mask}:
         return build_redaction_or_masking_document_payload(file_path, ocr_languages=ocr_languages)
 
+    if action in DOCUMENT_SET_ACTIONS:
+        return build_structured_extraction_or_compliance_document_payload(
+            file_path,
+            action=action,
+            ocr_languages=ocr_languages,
+        )
+
     raise ValueError(f"Unsupported document action for extraction: {action.value}")
+
+
+
+def build_input_artifact_for_action(
+    *,
+    action: FeatureType,
+    file_path: Optional[str] = None,
+    file_paths: Optional[Sequence[str]] = None,
+    inline_text: Optional[str] = None,
+    ocr_languages: Optional[Sequence[str]] = None,
+) -> Union[DocumentPayload, DocumentSetPayload]:
+    """
+    Runtime-aware normalization entrypoint aligned with schema InputArtifact rules.
+
+    - Most document actions return DocumentPayload.
+    - structured_extract and compliance may return DocumentSetPayload when file_paths is supplied.
+    - inline_text is supported only for text AI document actions and produces txt DocumentPayload.
+    """
+    provided = sum(
+        value is not None
+        for value in (
+            file_path,
+            file_paths,
+            inline_text,
+        )
+    )
+    if provided != 1:
+        raise ValueError("Provide exactly one of file_path, file_paths, or inline_text.")
+
+    if inline_text is not None:
+        return build_document_payload_for_action(action=action, inline_text=inline_text)
+
+    if file_paths is not None:
+        return build_document_set_payload(file_paths, action=action, ocr_languages=ocr_languages)
+
+    return build_document_payload_for_action(
+        action=action,
+        file_path=file_path,
+        ocr_languages=ocr_languages,
+    )
+
+
+__all__ = [
+    "OCR_CONFIG",
+    "CONVERSION_ACTIONS",
+    "TEXT_AI_DOC_INPUT_FORMATS",
+    "REDACTION_MASKING_INPUT_FORMATS",
+    "STRUCTURED_EXTRACTION_INPUT_FORMATS",
+    "COMPLIANCE_INPUT_FORMATS",
+    "CONVERSION_INPUT_FORMATS",
+    "OPTIONAL_TEXT_DOCUMENT_ACTIONS",
+    "DOCUMENT_SET_ACTIONS",
+    "get_available_tesseract_languages",
+    "resolve_ocr_lang",
+    "preprocess_for_ocr",
+    "get_file_size_mb",
+    "detect_format",
+    "extract_text_from_txt",
+    "extract_text_from_docx",
+    "extract_text_from_image",
+    "extract_text_from_pdf_text",
+    "extract_text_from_pdf_ocr",
+    "extract_text_by_format",
+    "count_words",
+    "enforce_text_ai_word_contract",
+    "build_inline_text_payload",
+    "build_conversion_document_payload",
+    "build_text_ai_document_payload",
+    "build_redaction_or_masking_document_payload",
+    "build_structured_extraction_or_compliance_document_payload",
+    "build_document_set_payload",
+    "build_document_payload_for_action",
+    "build_input_artifact_for_action",
+]

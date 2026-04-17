@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
 import docx
-import fitz  # PyMuPDF
+import fitz  
 import pytesseract
 from PIL import Image, ImageFilter
 

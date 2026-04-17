@@ -5,41 +5,44 @@ from typing import Any, Mapping, Optional, Type, Union
 from pydantic import BaseModel
 
 from .schema import (
-    # Core request/response envelope
     AnalyzerRequest,
     AnalyzerResponse,
-    FeatureType,
-    # Inputs
+    AnswerGenerationFileResult,
+    AnswerGenerationInlineResult,
+    AnswerGenerationRequest,
+    ComplianceFileResult,
+    ComplianceRequest,
+    ComplianceReportVariant,
+    ComplianceOutputFormat,
+    ConversionRequest,
+    DeterminismMetadata,
+    DocumentFileOutputFormat,
+    DocumentFileResult,
+    DocumentInputFormat,
     DocumentPayload,
+    DocumentSetPayload,
+    ExplanationRequest,
+    FeatureType,
+    GrammarCorrectionRequest,
+    InlineTextResult,
     MediaPayload,
     MediaType,
-    # Payloads
-    ConversionRequest,
-    SummarizationRequest,
-    GrammarCorrectionRequest,
-    TranslationRequest,
-    TranscriptionRequest,
-    ExplanationRequest,
-    RedactionRequest,
-    DataMaskingRequest,
-    QuestionGenerationRequest,
-    AnswerGenerationRequest,
-    # Policies
     OutputPolicy,
-    # Results + metadata
-    DeterminismMetadata,
-    InlineTextResult,
-    FileResult,
-    FileOutputFormat,
+    QuestionGenerationFileResult,
+    QuestionGenerationInlineResult,
+    QuestionGenerationRequest,
     QuestionScale,
     QuestionScaleMetadata,
-    QuestionGenerationInlineResult,
-    QuestionGenerationFileResult,
-    AnswerGenerationInlineResult,
-    AnswerGenerationFileResult,
+    RedactionRequest,
+    DataMaskingRequest,
+    StructuredDataOutputFormat,
+    StructuredExtractionFileResult,
+    StructuredExtractionRequest,
+    StructuredExtractionResultShape,
+    SummarizationRequest,
+    TranscriptionRequest,
+    TranslationRequest,
     classify_word_count,
-    # Limits
-    MAX_WORD_COUNT,
 )
 
 
@@ -56,80 +59,34 @@ _ACTION_PAYLOAD_MAP: dict[FeatureType, Type[BaseModel]] = {
     FeatureType.explain: ExplanationRequest,
     FeatureType.redact: RedactionRequest,
     FeatureType.data_mask: DataMaskingRequest,
+    FeatureType.structured_extract: StructuredExtractionRequest,
+    FeatureType.compliance: ComplianceRequest,
     FeatureType.generate_questions: QuestionGenerationRequest,
     FeatureType.generate_answers: AnswerGenerationRequest,
 }
 
-# Strict backend gate for generate_answers:
-# The request must prove that generate_questions completed first.
-# This is intentionally implemented in validation.py because the current schema.py
-# does not model workflow state as a first-class request field.
-GENERATE_ANSWERS_WORKFLOW_FIELD = "workflow"
-GENERATE_ANSWERS_COMPLETION_FLAG = "generate_questions_completed"
-GENERATE_ANSWERS_TOKEN_FIELD = "generate_questions_token"
+
+def _iter_documents(input_artifact: Union[DocumentPayload, DocumentSetPayload, MediaPayload]) -> list[DocumentPayload]:
+    if isinstance(input_artifact, DocumentPayload):
+        return [input_artifact]
+    if isinstance(input_artifact, DocumentSetPayload):
+        return list(input_artifact.documents)
+    return []
 
 
-def _has_nonempty_token(value: Any) -> bool:
-    return isinstance(value, str) and bool(value.strip())
-
-
-def validate_generate_answers_prerequisite(
-    request: Union[AnalyzerRequest, Mapping[str, Any]],
-    *,
-    generate_questions_completed: bool = False,
-    generate_questions_token: Optional[str] = None,
-) -> None:
-    """
-    Enforces the product rule that generate_answers is not a standalone backend action.
-
-    Accepted proof of prior completion:
-    - a non-empty top-level generate_questions_token, OR
-    - workflow.generate_questions_completed == True, OR
-    - function-level override parameters for already-instantiated AnalyzerRequest objects
-
-    Why this lives here:
-    - current schema.py does not define workflow/token fields, so raw transport-level
-      metadata must be checked before/alongside schema validation.
-    """
-    action_value: Optional[str] = None
-    raw_token: Optional[str] = None
-    raw_completed = False
-
-    if isinstance(request, AnalyzerRequest):
-        action_value = request.action.value
-    else:
-        action_raw = request.get("action")
-        action_value = action_raw.value if hasattr(action_raw, "value") else action_raw
-
-        token_value = request.get(GENERATE_ANSWERS_TOKEN_FIELD)
-        if _has_nonempty_token(token_value):
-            raw_token = token_value
-
-        workflow = request.get(GENERATE_ANSWERS_WORKFLOW_FIELD)
-        if isinstance(workflow, Mapping):
-            raw_completed = workflow.get(GENERATE_ANSWERS_COMPLETION_FLAG) is True
-
-    if action_value != FeatureType.generate_answers.value:
-        return
-
-    has_token = _has_nonempty_token(generate_questions_token) or _has_nonempty_token(raw_token)
-    has_completion_marker = generate_questions_completed or raw_completed
-
-    if not (has_token or has_completion_marker):
-        raise ValueError(
-            "generate_answers is not a standalone backend action. "
-            "A prior generate_questions completion proof is required: "
-            "provide either a non-empty generate_questions_token or "
-            "workflow.generate_questions_completed=True."
-        )
+TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT = {
+    FeatureType.summarize,
+    FeatureType.grammar_correct,
+    FeatureType.translate,
+    FeatureType.explain,
+    FeatureType.generate_questions,
+    FeatureType.generate_answers,
+}
 
 
 def validate_action_payload_consistency(request: AnalyzerRequest) -> None:
     """
-    Extra explicit type guard.
-
-    schema.py already enforces payload.feature == action. This function makes the
-    expected payload model for each action explicit for downstream callers.
+    Explicit action-to-payload type guard that mirrors schema.py.
     """
     expected_model = _ACTION_PAYLOAD_MAP.get(request.action)
     if expected_model is None:
@@ -146,29 +103,36 @@ def validate_no_client_detected_language(request: AnalyzerRequest) -> None:
     """
     Mirrors the schema contract: detected_language is server-supplied only.
     """
-    if isinstance(request.input, DocumentPayload):
-        if request.input.metadata.detected_language is not None:
-            raise ValueError("detected_language must not be provided by client; server supplies detection.")
-    if isinstance(request.input, MediaPayload):
-        if request.input.detected_language is not None:
+    for document in _iter_documents(request.input):
+        if document.metadata.detected_language is not None:
             raise ValueError("detected_language must not be provided by client; server supplies detection.")
 
+    if isinstance(request.input, MediaPayload) and request.input.detected_language is not None:
+        raise ValueError("detected_language must not be provided by client; server supplies detection.")
 
-def validate_word_count_bounds_when_present(request: AnalyzerRequest) -> None:
-    """
-    Defensive guard around extracted_word_count.
 
-    schema.py already enforces bounds, but this keeps validation.py explicit and
-    safe for any pre-instantiated or partially transformed request objects.
+def validate_word_count_contract_when_present(request: AnalyzerRequest) -> None:
     """
-    if isinstance(request.input, DocumentPayload):
-        wc = request.input.metadata.extracted_word_count
-        if wc is None:
-            return
-        if wc < 0:
-            raise ValueError("extracted_word_count must be >= 0.")
-        if wc > MAX_WORD_COUNT:
-            raise ValueError(f"extracted_word_count must be <= {MAX_WORD_COUNT}.")
+    Keeps validation.py aligned with schema.py's narrowed word-count contract:
+    extracted_word_count may be present on document metadata generally, but the
+    1..1000 enforced range applies only to text-based AI document actions that
+    require extracted text and word count.
+    """
+    if request.action not in TEXT_AI_DOC_ACTIONS_REQUIRING_TEXT_AND_WORDCOUNT:
+        return
+
+    if not isinstance(request.input, DocumentPayload):
+        raise ValueError(f"{request.action.value} requires DocumentPayload input.")
+
+    wc = request.input.metadata.extracted_word_count
+    if wc is None:
+        raise ValueError(f"{request.action.value} requires extracted_word_count.")
+    if wc < 1:
+        raise ValueError("extracted_word_count must be >= 1 for text-based AI processing actions.")
+
+    # schema.classify_word_count is the authoritative contract check for the
+    # supported word-count range used by question-scaling logic.
+    classify_word_count(wc)
 
 
 def validate_question_scale(word_count: int) -> QuestionScale:
@@ -186,14 +150,27 @@ def get_question_range(word_count: int) -> tuple[int, int]:
     return rule.min_questions, rule.max_questions
 
 
+def validate_generate_questions_request(request: AnalyzerRequest) -> None:
+    if request.action != FeatureType.generate_questions:
+        return
+
+    if not isinstance(request.input, DocumentPayload):
+        raise ValueError("generate_questions requires DocumentPayload input.")
+
+    wc = request.input.metadata.extracted_word_count
+    if wc is None:
+        raise ValueError("generate_questions requires extracted_word_count.")
+
+    classify_word_count(wc)
+
+
 def validate_generate_answers_request(request: AnalyzerRequest) -> None:
     """
-    Strict answer-generation checks that align with the non-standalone product flow.
-
-    Backend validation verifies that:
-    - prior generate_questions completion proof exists
-    - questions were supplied
-    - the count of supplied questions is compatible with the document size
+    Supplemental checks for answer generation that remain consistent with schema.py:
+    - DocumentPayload input only
+    - AnswerGenerationRequest payload only
+    - extracted_word_count must map to a valid question-scaling rule
+    - supplied questions count must fit the schema scaling range
     """
     if request.action != FeatureType.generate_answers:
         return
@@ -219,53 +196,24 @@ def validate_generate_answers_request(request: AnalyzerRequest) -> None:
 
 def validate_analyzer_request(
     request: Union[AnalyzerRequest, Mapping[str, Any]],
-    *,
-    generate_questions_completed: bool = False,
-    generate_questions_token: Optional[str] = None,
 ) -> AnalyzerRequest:
     """
     Full deterministic validation pipeline for incoming requests.
 
     Primary contract enforcement lives in schema.py via Pydantic validators.
-    This function adds explicit alignment checks plus a strict workflow gate
-    for generate_answers so downstream code can reject standalone answer-generation calls.
+    This function adds explicit alignment checks without inventing transport-level
+    fields or workflow metadata that are not modeled in schema.py.
     """
-    validate_generate_answers_prerequisite(
-        request,
-        generate_questions_completed=generate_questions_completed,
-        generate_questions_token=generate_questions_token,
-    )
-
     req = request if isinstance(request, AnalyzerRequest) else AnalyzerRequest.model_validate(request)
 
     validate_action_payload_consistency(req)
     validate_no_client_detected_language(req)
-    validate_word_count_bounds_when_present(req)
+    validate_word_count_contract_when_present(req)
+    validate_generate_questions_request(req)
+    validate_generate_answers_request(req)
 
-    if req.action == FeatureType.generate_questions:
-        if not isinstance(req.input, DocumentPayload):
-            raise ValueError("generate_questions requires DocumentPayload input.")
-        if req.input.metadata.extracted_word_count is None:
-            raise ValueError("generate_questions requires extracted_word_count.")
-        validate_question_scale(req.input.metadata.extracted_word_count)
-
-    if req.action == FeatureType.generate_answers:
-        validate_generate_answers_request(req)
-
-    if req.action in {
-        FeatureType.convert,
-        FeatureType.summarize,
-        FeatureType.grammar_correct,
-        FeatureType.translate,
-        FeatureType.transcribe,
-        FeatureType.explain,
-        FeatureType.redact,
-        FeatureType.data_mask,
-        FeatureType.generate_questions,
-        FeatureType.generate_answers,
-    }:
-        if not isinstance(req.policy, OutputPolicy):
-            raise ValueError(f"{req.action.value} requires OutputPolicy.")
+    if not isinstance(req.policy, OutputPolicy):
+        raise ValueError("AnalyzerRequest.policy must be OutputPolicy.")
 
     return req
 
@@ -287,17 +235,65 @@ def build_inline_txt_result(
     return InlineTextResult(content=content, meta=_meta(algorithm_version=algorithm_version))
 
 
-def build_file_result(
+def build_document_file_result(
     *,
     filename: str,
-    output_format: FileOutputFormat,
+    output_format: DocumentFileOutputFormat,
     file_size_mb: float,
+    storage_key: Optional[str] = None,
+    download_url: Optional[str] = None,
     algorithm_version: Optional[str] = None,
-) -> FileResult:
-    return FileResult(
+) -> DocumentFileResult:
+    return DocumentFileResult(
         filename=filename,
         output_format=output_format,
         file_size_mb=file_size_mb,
+        storage_key=storage_key,
+        download_url=download_url,
+        meta=_meta(algorithm_version=algorithm_version),
+    )
+
+
+def build_structured_extraction_file_result(
+    *,
+    filename: str,
+    output_format: StructuredDataOutputFormat,
+    file_size_mb: float,
+    result_shape: StructuredExtractionResultShape,
+    selected_fields: Optional[list[str]] = None,
+    storage_key: Optional[str] = None,
+    download_url: Optional[str] = None,
+    algorithm_version: Optional[str] = None,
+) -> StructuredExtractionFileResult:
+    return StructuredExtractionFileResult(
+        filename=filename,
+        output_format=output_format,
+        file_size_mb=file_size_mb,
+        result_shape=result_shape,
+        selected_fields=selected_fields or [],
+        storage_key=storage_key,
+        download_url=download_url,
+        meta=_meta(algorithm_version=algorithm_version),
+    )
+
+
+def build_compliance_file_result(
+    *,
+    filename: str,
+    output_format: ComplianceOutputFormat,
+    file_size_mb: float,
+    report_variant: ComplianceReportVariant,
+    storage_key: Optional[str] = None,
+    download_url: Optional[str] = None,
+    algorithm_version: Optional[str] = None,
+) -> ComplianceFileResult:
+    return ComplianceFileResult(
+        filename=filename,
+        output_format=output_format,
+        file_size_mb=file_size_mb,
+        report_variant=report_variant,
+        storage_key=storage_key,
+        download_url=download_url,
         meta=_meta(algorithm_version=algorithm_version),
     )
 
@@ -322,9 +318,11 @@ def build_question_generation_inline_result(
 def build_question_generation_file_result(
     *,
     filename: str,
-    output_format: FileOutputFormat,
+    output_format: DocumentFileOutputFormat,
     file_size_mb: float,
     extracted_word_count: int,
+    storage_key: Optional[str] = None,
+    download_url: Optional[str] = None,
     algorithm_version: Optional[str] = None,
 ) -> QuestionGenerationFileResult:
     classification = classify_word_count(extracted_word_count).classification
@@ -332,6 +330,8 @@ def build_question_generation_file_result(
         filename=filename,
         output_format=output_format,
         file_size_mb=file_size_mb,
+        storage_key=storage_key,
+        download_url=download_url,
         meta=_meta(algorithm_version=algorithm_version),
         scale=QuestionScaleMetadata(
             classification=classification,
@@ -356,15 +356,19 @@ def build_answer_generation_inline_result(
 def build_answer_generation_file_result(
     *,
     filename: str,
-    output_format: FileOutputFormat,
+    output_format: DocumentFileOutputFormat,
     file_size_mb: float,
     expected_question_count: int,
+    storage_key: Optional[str] = None,
+    download_url: Optional[str] = None,
     algorithm_version: Optional[str] = None,
 ) -> AnswerGenerationFileResult:
     return AnswerGenerationFileResult(
         filename=filename,
         output_format=output_format,
         file_size_mb=file_size_mb,
+        storage_key=storage_key,
+        download_url=download_url,
         meta=_meta(algorithm_version=algorithm_version),
         expected_question_count=expected_question_count,
     )
@@ -378,11 +382,14 @@ def build_answer_generation_file_result(
 def _expected_response_input_format(request: AnalyzerRequest):
     """
     AnalyzerResponse echoes input_format as:
-      - DocumentInputFormat for document requests
+      - DocumentInputFormat for single-document requests
+      - "document_set" for DocumentSetPayload requests
       - "audio" or "video" for transcription requests
     """
     if isinstance(request.input, MediaPayload):
         return "audio" if request.input.media_type == MediaType.audio else "video"
+    if isinstance(request.input, DocumentSetPayload):
+        return "document_set"
     return request.input.metadata.input_format
 
 
@@ -414,6 +421,31 @@ def validate_analyzer_response(
             if resp.output_language is not None and resp.output_language != request.payload.target_language:
                 raise ValueError("For translate, output_language must match payload.target_language.")
 
+        if request.action == FeatureType.structured_extract:
+            assert isinstance(request.payload, StructuredExtractionRequest)
+            if not isinstance(resp.result, StructuredExtractionFileResult):
+                raise ValueError("structured_extract response must contain StructuredExtractionFileResult.")
+            if resp.result.output_format != request.payload.output_format:
+                raise ValueError("structured_extract response output_format must match request payload.output_format.")
+            if resp.result.result_shape != request.payload.result_shape:
+                raise ValueError("structured_extract response result_shape must match request payload.result_shape.")
+            if resp.result.selected_fields != request.payload.selected_fields:
+                raise ValueError("structured_extract response selected_fields must match request payload.selected_fields.")
+
+        if request.action == FeatureType.compliance:
+            assert isinstance(request.payload, ComplianceRequest)
+            if not isinstance(resp.result, ComplianceFileResult):
+                raise ValueError("compliance response must contain ComplianceFileResult.")
+            if resp.result.report_variant != request.payload.report_variant:
+                raise ValueError("compliance response report_variant must match request payload.report_variant.")
+            expected_output_format = (
+                ComplianceOutputFormat.json
+                if request.payload.report_variant == ComplianceReportVariant.machine_readable_report
+                else ComplianceOutputFormat.pdf
+            )
+            if resp.result.output_format != expected_output_format:
+                raise ValueError("compliance response output_format is inconsistent with report_variant.")
+
         if request.action == FeatureType.generate_questions:
             if not isinstance(resp.result, (QuestionGenerationInlineResult, QuestionGenerationFileResult)):
                 raise ValueError("generate_questions response must contain a question-generation result.")
@@ -444,19 +476,18 @@ def validate_analyzer_response(
 
 
 __all__ = [
-    "GENERATE_ANSWERS_WORKFLOW_FIELD",
-    "GENERATE_ANSWERS_COMPLETION_FLAG",
-    "GENERATE_ANSWERS_TOKEN_FIELD",
-    "validate_generate_answers_prerequisite",
     "validate_action_payload_consistency",
     "validate_no_client_detected_language",
-    "validate_word_count_bounds_when_present",
+    "validate_word_count_contract_when_present",
     "validate_question_scale",
     "get_question_range",
+    "validate_generate_questions_request",
     "validate_generate_answers_request",
     "validate_analyzer_request",
     "build_inline_txt_result",
-    "build_file_result",
+    "build_document_file_result",
+    "build_structured_extraction_file_result",
+    "build_compliance_file_result",
     "build_question_generation_inline_result",
     "build_question_generation_file_result",
     "build_answer_generation_inline_result",
