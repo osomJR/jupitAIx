@@ -1,0 +1,379 @@
+{
+  "pack_id": "nigeria.legal_law_firm",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "sector_pack": "legal_law_firm",
+  "display_name": "Legal and Law Firm",
+  "status": "draft_starter_pack_requires_legal_review",
+  "generated_at": "2026-04-29",
+  "intended_engine": "jupitAIx compliance rule-pack registry/evaluator v1",
+  "requires_core_control_library": true,
+  "metadata": {
+    "scope_note": "Nigeria v1 sector overlay pack. Use together with nigeria_core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
+    "versioning_note": "This is a frozen starter snapshot. Do not mutate after use in reports; publish v2025_02 or later for changes.",
+    "official_sources_consulted": [
+      {
+        "name": "Rules of Professional Conduct for Legal Practitioners 2023",
+        "url": "https://sabilaw.org/wp-content/uploads/2023/06/Rules-of-Professional-Conduct-for-Legal-Practitioners-2023-1.pdf"
+      },
+      {
+        "name": "Rules of Professional Conduct 2007 official judiciary copy",
+        "url": "https://edojudiciary.gov.ng/wp-content/uploads/2016/10/Rules-Of-Proffessional-Conduct-For-Legal-Practitioners-2007.pdf"
+      },
+      {
+        "name": "Legal Practitioners Act",
+        "url": "https://nigerianlawguru.com/wp-content/uploads/2024/06/LEGAL-PRACTITIONERS-ACT.pdf"
+      },
+      {
+        "name": "NBA notice on AML/CFT provisions for legal practitioners",
+        "url": "https://blog.nigerianbar.org.ng/2024/10/11/notice-to-all-lawyers-in-nigeria-on-compliance-with-anti-money-laundering-and-terrorism-financing-provisions-of-the-rules-of-professional-conduct-for-legal-practitioners-2023/"
+      },
+      {
+        "name": "NDPC NDP Act GAID 2025",
+        "url": "https://ndpc.gov.ng/wp-content/uploads/2025/07/NDP-ACT-GAID-2025-MARCH-20TH.pdf"
+      }
+    ],
+    "limitations": [
+      "This is not legal advice.",
+      "Rules encode document-evidence checks, not a final legal determination.",
+      "Each rule requires validation against current Nigerian laws, regulations, regulator circulars, directives, codes and guidance before production reliance."
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "LEGAL-ETH-001",
+      "rule_version": "2025.01",
+      "title": "Client confidentiality and privilege controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Law-firm documents should evidence client confidentiality, legal professional privilege, privileged communication, or file confidentiality controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "client confidentiality",
+          "confidential information",
+          "legal professional privilege",
+          "privileged communication",
+          "client file",
+          "confidentiality"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Rules of Professional Conduct for Legal Practitioners",
+          "Evidence Act privilege references"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/CFT risk controls for legal practice are referenced",
+      "regulatory_domain": "aml",
+      "summary": "Legal-practice documents should evidence AML/CFT controls where the practice performs covered transactional, corporate, real-estate, trust, or financial services.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "anti-money laundering",
+          "AML",
+          "counter terrorist financing",
+          "CFT",
+          "client due diligence",
+          "source of funds",
+          "beneficial owner"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Rules of Professional Conduct for Legal Practitioners 2023",
+          "NBA AML/CFT notice for legal practitioners"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-AML-002",
+      "rule_version": "2025.01",
+      "title": "Client due diligence or conflict/risk onboarding is documented",
+      "regulatory_domain": "aml",
+      "summary": "Law-firm intake documents should evidence client identification, onboarding due diligence, conflict checks, or source-of-funds review where applicable.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "client identification",
+          "client due diligence",
+          "conflict check",
+          "source of funds",
+          "beneficial owner",
+          "engagement letter"
+        ],
+        "optional_signals": [
+          "risk assessment",
+          "retainer"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Rules of Professional Conduct for Legal Practitioners 2023"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-GOV-001",
+      "rule_version": "2025.01",
+      "title": "Engagement terms or retainer evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Law-firm service documents should evidence engagement terms, retainer, scope of work, fees, or client authorization.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "engagement letter",
+          "retainer",
+          "scope of work",
+          "legal fees",
+          "client authorization",
+          "instructions"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Rules of Professional Conduct for Legal Practitioners",
+          "Legal Practitioners Remuneration Order references"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-GOV-002",
+      "rule_version": "2025.01",
+      "title": "Conflict-of-interest management is documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Law-firm policies should evidence conflict checks, conflict disclosure, consent, or matter-screening controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "conflict of interest",
+          "conflict check",
+          "conflict disclosure",
+          "informed consent",
+          "matter screening"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Rules of Professional Conduct for Legal Practitioners"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Personal-data processing for clients/matters is documented",
+      "regulatory_domain": "privacy",
+      "summary": "Law-firm documents should evidence privacy notice, lawful basis, data-subject rights, data retention, or data security for client and matter data.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy notice",
+          "personal data",
+          "data protection",
+          "data subject",
+          "retention",
+          "lawful basis"
+        ],
+        "optional_signals": [
+          "processor",
+          "consent"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPC Nigeria Data Protection Act GAID 2025"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Secure handling of electronic client files is documented",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Legal-practice documents should evidence security controls for electronic client files, access control, encryption, secure storage, or incident handling.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "access control",
+          "encryption",
+          "secure storage",
+          "client file",
+          "incident response",
+          "document management"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPC GAID 2025",
+          "Cybercrimes Act 2024"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-REG-001",
+      "rule_version": "2025.01",
+      "title": "Practice authorization or lawyer eligibility evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Law-practice documents should evidence legal-practice authorization, call-to-bar status, practising certificate, NBA branch, or firm registration where relevant.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "practising certificate",
+          "practicing certificate",
+          "call to bar",
+          "NBA",
+          "Legal Practitioners",
+          "law firm registration",
+          "Bar"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Legal Practitioners Act",
+          "Rules of Professional Conduct for Legal Practitioners"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Client complaint or grievance process is referenced",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Client-facing law-firm materials should evidence complaints, grievance handling, escalation, or client communication process.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "complaint",
+          "grievance",
+          "client feedback",
+          "escalation",
+          "dispute resolution"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Professional conduct/client-service controls"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Client money/trust account controls are referenced where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Law-firm financial documents should evidence client money, trust account, disbursement, reconciliation, or segregation controls where applicable.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "client money",
+          "trust account",
+          "client account",
+          "disbursement",
+          "reconciliation",
+          "segregation"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Rules of Professional Conduct for Legal Practitioners"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

@@ -1,0 +1,840 @@
+{
+  "pack_id": "nigeria_core_control_library",
+  "pack_name": "Nigeria Core Control Library",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Cross-sector baseline compliance controls for Nigeria v1. This pack is designed to be applied together with sector-specific overlays. Rules are evidence-driven and deterministic; absence of evidence does not by itself constitute legal non-compliance.",
+  "metadata": {
+    "scope": "Nigeria-only baseline controls for document/document-set review.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+        "issuer": "Federal Republic of Nigeria",
+        "used_for": [
+          "privacy baseline"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Act, 2023",
+        "issuer": "Federal Republic of Nigeria / Nigeria Data Protection Commission",
+        "used_for": [
+          "privacy",
+          "data protection governance",
+          "data subject rights",
+          "controller/processor obligations"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Act General Application and Implementation Directive, 2025",
+        "issuer": "Nigeria Data Protection Commission",
+        "used_for": [
+          "privacy notices",
+          "lawful basis documentation",
+          "LIA/DPIA",
+          "implementation expectations"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Regulation, 2019 and Implementation Framework",
+        "issuer": "NITDA",
+        "used_for": [
+          "privacy policy clarity",
+          "data security",
+          "third-party processing contracts",
+          "DPO and audit controls"
+        ]
+      },
+      {
+        "name": "Cybercrimes (Prohibition, Prevention, etc.) Act, 2015 as amended 2024",
+        "issuer": "Federal Republic of Nigeria / ngCERT",
+        "used_for": [
+          "cybersecurity incident and cyber-risk controls"
+        ]
+      },
+      {
+        "name": "Federal Competition and Consumer Protection Act, 2018",
+        "issuer": "Federal Republic of Nigeria / FCCPC",
+        "used_for": [
+          "consumer protection",
+          "complaints",
+          "disclosure",
+          "redress"
+        ]
+      },
+      {
+        "name": "CBN AML/CFT/CPF supervisory resources",
+        "issuer": "Central Bank of Nigeria",
+        "used_for": [
+          "baseline AML/KYC evidence routing where applicable"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "NCCL-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Privacy notice or privacy policy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks whether the document contains a privacy notice, privacy policy, or equivalent personal-data disclosure evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy notice",
+          "privacy policy",
+          "data protection notice",
+          "personal data notice",
+          "privacy statement"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-PRIV-002",
+      "rule_version": "2025.01",
+      "title": "Personal-data processing purpose and lawful-basis evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks whether the document explains why personal data is processed and gives a lawful basis or consent/legitimate-interest basis.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "purpose of processing",
+          "lawful basis",
+          "consent",
+          "legitimate interest",
+          "legal obligation",
+          "contractual necessity",
+          "public interest"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-PRIV-003",
+      "rule_version": "2025.01",
+      "title": "Data-subject rights and grievance channel evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for evidence of data-subject rights, complaint/grievance channels, or rights-request handling.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "data subject rights",
+          "right of access",
+          "right to rectification",
+          "right to erasure",
+          "right to object",
+          "withdraw consent",
+          "grievance",
+          "complaint"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-PRIV-004",
+      "rule_version": "2025.01",
+      "title": "Data Protection Officer or privacy contact evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for a named or functional DPO/privacy contact, privacy office, or data-protection contact point.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "data protection officer",
+          "DPO",
+          "privacy officer",
+          "privacy contact",
+          "data protection contact"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-PRIV-005",
+      "rule_version": "2025.01",
+      "title": "Data security safeguard evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for data-security safeguards relevant to personal-data protection.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "data security",
+          "confidentiality",
+          "access control",
+          "encryption",
+          "authentication",
+          "technical and organisational measures",
+          "security measures"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-PRIV-006",
+      "rule_version": "2025.01",
+      "title": "Third-party processor or data-sharing control evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks whether third-party sharing, processor contracts, vendor obligations, or confidentiality controls are addressed.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "third party processor",
+          "data processor",
+          "processor agreement",
+          "data sharing",
+          "vendor confidentiality",
+          "third-party processing",
+          "outsourcing"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-PRIV-007",
+      "rule_version": "2025.01",
+      "title": "Retention, deletion, or disposal evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks whether the document defines retention, deletion, disposal, or retention-period controls for information/personal data.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "retention period",
+          "data retention",
+          "record retention",
+          "delete",
+          "deletion",
+          "dispose",
+          "disposal",
+          "archive period"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-PRIV-008",
+      "rule_version": "2025.01",
+      "title": "Cross-border transfer safeguard evidence is present where transfer is referenced",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for safeguards around international or cross-border personal-data transfer when such transfers are referenced.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "cross-border transfer",
+          "international transfer",
+          "transfer outside Nigeria",
+          "adequacy",
+          "transfer safeguard",
+          "standard contractual clauses",
+          "data transfer"
+        ],
+        "min_count": 1
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Constitution of the Federal Republic of Nigeria 1999, Section 37",
+          "Nigeria Data Protection Act, 2023",
+          "NDP Act GAID 2025",
+          "NDPR 2019 / Implementation Framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Cybersecurity or information-security policy evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for cybersecurity, information-security, or security-policy evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "cybersecurity policy",
+          "information security policy",
+          "security policy",
+          "information security",
+          "cyber risk",
+          "security controls"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybercrimes (Prohibition, Prevention, etc.) Act, 2015 as amended 2024",
+          "National Cybersecurity Policy and Strategy / ngCERT resources"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-CYBER-002",
+      "rule_version": "2025.01",
+      "title": "Access-control and authentication evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for evidence of logical access control, authentication, authorization, or least-privilege controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "access control",
+          "authentication",
+          "authorization",
+          "authorisation",
+          "least privilege",
+          "password",
+          "multi-factor",
+          "MFA",
+          "role-based access"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybercrimes (Prohibition, Prevention, etc.) Act, 2015 as amended 2024",
+          "National Cybersecurity Policy and Strategy / ngCERT resources"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-CYBER-003",
+      "rule_version": "2025.01",
+      "title": "Incident response or breach-reporting evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks whether cyber incident, breach notification, escalation, response, or reporting procedures are documented.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "incident response",
+          "security incident",
+          "data breach",
+          "breach notification",
+          "incident reporting",
+          "escalation procedure",
+          "cyber incident"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybercrimes (Prohibition, Prevention, etc.) Act, 2015 as amended 2024",
+          "National Cybersecurity Policy and Strategy / ngCERT resources"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-CYBER-004",
+      "rule_version": "2025.01",
+      "title": "System monitoring, audit log, or vulnerability management evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for audit logging, monitoring, vulnerability management, patching, or security testing evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "audit log",
+          "monitoring",
+          "vulnerability",
+          "patch management",
+          "security testing",
+          "penetration test",
+          "logging",
+          "system audit"
+        ],
+        "min_count": 1
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybercrimes (Prohibition, Prevention, etc.) Act, 2015 as amended 2024",
+          "National Cybersecurity Policy and Strategy / ngCERT resources"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Consumer/customer complaint and redress evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for complaint-handling, customer redress, refund, dispute, or service-escalation procedures.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "complaint",
+          "redress",
+          "refund",
+          "dispute resolution",
+          "customer support",
+          "consumer complaint",
+          "escalation"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Federal Competition and Consumer Protection Act, 2018",
+          "FCCPC regulations/guidelines resources"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-CONS-002",
+      "rule_version": "2025.01",
+      "title": "Material customer disclosure evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks whether the document contains customer-facing disclosure evidence such as fees, terms, conditions, risks, or service limitations.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "terms and conditions",
+          "fees",
+          "charges",
+          "disclosure",
+          "service limitation",
+          "risk disclosure",
+          "customer notice"
+        ],
+        "min_count": 1
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Federal Competition and Consumer Protection Act, 2018",
+          "FCCPC regulations/guidelines resources"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-LIC-001",
+      "rule_version": "2025.01",
+      "title": "Licensing, authorization, or permit evidence is present where regulated activity is referenced",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for licence/license, authorization, permit, approval, or regulator-issued authority evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "license",
+          "licence",
+          "licensed",
+          "licenced",
+          "authorization",
+          "authorisation",
+          "permit",
+          "approval",
+          "regulatory approval"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Applicable regulator licensing/authorization requirements; sector pack overlays should supply regulator-specific rules"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-REG-001",
+      "rule_version": "2025.01",
+      "title": "Corporate registration or statutory identity evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for registration/incorporation identifiers such as CAC, RC number, incorporation, registration certificate, or statutory identity.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CAC",
+          "RC number",
+          "registered",
+          "registration number",
+          "certificate of incorporation",
+          "incorporated",
+          "company registration"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Corporate/statutory registration evidence; sector pack overlays should supply regulator-specific rules"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/KYC control evidence is present where financial crime risk is relevant",
+      "regulatory_domain": "aml",
+      "summary": "Checks for AML, CFT, CPF, KYC, customer due diligence, transaction monitoring, or suspicious-activity escalation evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "AML",
+          "CFT",
+          "CPF",
+          "KYC",
+          "customer due diligence",
+          "beneficial owner",
+          "transaction monitoring",
+          "suspicious transaction",
+          "sanctions screening"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CBN AML/CFT/CPF supervisory resources; sector-specific AML/CFT laws, regulations and guidelines where applicable"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Sector regulator or rule-source evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks whether the document references regulator-issued rules, directives, circulars, guidelines, standards, approvals, or supervisory obligations.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "regulator",
+          "regulatory requirement",
+          "directive",
+          "circular",
+          "guideline",
+          "supervisory",
+          "compliance obligation",
+          "sector regulator"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Applicable Nigerian regulator directives, circulars, codes, guidelines and sector pack overlays"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-GOV-001",
+      "rule_version": "2025.01",
+      "title": "Governance ownership or approval evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for ownership, approval, accountability, board/management sign-off, policy owner, or responsible officer evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "approved by",
+          "approval",
+          "policy owner",
+          "responsible officer",
+          "accountable",
+          "board approval",
+          "management approval",
+          "owner"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Applicable Nigerian regulator directives, circulars, codes, guidelines and sector pack overlays"
+        ]
+      }
+    },
+    {
+      "rule_id": "NCCL-ATI-001",
+      "rule_version": "2025.01",
+      "title": "Public-sector access-to-information evidence is present where applicable",
+      "regulatory_domain": "public_sector_access_to_information",
+      "summary": "Checks for access-to-information, public-record, disclosure, response-time, or information-request process evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "freedom of information",
+          "FOI",
+          "access to information",
+          "information request",
+          "public record",
+          "disclosure request",
+          "response time"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required.",
+        "legal_review_required": true,
+        "review_guidance": "A human reviewer must confirm applicability, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Freedom of Information/access-to-information workflow where applicable; public-sector overlays should refine this rule"
+        ]
+      }
+    }
+  ]
+}

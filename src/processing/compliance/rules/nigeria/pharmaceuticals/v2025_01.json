@@ -1,0 +1,348 @@
+{
+  "pack_id": "pharmaceuticals",
+  "pack_name": "Pharmaceuticals",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for pharmaceutical manufacturing, importation, distribution, pharmacy practice, product registration, GMP, traceability, and regulated drug documentation in Nigeria.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay controls for Pharmaceuticals. Intended to be used with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "NAFDAC gazetted regulations, including pharmaceutical products regulations",
+        "issuer": "NAFDAC",
+        "used_for": [
+          "drug registration",
+          "GMP",
+          "traceability",
+          "regulated product controls"
+        ]
+      },
+      {
+        "name": "NAFDAC drugs regulatory resources",
+        "issuer": "NAFDAC",
+        "used_for": [
+          "drug manufacturing/import/export/distribution controls"
+        ]
+      },
+      {
+        "name": "Pharmacy Council of Nigeria Act, 2022",
+        "issuer": "Federal Republic of Nigeria / PCN",
+        "used_for": [
+          "pharmacy practice regulation",
+          "premises/personnel oversight"
+        ]
+      },
+      {
+        "name": "NDPA 2023",
+        "issuer": "Federal Republic of Nigeria / NDPC",
+        "used_for": [
+          "patient/customer data handling"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "PHAR-NAFDAC-001",
+      "rule_version": "2025.01",
+      "title": "NAFDAC product registration or approval evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NAFDAC registration number, product approval, listing, import permit, or regulated-product authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "NAFDAC registration number",
+          "NAFDAC number",
+          "product registration",
+          "import permit",
+          "marketing authorization",
+          "approval"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAFDAC gazetted regulations",
+          "NAFDAC drug regulations"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-GMP-001",
+      "rule_version": "2025.01",
+      "title": "GMP or quality-system evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for GMP, quality assurance, quality control, validation, batch release, or deviation/CAPA evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "GMP",
+          "good manufacturing practice",
+          "quality assurance",
+          "quality control",
+          "batch release",
+          "validation",
+          "CAPA",
+          "deviation"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAFDAC pharmaceutical regulations 2024",
+          "NAFDAC GMP controls"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-TRACE-001",
+      "rule_version": "2025.01",
+      "title": "Pharmaceutical traceability evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for batch, lot, serialization, expiry date, recall, distribution record, or traceability evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "batch number",
+          "lot number",
+          "serialization",
+          "expiry date",
+          "recall",
+          "distribution record",
+          "traceability"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAFDAC Pharmaceutical Products Traceability Regulations 2024"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-PV-001",
+      "rule_version": "2025.01",
+      "title": "Pharmacovigilance or adverse-event reporting evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for adverse event, pharmacovigilance, complaint, product defect, recall, or safety reporting evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "adverse event",
+          "pharmacovigilance",
+          "product defect",
+          "recall",
+          "safety report",
+          "complaint"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAFDAC drug safety framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-PCN-001",
+      "rule_version": "2025.01",
+      "title": "PCN pharmacy premises/personnel authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for PCN registration, superintendent pharmacist, premises licence, or professional registration evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Pharmacy Council of Nigeria",
+          "PCN",
+          "superintendent pharmacist",
+          "premises licence",
+          "pharmacist registration"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Pharmacy Council of Nigeria Act 2022"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-LABEL-001",
+      "rule_version": "2025.01",
+      "title": "Labelling and patient/consumer information evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for dosage, warning, contraindication, leaflet, label, or patient-information evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "dosage",
+          "warning",
+          "contraindication",
+          "patient information",
+          "leaflet",
+          "label"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAFDAC gazetted regulations",
+          "FCCPA 2018"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Patient/customer health-data protection evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, personal data, patient record, health data, consent, or data protection evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy",
+          "personal data",
+          "patient record",
+          "health data",
+          "consent",
+          "data protection"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigeria Data Protection Act 2023"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-SUPPLY-001",
+      "rule_version": "2025.01",
+      "title": "Controlled supply-chain or distribution authorization evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for licensed distributor, wholesale, storage condition, cold chain, transport, or supply authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "licensed distributor",
+          "wholesale",
+          "storage condition",
+          "cold chain",
+          "transport condition",
+          "supply authorization"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAFDAC regulations",
+          "PCN Act 2022"
+        ]
+      }
+    }
+  ]
+}

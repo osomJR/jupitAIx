@@ -1,0 +1,376 @@
+{
+  "pack_id": "oil_and_gas",
+  "pack_name": "Oil and Gas Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Nigerian upstream, midstream, and downstream oil and gas documents, including licence, HSE, environmental, decommissioning, metering, reporting, and decarbonisation evidence.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay for Oil and Gas Sector Compliance Overlay; intended to be applied with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from Nigerian statutes, regulations, regulator guidance, codes, directives, and sector rules available at rule-pack publication time.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Petroleum Industry Act, 2021",
+        "issuer": "Federal Republic of Nigeria",
+        "used_for": [
+          "petroleum licensing",
+          "regulatory structure",
+          "host community and petroleum operations governance"
+        ]
+      },
+      {
+        "name": "NUPRC Guidelines and Safety/Environment regulatory framework",
+        "issuer": "Nigerian Upstream Petroleum Regulatory Commission",
+        "used_for": [
+          "upstream licensing",
+          "HSE",
+          "environmental management",
+          "operational compliance"
+        ]
+      },
+      {
+        "name": "Upstream Petroleum Safety Regulations, 2024",
+        "issuer": "NUPRC",
+        "used_for": [
+          "occupational health",
+          "fitness to work",
+          "safety management"
+        ]
+      },
+      {
+        "name": "NMDPRA regulatory framework",
+        "issuer": "Nigerian Midstream and Downstream Petroleum Regulatory Authority",
+        "used_for": [
+          "midstream/downstream licensing",
+          "product standards",
+          "facility permits"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "OILGAS-LIC-001",
+      "rule_version": "2025.01",
+      "title": "Petroleum licence, lease, permit, or regulatory authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for licence, lease, permit, NUPRC/NMDPRA authorization, or regulatory approval evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "petroleum licence",
+          "petroleum license",
+          "oil mining lease",
+          "oml",
+          "oil prospecting licence",
+          "opl",
+          "nuprc",
+          "nmdpra",
+          "permit",
+          "approval"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Petroleum Industry Act 2021",
+          "NUPRC regulatory framework",
+          "NMDPRA regulatory framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Health, safety, and environment management controls are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for HSE plan, safety case, risk assessment, emergency response, or occupational health evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "hse",
+          "health safety and environment",
+          "safety case",
+          "risk assessment",
+          "emergency response",
+          "occupational health"
+        ],
+        "optional_signals": [
+          "fitness to work",
+          "permit to work",
+          "hazard identification"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "source_basis": [
+          "NUPRC Safety and Environment framework",
+          "Upstream Petroleum Safety Regulations 2024"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Environmental management, spill response, or remediation evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for environmental management, spill response, remediation, waste management, or emissions controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "environmental management",
+          "spill response",
+          "remediation",
+          "waste management",
+          "emissions",
+          "environmental impact assessment",
+          "eia"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Petroleum Industry Act 2021",
+          "NUPRC environmental framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-SECTOR-003",
+      "rule_version": "2025.01",
+      "title": "Metering, production reporting, or regulatory return evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for production reporting, metering, measurement, fiscal metering, or regulatory return evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "metering",
+          "production report",
+          "regulatory return",
+          "fiscal metering",
+          "measurement",
+          "crude allocation",
+          "volume reconciliation"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Petroleum Industry Act 2021",
+          "NUPRC/NMDPRA reporting expectations"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-SECTOR-004",
+      "rule_version": "2025.01",
+      "title": "Host community, local content, or community-relations evidence is referenced",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for host community, community development, Nigerian content, stakeholder engagement, or grievance mechanism evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "host community",
+          "community development",
+          "nigerian content",
+          "local content",
+          "stakeholder engagement",
+          "grievance mechanism"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Petroleum Industry Act 2021",
+          "Nigerian Content framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Operational technology or critical infrastructure security controls are referenced",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for cybersecurity, SCADA, operational technology security, access control, or incident response evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "cybersecurity",
+          "scada",
+          "operational technology",
+          "ot security",
+          "access control",
+          "incident response"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Cybercrimes Act 2015 as amended 2024",
+          "critical infrastructure risk expectations"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Workforce, contractor, or community personal-data handling is addressed",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for data protection, privacy, consent, or confidentiality controls covering workers, contractors, or community records.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "data protection",
+          "privacy",
+          "personal data",
+          "contractor records",
+          "employee records",
+          "community data",
+          "confidentiality"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "NDPA GAID 2025"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-SECTOR-005",
+      "rule_version": "2025.01",
+      "title": "Decarbonisation, emissions, or energy-transition evidence is referenced where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for decarbonisation, emissions reduction, methane, renewable energy, or low-carbon operational evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "decarbonisation",
+          "decarbonization",
+          "emissions reduction",
+          "methane",
+          "low carbon",
+          "renewable energy",
+          "net zero"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NUPRC decarbonisation and emissions-related guidance"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "OILGAS-ABS-001",
+      "rule_version": "2025.01",
+      "title": "No evidence of bypassing safety or environmental approvals is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Screens for language suggesting operations proceed without permit, safety clearance, or environmental approval.",
+      "evaluation": {
+        "strategy": "absent_signals",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "prohibited_signals": [
+          "operate without permit",
+          "bypass safety approval",
+          "no environmental approval required",
+          "ignore spill reporting",
+          "avoid regulator notification"
+        ],
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Petroleum Industry Act 2021",
+          "NUPRC/NMDPRA regulatory framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    }
+  ]
+}

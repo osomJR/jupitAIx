@@ -1,0 +1,353 @@
+{
+  "pack_id": "manufacturing",
+  "pack_name": "Manufacturing",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for manufacturing, processing, assembly, quality assurance, product safety, and regulated-product documentation in Nigeria.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay controls for Manufacturing. Intended to be used with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Standards Organisation of Nigeria Act, 2015",
+        "issuer": "Federal Republic of Nigeria / SON",
+        "used_for": [
+          "standards",
+          "quality assurance",
+          "product conformity"
+        ]
+      },
+      {
+        "name": "NESREA Laws and Regulations / sector environmental regulations",
+        "issuer": "NESREA",
+        "used_for": [
+          "environmental permits",
+          "pollution control",
+          "effluent and waste management"
+        ]
+      },
+      {
+        "name": "FCCPC product safety and consumer protection materials",
+        "issuer": "FCCPC",
+        "used_for": [
+          "consumer safety",
+          "product safety compliance"
+        ]
+      },
+      {
+        "name": "NAFDAC gazetted regulations for regulated products where applicable",
+        "issuer": "NAFDAC",
+        "used_for": [
+          "regulated products",
+          "GMP",
+          "product registration"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MFG-SON-001",
+      "rule_version": "2025.01",
+      "title": "SON standards or conformity evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for evidence of Nigerian standards, SONCAP/MANCAP, conformity assessment, or product standard controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "SON",
+          "MANCAP",
+          "SONCAP",
+          "standard",
+          "conformity assessment",
+          "Nigerian Industrial Standard"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Standards Organisation of Nigeria Act 2015"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-QA-001",
+      "rule_version": "2025.01",
+      "title": "Quality management or production quality-control evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for quality control, quality assurance, batch release, inspection, testing, or nonconformance management evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "quality control",
+          "quality assurance",
+          "batch release",
+          "inspection",
+          "testing",
+          "nonconformance",
+          "corrective action"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "SON Act 2015",
+          "NAFDAC regulations where applicable"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-ENV-001",
+      "rule_version": "2025.01",
+      "title": "Environmental or pollution-control evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for environmental impact, pollution control, effluent, waste management, or emission control evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "environmental impact",
+          "pollution control",
+          "effluent",
+          "waste management",
+          "emission",
+          "NESREA"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NESREA laws and regulations"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Product safety and consumer-risk controls are present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for product safety, warning, recall, complaint, label, or consumer disclosure controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "product safety",
+          "warning",
+          "recall",
+          "complaint",
+          "label",
+          "consumer"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FCCPA 2018",
+          "FCCPC product safety guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-LIC-001",
+      "rule_version": "2025.01",
+      "title": "Factory, product, or regulatory authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for manufacturing licence, factory permit, product registration, approval, or authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "manufacturing licence",
+          "factory licence",
+          "permit",
+          "product registration",
+          "approval",
+          "authorization",
+          "authorisation"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "SON Act 2015",
+          "NAFDAC regulations where applicable"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-TRACE-001",
+      "rule_version": "2025.01",
+      "title": "Batch, lot, or supply-chain traceability evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for lot number, batch number, supplier, production date, recall, or traceability evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "batch number",
+          "lot number",
+          "supplier",
+          "production date",
+          "traceability",
+          "recall"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "SON Act 2015",
+          "NAFDAC traceability/GMP regulations where applicable"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-WHS-001",
+      "rule_version": "2025.01",
+      "title": "Worker health and safety controls are referenced",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for health and safety, PPE, accident reporting, emergency response, or workplace safety evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "health and safety",
+          "PPE",
+          "accident report",
+          "emergency response",
+          "workplace safety",
+          "hazard"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Factories/workplace safety framework",
+          "NESREA regulations"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Employee/customer data protection evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, personal data, data protection, consent, or employee/customer data handling evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "personal data",
+          "privacy",
+          "data protection",
+          "employee data",
+          "customer data",
+          "consent"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigeria Data Protection Act 2023"
+        ]
+      }
+    }
+  ]
+}

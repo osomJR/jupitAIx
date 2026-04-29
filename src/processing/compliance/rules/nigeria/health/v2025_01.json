@@ -1,0 +1,374 @@
+{
+  "pack_id": "health",
+  "pack_name": "Health Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Nigerian healthcare providers, health facilities, health data, clinical services, and health-sector regulated documents.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay for Health Sector Compliance Overlay; intended to be applied with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from Nigerian statutes, regulations, regulator guidance, codes, directives, and sector rules available at rule-pack publication time.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "National Health Act, 2014",
+        "issuer": "Federal Republic of Nigeria / Federal Ministry of Health",
+        "used_for": [
+          "health-system governance",
+          "health records",
+          "patient confidentiality",
+          "standards for health services"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Act, 2023 and GAID 2025",
+        "issuer": "Nigeria Data Protection Commission",
+        "used_for": [
+          "sensitive personal data",
+          "health data privacy",
+          "data subject rights",
+          "lawful basis"
+        ]
+      },
+      {
+        "name": "Federal Ministry of Health and Social Welfare regulatory-agency framework",
+        "issuer": "Federal Ministry of Health and Social Welfare",
+        "used_for": [
+          "sector regulator identification",
+          "facility/service governance"
+        ]
+      },
+      {
+        "name": "NAFDAC regulatory framework",
+        "issuer": "National Agency for Food and Drug Administration and Control",
+        "used_for": [
+          "regulated health products",
+          "clinical trials",
+          "pharmaceutical and medical-product controls"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "HEALTH-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Patient confidentiality and health-record privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks whether health documents contain patient confidentiality, privacy, or health-record protection language.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "patient confidentiality",
+          "confidentiality",
+          "health record",
+          "medical record",
+          "patient privacy",
+          "sensitive personal data"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "National Health Act 2014",
+          "NDPA 2023",
+          "NDPA GAID 2025"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-PRIV-002",
+      "rule_version": "2025.01",
+      "title": "Patient consent or lawful basis for processing health data is documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for consent, lawful basis, authorization, or patient information disclosure controls for health-data processing.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "patient consent",
+          "informed consent",
+          "lawful basis",
+          "authorization",
+          "authorisation",
+          "data subject consent"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "NDPA GAID 2025",
+          "National Health Act 2014"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-REG-001",
+      "rule_version": "2025.01",
+      "title": "Health facility or provider registration/licensing evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks whether the document contains evidence of registration, licence, accreditation, permit, or recognized health facility/provider authority.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "licence",
+          "license",
+          "registered health facility",
+          "accreditation",
+          "facility registration",
+          "medical and dental council",
+          "nursing and midwifery council",
+          "pharmacists council"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "National Health Act 2014",
+          "Federal Ministry of Health and Social Welfare regulatory-agency framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Clinical governance or quality-of-care process is documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for clinical governance, quality assurance, standard operating procedures, or patient-safety process language.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "clinical governance",
+          "quality assurance",
+          "standard operating procedure",
+          "patient safety",
+          "infection prevention",
+          "quality improvement"
+        ],
+        "optional_signals": [
+          "clinical audit",
+          "incident reporting",
+          "care pathway"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "source_basis": [
+          "National Health Act 2014",
+          "Federal Ministry of Health and Social Welfare regulatory-agency framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Electronic health-record access and security controls are referenced",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for evidence of access controls, authentication, audit logs, or security controls over health records and systems.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "access control",
+          "role based access",
+          "authentication",
+          "audit log",
+          "electronic health record",
+          "health information system",
+          "encryption"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "Cybercrimes Act 2015 as amended 2024"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Clinical trial, research ethics, or regulated product approval evidence is present when applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for evidence of NHREC, ethics committee, clinical trial approval, NAFDAC approval, or regulated-product authorization language.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "ethics committee",
+          "nhrec",
+          "clinical trial approval",
+          "nafdac approval",
+          "regulated product",
+          "good clinical practice",
+          "gcp"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NAFDAC regulatory framework",
+          "National Health Research Ethics Committee framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-CONSUMER-001",
+      "rule_version": "2025.01",
+      "title": "Patient complaint, grievance, or redress process is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for complaint, grievance, redress, escalation, or patient-rights process language.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "complaint",
+          "grievance",
+          "redress",
+          "patient rights",
+          "appeal",
+          "escalation"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "National Health Act 2014",
+          "Federal Competition and Consumer Protection Act 2018"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-SECTOR-003",
+      "rule_version": "2025.01",
+      "title": "Medicines, devices, or controlled health products are subject to regulatory handling controls",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for NAFDAC, batch, pharmacovigilance, adverse-event, or product-registration controls in health-product documents.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "nafdac",
+          "batch number",
+          "pharmacovigilance",
+          "adverse event",
+          "product registration",
+          "medical device",
+          "drug registration"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NAFDAC regulatory framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "HEALTH-ABS-001",
+      "rule_version": "2025.01",
+      "title": "No evidence of unauthorized disclosure of patient information is present",
+      "regulatory_domain": "privacy",
+      "summary": "Screens for phrases suggesting unauthorized disclosure or public exposure of identifiable patient data.",
+      "evaluation": {
+        "strategy": "absent_signals",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "prohibited_signals": [
+          "unauthorized disclosure",
+          "unauthorised disclosure",
+          "share patient list publicly",
+          "public patient data",
+          "disclose without consent"
+        ],
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "National Health Act 2014",
+          "NDPA 2023"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    }
+  ]
+}

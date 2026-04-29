@@ -1,0 +1,370 @@
+{
+  "pack_id": "energy_and_power",
+  "pack_name": "Energy and Power Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Nigerian electricity generation, transmission, distribution, supply, embedded generation, eligible customer, safety, technical code, metering, customer protection, and regulatory compliance documents.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay for Energy and Power Sector Compliance Overlay; intended to be applied with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from Nigerian statutes, regulations, regulator guidance, codes, directives, and sector rules available at rule-pack publication time.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Electric Power Sector Reform / Electricity Act framework and NERC regulatory framework",
+        "issuer": "Federal Republic of Nigeria / Nigerian Electricity Regulatory Commission",
+        "used_for": [
+          "electricity licensing",
+          "market rules",
+          "technical codes",
+          "consumer protection"
+        ]
+      },
+      {
+        "name": "NERC Distribution Code",
+        "issuer": "Nigerian Electricity Regulatory Commission",
+        "used_for": [
+          "distribution technical compliance",
+          "connection and network obligations"
+        ]
+      },
+      {
+        "name": "NERC Health and Safety Code",
+        "issuer": "Nigerian Electricity Regulatory Commission",
+        "used_for": [
+          "power-sector occupational health and safety"
+        ]
+      },
+      {
+        "name": "NERC Eligible Customer Regulations 2024",
+        "issuer": "Nigerian Electricity Regulatory Commission",
+        "used_for": [
+          "eligible customer supply",
+          "technical code compliance",
+          "metering obligations"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "POWER-LIC-001",
+      "rule_version": "2025.01",
+      "title": "NERC licence, permit, or authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NERC licence, permit, eligible customer approval, embedded generation permit, or electricity authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "nerc",
+          "licence",
+          "license",
+          "permit",
+          "eligible customer",
+          "embedded generation",
+          "generation licence",
+          "distribution licence"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NERC regulatory framework",
+          "NERC Eligible Customer Regulations 2024"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Grid, distribution, metering, or technical-code compliance is referenced",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for Distribution Code, Grid Code, metering, connection agreement, remote reading, or technical-code compliance.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "distribution code",
+          "grid code",
+          "metering",
+          "connection agreement",
+          "technical code",
+          "remote reading",
+          "off-take"
+        ],
+        "optional_signals": [
+          "network connection",
+          "meter infrastructure",
+          "power purchase agreement"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "source_basis": [
+          "NERC Distribution Code",
+          "NERC Eligible Customer Regulations 2024"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Health, safety, and emergency controls for power operations are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for safety code, HSE, emergency response, electrical safety, isolation, or incident reporting evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "health and safety",
+          "hse",
+          "electrical safety",
+          "emergency response",
+          "incident reporting",
+          "isolation procedure",
+          "safety code"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NERC Health and Safety Code"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-CONSUMER-001",
+      "rule_version": "2025.01",
+      "title": "Customer service, complaint, billing, or service-level process is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for customer complaints, billing dispute, service level, tariff disclosure, refund, or customer care evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "customer complaint",
+          "billing dispute",
+          "service level",
+          "tariff",
+          "refund",
+          "customer care",
+          "disconnection notice"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NERC consumer-protection framework",
+          "FCCPA 2018"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Energy systems cybersecurity or operational technology security controls are referenced",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for cybersecurity, SCADA, operational technology, access control, incident response, or system security language.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "cybersecurity",
+          "scada",
+          "operational technology",
+          "ot security",
+          "access control",
+          "incident response",
+          "system security"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Cybercrimes Act 2015 as amended 2024",
+          "power-sector critical infrastructure risk expectations"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Customer data privacy and billing-data protection controls are present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, personal data, customer data, billing data, confidentiality, or consent controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy",
+          "personal data",
+          "customer data",
+          "billing data",
+          "confidentiality",
+          "consent"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "NDPA GAID 2025"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-SECTOR-003",
+      "rule_version": "2025.01",
+      "title": "Environmental, emissions, or renewable-energy evidence is referenced where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for environmental management, emissions, renewable energy, energy efficiency, or sustainability evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "environmental management",
+          "emissions",
+          "renewable energy",
+          "energy efficiency",
+          "sustainability",
+          "carbon"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NERC regulatory framework",
+          "national energy transition expectations"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-REG-001",
+      "rule_version": "2025.01",
+      "title": "Regulatory reporting, market-settlement, or financial obligation evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for regulatory returns, market settlement, payment obligations, invoice reconciliation, or compliance reporting.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "regulatory return",
+          "market settlement",
+          "financial obligation",
+          "invoice reconciliation",
+          "compliance report",
+          "settlement statement"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NERC market and eligible customer framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "POWER-ABS-001",
+      "rule_version": "2025.01",
+      "title": "No evidence of unauthorized connection, unsafe bypass, or meter tampering is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Screens for language suggesting meter bypass, unauthorized connection, unsafe energization, or technical-code avoidance.",
+      "evaluation": {
+        "strategy": "absent_signals",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "prohibited_signals": [
+          "meter bypass",
+          "unauthorized connection",
+          "unauthorised connection",
+          "tamper meter",
+          "unsafe energization",
+          "bypass technical code"
+        ],
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NERC Distribution Code",
+          "NERC regulatory framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    }
+  ]
+}

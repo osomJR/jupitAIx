@@ -1,0 +1,347 @@
+{
+  "pack_id": "ngo",
+  "pack_name": "NGO",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for non-governmental organizations, incorporated trustees, charities, donor-funded bodies, associations, foundations, and civil-society documentation in Nigeria.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay controls for NGO. Intended to be used with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Companies and Allied Matters Act, 2020 / CAC incorporated trustees process",
+        "issuer": "Federal Republic of Nigeria / CAC",
+        "used_for": [
+          "incorporated trustees registration",
+          "governance documents"
+        ]
+      },
+      {
+        "name": "CAC official Incorporated Trustees registration guidance",
+        "issuer": "CAC",
+        "used_for": [
+          "registration workflow",
+          "constitution/trustee documentation"
+        ]
+      },
+      {
+        "name": "SCUML AML/CFT Compliance Guidelines for DNFIs",
+        "issuer": "SCUML / EFCC",
+        "used_for": [
+          "AML/CFT registration and controls where NGO activities are in scope"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Act, 2023",
+        "issuer": "Federal Republic of Nigeria / NDPC",
+        "used_for": [
+          "donor/beneficiary/employee data handling"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "NGO-CAC-001",
+      "rule_version": "2025.01",
+      "title": "CAC incorporated trustee or registration evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for CAC, incorporated trustees, certificate of incorporation, constitution, trustees, or registration-number evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CAC",
+          "incorporated trustees",
+          "certificate of incorporation",
+          "constitution",
+          "trustees",
+          "registration number"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CAMA 2020",
+          "CAC Incorporated Trustees process"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-GOV-001",
+      "rule_version": "2025.01",
+      "title": "Board/trustee governance evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for board, trustees, meeting minutes, resolution, governance, or approval evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "board",
+          "trustees",
+          "meeting minutes",
+          "resolution",
+          "governance",
+          "approval"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CAMA 2020",
+          "CAC incorporated trustees process"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-OBJ-001",
+      "rule_version": "2025.01",
+      "title": "Objects, charitable purpose, or programme mandate evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for charitable object, social development purpose, programme mandate, constitution objects, or mission evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "objects",
+          "charitable",
+          "social development",
+          "mission",
+          "programme mandate",
+          "constitution"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CAMA 2020"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-AML-001",
+      "rule_version": "2025.01",
+      "title": "SCUML/AML-CFT controls are present where applicable",
+      "regulatory_domain": "aml",
+      "summary": "Checks for SCUML registration, donor due diligence, beneficial ownership, AML, CFT, or suspicious transaction evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "SCUML",
+          "AML",
+          "CFT",
+          "donor due diligence",
+          "beneficial owner",
+          "suspicious transaction"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "SCUML AML/CFT Compliance Guidelines for DNFIs"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-FIN-001",
+      "rule_version": "2025.01",
+      "title": "Funds, grant, donation, or financial accountability evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for donor funds, grants, donations, budget, audited accounts, financial report, or accountability evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "donor",
+          "grant",
+          "donation",
+          "budget",
+          "audited accounts",
+          "financial report",
+          "accountability"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CAMA 2020",
+          "FRC/financial reporting requirements where applicable"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-BEN-001",
+      "rule_version": "2025.01",
+      "title": "Beneficiary protection or safeguarding evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for beneficiary, safeguarding, complaint, grievance, protection, or abuse-prevention evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "beneficiary",
+          "safeguarding",
+          "complaint",
+          "grievance",
+          "protection",
+          "abuse"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "governance best practice mapped for NGO review",
+          "FCCPA where consumer-facing services apply"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Donor, beneficiary, employee, or volunteer data protection evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, personal data, donor data, beneficiary data, consent, or data protection evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy",
+          "personal data",
+          "donor data",
+          "beneficiary data",
+          "volunteer data",
+          "consent",
+          "data protection"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigeria Data Protection Act 2023"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-TAX-001",
+      "rule_version": "2025.01",
+      "title": "Tax exemption, returns, or statutory filing evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for annual returns, tax exemption, FIRS, statutory filing, or compliance returns evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "annual returns",
+          "tax exemption",
+          "FIRS",
+          "statutory filing",
+          "compliance return",
+          "returns"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CAMA 2020",
+          "tax/statutory filing framework"
+        ]
+      }
+    }
+  ]
+}

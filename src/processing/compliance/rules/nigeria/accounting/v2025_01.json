@@ -1,0 +1,346 @@
+{
+  "pack_id": "accounting",
+  "pack_name": "Accounting",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for accounting firms, audit practices, assurance providers, financial reporting professionals, and related professional-services documentation in Nigeria.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay controls for Accounting. Intended to be used with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Financial Reporting Council of Nigeria Act / Amendment materials",
+        "issuer": "FRC Nigeria",
+        "used_for": [
+          "financial reporting",
+          "corporate governance",
+          "audit oversight"
+        ]
+      },
+      {
+        "name": "FRC Nigeria Regulations 2024 on statutory audits and assurance services",
+        "issuer": "FRC Nigeria",
+        "used_for": [
+          "audit execution",
+          "standards adoption",
+          "firm obligations"
+        ]
+      },
+      {
+        "name": "FRC Rules including ISA 701 adoption guidance",
+        "issuer": "FRC Nigeria",
+        "used_for": [
+          "audit reporting",
+          "key audit matters"
+        ]
+      },
+      {
+        "name": "AML/CFT requirements applicable to DNFBPs where applicable",
+        "issuer": "SCUML/EFCC",
+        "used_for": [
+          "client due diligence for relevant professional services"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "ACC-FRC-001",
+      "rule_version": "2025.01",
+      "title": "FRC registration, oversight, or reporting evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for FRC registration, professional registration, firm registration, or FRC compliance evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Financial Reporting Council",
+          "FRC",
+          "registration number",
+          "professional registration",
+          "audit firm"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FRC Act",
+          "FRC Regulations 2024"
+        ]
+      }
+    },
+    {
+      "rule_id": "ACC-AUD-001",
+      "rule_version": "2025.01",
+      "title": "Audit standards compliance evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for ISA, auditing standards, audit methodology, audit plan, engagement quality review, or audit evidence references.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "International Standards on Auditing",
+          "ISA",
+          "audit plan",
+          "audit evidence",
+          "engagement quality review",
+          "audit methodology"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FRC Regulations 2024",
+          "FRC Rules"
+        ]
+      }
+    },
+    {
+      "rule_id": "ACC-ETH-001",
+      "rule_version": "2025.01",
+      "title": "Professional ethics and independence evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for independence, conflict of interest, code of ethics, objectivity, integrity, or confidentiality evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "independence",
+          "conflict of interest",
+          "code of ethics",
+          "objectivity",
+          "integrity",
+          "confidentiality"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FRC Regulations 2024",
+          "IFAC ethics adoption through FRC framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "ACC-FR-001",
+      "rule_version": "2025.01",
+      "title": "Financial reporting framework evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for IFRS, financial statements, accounting policy, disclosure, consolidation, or reporting framework evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "IFRS",
+          "financial statements",
+          "accounting policy",
+          "disclosure",
+          "consolidation",
+          "financial reporting"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FRC Act",
+          "FRC reporting framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "ACC-KAM-001",
+      "rule_version": "2025.01",
+      "title": "Key audit matters or audit-reporting rule evidence is present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for key audit matters, modified opinion, auditor report, going concern, or ISA 701 evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "key audit matters",
+          "modified opinion",
+          "auditor report",
+          "going concern",
+          "ISA 701"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FRC Rule 9 / ISA 701 guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "ACC-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/CFT client due-diligence controls are present where applicable",
+      "regulatory_domain": "aml",
+      "summary": "Checks for client due diligence, beneficial ownership, suspicious transaction, risk assessment, or SCUML evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client due diligence",
+          "beneficial owner",
+          "suspicious transaction",
+          "risk assessment",
+          "SCUML",
+          "AML"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "SCUML AML/CFT Compliance Guidelines for DNFIs"
+        ]
+      }
+    },
+    {
+      "rule_id": "ACC-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Client confidentiality and personal-data protection evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for client confidentiality, privacy, personal data, data protection, or consent evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client confidentiality",
+          "privacy",
+          "personal data",
+          "data protection",
+          "consent"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigeria Data Protection Act 2023",
+          "professional ethics requirements"
+        ]
+      }
+    },
+    {
+      "rule_id": "ACC-RET-001",
+      "rule_version": "2025.01",
+      "title": "Audit/engagement document retention or recordkeeping evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for retention, working papers, engagement file, audit documentation, or recordkeeping evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "retention",
+          "working papers",
+          "engagement file",
+          "audit documentation",
+          "record keeping",
+          "recordkeeping"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FRC Regulations 2024",
+          "auditing standards"
+        ]
+      }
+    }
+  ]
+}

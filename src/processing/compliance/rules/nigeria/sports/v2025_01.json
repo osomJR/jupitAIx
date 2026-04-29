@@ -1,0 +1,371 @@
+{
+  "pack_id": "sports",
+  "pack_name": "Sports Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Nigerian sports organizations, clubs, federations, academies, athlete welfare, anti-doping, safeguarding, events, and sports governance documents.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay for Sports Sector Compliance Overlay; intended to be applied with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from Nigerian statutes, regulations, regulator guidance, codes, directives, and sector rules available at rule-pack publication time.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "National Sports Commission Act / National sports administration framework",
+        "issuer": "Federal Republic of Nigeria / National Sports Commission",
+        "used_for": [
+          "sports governance",
+          "sports federation oversight",
+          "sports development administration"
+        ]
+      },
+      {
+        "name": "Nigeria Anti-Doping Organization rules and resources",
+        "issuer": "Nigeria Anti-Doping Organization",
+        "used_for": [
+          "anti-doping controls",
+          "athlete testing",
+          "education",
+          "TUE and reporting"
+        ]
+      },
+      {
+        "name": "National Anti-Doping legal and policy framework",
+        "issuer": "Federal Republic of Nigeria / sports authorities",
+        "used_for": [
+          "World Anti-Doping Code alignment",
+          "drug-free sports controls"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Act, 2023 and GAID 2025",
+        "issuer": "Nigeria Data Protection Commission",
+        "used_for": [
+          "athlete personal data",
+          "minor data",
+          "medical/fitness records"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "SPORT-LIC-001",
+      "rule_version": "2025.01",
+      "title": "Sports organization, federation, academy, or event authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for registration, federation affiliation, permit, authorization, or approval evidence for sports operations or events.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "national sports commission",
+          "sports federation",
+          "registered club",
+          "sports academy",
+          "event permit",
+          "affiliation",
+          "approval"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "National Sports Commission framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Anti-doping policy, education, or testing controls are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for anti-doping, prohibited substances, testing, therapeutic-use exemption, whereabouts, or education controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "anti-doping",
+          "prohibited substance",
+          "drug testing",
+          "therapeutic use exemption",
+          "tue",
+          "whereabouts",
+          "doping education"
+        ],
+        "optional_signals": [
+          "sample collection",
+          "wada code",
+          "nado"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "source_basis": [
+          "Nigeria Anti-Doping Organization resources",
+          "National Anti-Doping legal/policy framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Athlete welfare, safeguarding, or medical fitness controls are present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for athlete welfare, safeguarding, medical clearance, fitness to compete, concussion, or injury management evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "athlete welfare",
+          "safeguarding",
+          "medical clearance",
+          "fitness to compete",
+          "injury management",
+          "concussion",
+          "duty of care"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "National Sports Commission framework",
+          "sports welfare standards"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Athlete personal, medical, or minor data protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, consent, parental consent, medical record confidentiality, or data protection language.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy",
+          "data protection",
+          "consent",
+          "parental consent",
+          "minor",
+          "medical record",
+          "athlete data"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "NDPA GAID 2025"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-CONSUMER-001",
+      "rule_version": "2025.01",
+      "title": "Participant, ticket-holder, sponsor, or fan-facing disclosures are present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for event terms, refund, cancellation, participant risk disclosure, sponsorship terms, or complaint handling.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "refund",
+          "cancellation",
+          "ticket terms",
+          "participant waiver",
+          "risk disclosure",
+          "complaint",
+          "sponsorship terms"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "FCCPA 2018",
+          "sports event governance expectations"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-SECTOR-003",
+      "rule_version": "2025.01",
+      "title": "Age verification, eligibility, or athlete registration evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for athlete registration, age verification, eligibility, roster, or identity checks.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "athlete registration",
+          "age verification",
+          "eligibility",
+          "roster",
+          "identity verification",
+          "player registration"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "National Sports Commission framework",
+          "sports federation eligibility rules"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-SECTOR-004",
+      "rule_version": "2025.01",
+      "title": "Governance, ethics, conflict-of-interest, or disciplinary controls are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for governance, ethics, disciplinary procedure, conflict-of-interest, election, or financial accountability evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "code of conduct",
+          "disciplinary procedure",
+          "conflict of interest",
+          "ethics",
+          "governance",
+          "financial accountability",
+          "election"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "National Sports Commission framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Digital athlete-management or ticketing systems have security controls",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for access control, authentication, system security, payment security, or incident response in sports systems.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "access control",
+          "authentication",
+          "payment security",
+          "ticketing system",
+          "incident response",
+          "cybersecurity"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Cybercrimes Act 2015 as amended 2024",
+          "NDPA 2023"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "SPORT-ABS-001",
+      "rule_version": "2025.01",
+      "title": "No evidence of tolerating doping, age fraud, or unsafe participation is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Screens for language suggesting tolerance of doping, age falsification, unverified eligibility, or participation without medical clearance.",
+      "evaluation": {
+        "strategy": "absent_signals",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "prohibited_signals": [
+          "ignore doping",
+          "age falsification allowed",
+          "unverified age accepted",
+          "no medical clearance required",
+          "avoid drug test"
+        ],
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Nigeria Anti-Doping Organization resources",
+          "National Sports Commission framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    }
+  ]
+}

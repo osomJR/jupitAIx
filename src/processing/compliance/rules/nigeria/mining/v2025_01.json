@@ -1,0 +1,347 @@
+{
+  "pack_id": "mining",
+  "pack_name": "Mining",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for exploration, mining, quarrying, mineral title holders, environmental compliance, and mineral operations documentation in Nigeria.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay controls for Mining. Intended to be used with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Nigerian Minerals and Mining Act, 2007",
+        "issuer": "Federal Republic of Nigeria",
+        "used_for": [
+          "mineral title obligations",
+          "mines inspectorate",
+          "environmental compliance"
+        ]
+      },
+      {
+        "name": "Nigerian Minerals and Mining Regulations, 2011",
+        "issuer": "Ministry/MCO",
+        "used_for": [
+          "mining operations plans",
+          "environmental obligations",
+          "record keeping"
+        ]
+      },
+      {
+        "name": "Mining Cadastre Office legal documents",
+        "issuer": "Nigeria Mining Cadastre Office",
+        "used_for": [
+          "mineral title and permit documentation"
+        ]
+      },
+      {
+        "name": "NESREA environmental regulations",
+        "issuer": "NESREA",
+        "used_for": [
+          "environmental compliance"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MIN-MCO-001",
+      "rule_version": "2025.01",
+      "title": "Mineral title, licence, lease, or permit evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for exploration licence, mining lease, quarry lease, small-scale mining lease, water-use permit, or MCO title evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "exploration licence",
+          "mining lease",
+          "quarry lease",
+          "small-scale mining lease",
+          "water use permit",
+          "Mining Cadastre Office",
+          "mineral title"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigerian Minerals and Mining Act 2007",
+          "Mining Regulations 2011"
+        ]
+      }
+    },
+    {
+      "rule_id": "MIN-OPS-001",
+      "rule_version": "2025.01",
+      "title": "Mining operations plan evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for plan of mining operations, mine plan, amended operations plan, or operations approval evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "plan of mining operations",
+          "mine plan",
+          "operations plan",
+          "mining operations",
+          "amended plan"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigerian Minerals and Mining Regulations 2011"
+        ]
+      }
+    },
+    {
+      "rule_id": "MIN-ENV-001",
+      "rule_version": "2025.01",
+      "title": "Mines environmental compliance evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for environmental compliance, restoration, reclamation, remediation, effluent, or environmental management evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "environmental compliance",
+          "reclamation",
+          "restoration",
+          "remediation",
+          "effluent",
+          "environmental management"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigerian Minerals and Mining Act 2007",
+          "Mining Regulations 2011"
+        ]
+      }
+    },
+    {
+      "rule_id": "MIN-REC-001",
+      "rule_version": "2025.01",
+      "title": "Mineral recordkeeping and reporting evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for mineral record, ore reserve, production report, royalty, sales record, or reporting evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "mineral record",
+          "ore reserve",
+          "production report",
+          "royalty",
+          "sales record",
+          "monthly return"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigerian Minerals and Mining Regulations 2011"
+        ]
+      }
+    },
+    {
+      "rule_id": "MIN-HS-001",
+      "rule_version": "2025.01",
+      "title": "Mine health and safety controls are present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for health and safety, hazard, blasting, PPE, accident reporting, emergency response, or mine safety evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "health and safety",
+          "hazard",
+          "blasting",
+          "PPE",
+          "accident report",
+          "emergency response",
+          "mine safety"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigerian Minerals and Mining Act 2007",
+          "Mining Regulations 2011"
+        ]
+      }
+    },
+    {
+      "rule_id": "MIN-COMM-001",
+      "rule_version": "2025.01",
+      "title": "Host-community, land-use, or compensation evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for host community, land access, compensation, community development, grievance, or surface rights evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "host community",
+          "land access",
+          "compensation",
+          "community development",
+          "grievance",
+          "surface rights"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigerian Minerals and Mining Act 2007"
+        ]
+      }
+    },
+    {
+      "rule_id": "MIN-SEC-001",
+      "rule_version": "2025.01",
+      "title": "Mineral chain-of-custody or anti-illicit-trading evidence is present",
+      "regulatory_domain": "aml",
+      "summary": "Checks for chain of custody, mineral sourcing, due diligence, buyer records, export permit, or anti-illicit trading evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "chain of custody",
+          "due diligence",
+          "buyer record",
+          "export permit",
+          "mineral sourcing",
+          "illicit"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigerian Minerals and Mining Act 2007",
+          "AML/CFT controls where applicable"
+        ]
+      }
+    },
+    {
+      "rule_id": "MIN-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Employee, contractor, or community personal-data handling evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for personal-data controls in mine-worker, contractor, community, or landholder records.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "personal data",
+          "privacy",
+          "data protection",
+          "employee data",
+          "contractor data",
+          "community data"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigeria Data Protection Act 2023"
+        ]
+      }
+    }
+  ]
+}

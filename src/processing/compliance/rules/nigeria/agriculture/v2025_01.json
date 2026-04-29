@@ -1,0 +1,351 @@
+{
+  "pack_id": "agriculture",
+  "pack_name": "Agriculture",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for agricultural producers, exporters, processors, aggregators, and related agribusiness documentation in Nigeria.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay controls for Agriculture. Intended to be used with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Nigeria Agricultural Quarantine Service (Establishment) Act, 2018",
+        "issuer": "Federal Republic of Nigeria / NAQS",
+        "used_for": [
+          "quarantine",
+          "sanitary and phytosanitary controls",
+          "import/export agricultural product controls"
+        ]
+      },
+      {
+        "name": "Nigeria Agricultural Quarantine Service official mandate",
+        "issuer": "NAQS",
+        "used_for": [
+          "agency mandate",
+          "pest and disease prevention"
+        ]
+      },
+      {
+        "name": "National Environmental Regulations relevant to agriculture/food operations",
+        "issuer": "NESREA",
+        "used_for": [
+          "environmental controls",
+          "pollution prevention"
+        ]
+      },
+      {
+        "name": "NAFDAC food/drug regulated product controls where agricultural output enters food/feed chains",
+        "issuer": "NAFDAC",
+        "used_for": [
+          "food product quality and safety routing"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "AGRI-NAQS-001",
+      "rule_version": "2025.01",
+      "title": "NAQS quarantine/export-import control evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for agricultural quarantine, phytosanitary, sanitary, import, or export control evidence relevant to NAQS oversight.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "phytosanitary",
+          "quarantine",
+          "NAQS",
+          "sanitary certificate",
+          "export certificate",
+          "import permit"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAQS Act 2018",
+          "NAQS official mandate"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-NAQS-002",
+      "rule_version": "2025.01",
+      "title": "Pest and disease prevention control evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for controls addressing pest, disease, contamination, or biosecurity risks in plant, animal, aquatic, or agricultural products.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "pest control",
+          "disease prevention",
+          "biosecurity",
+          "contamination control",
+          "plant health",
+          "animal health"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAQS Act 2018"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-ENV-001",
+      "rule_version": "2025.01",
+      "title": "Environmental management controls for agricultural operations are present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for environmental or waste-management controls relevant to agricultural or processing operations.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "environmental management",
+          "waste management",
+          "effluent",
+          "pollution control",
+          "environmental impact"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NESREA environmental regulations"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-TRACE-001",
+      "rule_version": "2025.01",
+      "title": "Batch, lot, farm, or supply-chain traceability evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for traceability evidence across agricultural production, aggregation, export, or food-chain handoff.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "batch",
+          "lot number",
+          "farm source",
+          "traceability",
+          "supplier",
+          "harvest date",
+          "warehouse"
+        ],
+        "optional_signals": [
+          "recall",
+          "chain of custody"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAQS Act 2018",
+          "NAFDAC food regulated product controls"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-LIC-001",
+      "rule_version": "2025.01",
+      "title": "Agricultural permit, registration, or regulatory authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for licence, permit, registration, certification, or authorization evidence for regulated agricultural activity.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "licence",
+          "license",
+          "permit",
+          "registration",
+          "certificate",
+          "authorisation",
+          "authorization"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NAQS Act 2018"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-CONSUMER-001",
+      "rule_version": "2025.01",
+      "title": "Product safety or consumer-facing quality assurance evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for product safety, quality assurance, labelling, or consumer-risk language where agricultural output is sold into consumer or food supply chains.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "quality assurance",
+          "product safety",
+          "labelling",
+          "labeling",
+          "consumer",
+          "fit for consumption",
+          "food safety"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FCCPA 2018",
+          "NAFDAC regulated product controls"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Farmer/customer personal-data handling evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks whether farm, cooperative, outgrower, customer, or employee data handling is addressed.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "personal data",
+          "privacy",
+          "data protection",
+          "consent",
+          "data subject"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigeria Data Protection Act 2023"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-REG-001",
+      "rule_version": "2025.01",
+      "title": "Business or cooperative registration evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for CAC, cooperative, business-name, or corporate registration evidence in agriculture-sector documents.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CAC",
+          "RC number",
+          "business name",
+          "incorporated",
+          "registered cooperative",
+          "registration number"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Companies and Allied Matters Act 2020",
+          "Cooperative/business registration practices"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,376 @@
+{
+  "pack_id": "media",
+  "pack_name": "Media Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Nigerian broadcast, advertising, publishing, digital media, content governance, elections coverage, advertising clearance, consumer protection, and privacy documents.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay for Media Sector Compliance Overlay; intended to be applied with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from Nigerian statutes, regulations, regulator guidance, codes, directives, and sector rules available at rule-pack publication time.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Nigeria Broadcasting Code",
+        "issuer": "National Broadcasting Commission",
+        "used_for": [
+          "broadcast standards",
+          "legality",
+          "decency",
+          "truth",
+          "political content and hate-speech controls"
+        ]
+      },
+      {
+        "name": "ARCON Act, 2022",
+        "issuer": "Advertising Regulatory Council of Nigeria",
+        "used_for": [
+          "advertising standards",
+          "advertisement vetting/approval",
+          "marketing communications licensing"
+        ]
+      },
+      {
+        "name": "Federal Competition and Consumer Protection Act, 2018",
+        "issuer": "FCCPC",
+        "used_for": [
+          "consumer-facing claims",
+          "misleading advertising",
+          "redress"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Act, 2023 and GAID 2025",
+        "issuer": "Nigeria Data Protection Commission",
+        "used_for": [
+          "subscriber, viewer, audience, employee and source-data privacy"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MEDIA-LIC-001",
+      "rule_version": "2025.01",
+      "title": "Broadcast, advertising, or media operating authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NBC licence, ARCON registration, advertising approval, media permit, or operating authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "nbc licence",
+          "nbc license",
+          "broadcast licence",
+          "broadcast license",
+          "arcon",
+          "advertising approval",
+          "media permit",
+          "registration"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Nigeria Broadcasting Code",
+          "ARCON Act 2022"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Editorial accuracy, truth, fairness, or content-verification controls are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for editorial policy, fact-checking, verification, fairness, right of reply, or accuracy controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "editorial policy",
+          "fact check",
+          "verification",
+          "accuracy",
+          "fairness",
+          "right of reply",
+          "correction policy"
+        ],
+        "optional_signals": [
+          "source verification",
+          "retraction",
+          "ombudsman"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "source_basis": [
+          "Nigeria Broadcasting Code",
+          "media ethics expectations"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Hate speech, incitement, harmful content, or political-broadcast safeguards are present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for hate-speech controls, incitement prevention, political-broadcast neutrality, election coverage controls, or inflammatory-content safeguards.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "hate speech",
+          "incitement",
+          "inflammatory content",
+          "political broadcast",
+          "election coverage",
+          "neutrality",
+          "public order"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Nigeria Broadcasting Code",
+          "NBC political/broadcast standards"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-CONSUMER-001",
+      "rule_version": "2025.01",
+      "title": "Advertising claim substantiation or pre-clearance evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for substantiation, pre-clearance, ARCON approval, claims review, or misleading-advertising safeguards.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "substantiation",
+          "pre-clearance",
+          "preclearance",
+          "arcon approval",
+          "claims review",
+          "misleading advertisement",
+          "advertising standards"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "ARCON Act 2022",
+          "FCCPA 2018"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Audience, subscriber, source, or journalist data privacy controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, consent, source confidentiality, subscriber data, audience data, or personal-data controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy",
+          "consent",
+          "source confidentiality",
+          "subscriber data",
+          "audience data",
+          "personal data",
+          "data protection"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "NDPA GAID 2025"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Digital publishing, broadcast platform, or subscriber-system security controls are present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for access controls, account security, content-management security, incident response, or platform security evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "access control",
+          "account security",
+          "content management system",
+          "incident response",
+          "platform security",
+          "cybersecurity"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Cybercrimes Act 2015 as amended 2024",
+          "NDPA 2023"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-REG-001",
+      "rule_version": "2025.01",
+      "title": "Complaints, corrections, takedown, or redress process is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for complaint handling, correction, retraction, takedown, appeal, or redress processes.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "complaint",
+          "correction",
+          "retraction",
+          "takedown",
+          "appeal",
+          "redress"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "Nigeria Broadcasting Code",
+          "FCCPA 2018",
+          "ARCON Act 2022"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-SECTOR-003",
+      "rule_version": "2025.01",
+      "title": "Sponsored content, advertising, or influencer disclosure is clearly identified",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for sponsored-content disclosure, advertisement labeling, influencer disclosure, paid partnership, or commercial communication labels.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "sponsored",
+          "advertisement",
+          "paid partnership",
+          "commercial communication",
+          "influencer disclosure",
+          "advertorial"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "ARCON Act 2022",
+          "FCCPA 2018"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "MEDIA-ABS-001",
+      "rule_version": "2025.01",
+      "title": "No evidence of undisclosed advertising or intentionally misleading content is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Screens for language suggesting hidden advertising, fabricated claims, undisclosed sponsorship, or deliberate misinformation.",
+      "evaluation": {
+        "strategy": "absent_signals",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "prohibited_signals": [
+          "undisclosed sponsorship",
+          "hidden advertisement",
+          "fabricated claim",
+          "knowingly false",
+          "mislead audience",
+          "fake endorsement"
+        ],
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "ARCON Act 2022",
+          "FCCPA 2018",
+          "Nigeria Broadcasting Code"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "pack_id": "insurance",
+  "pack_name": "Insurance Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Nigerian insurance institutions, policyholder documents, underwriting, claims, market conduct, AML/CFT/CPF, and policyholder protection.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay for Insurance Sector Compliance Overlay; intended to be applied with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from Nigerian statutes, regulations, regulator guidance, codes, directives, and sector rules available at rule-pack publication time.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "National Insurance Commission Act / NAICOM regulatory framework",
+        "issuer": "National Insurance Commission",
+        "used_for": [
+          "insurance sector supervision",
+          "market conduct",
+          "policyholder protection"
+        ]
+      },
+      {
+        "name": "NAICOM Insurance Industry Regulations, 2025",
+        "issuer": "National Insurance Commission / Federal Republic of Nigeria",
+        "used_for": [
+          "KYC/AML/CFT/CPF commitments",
+          "internal control expectations",
+          "insurance institution compliance"
+        ]
+      },
+      {
+        "name": "NAICOM AML/CFT/CPF Regulations for Insurance Institutions, 2022",
+        "issuer": "Federal Republic of Nigeria / NAICOM",
+        "used_for": [
+          "insurance AML/CFT/CPF",
+          "CDD/KYC",
+          "suspicious transaction controls"
+        ]
+      },
+      {
+        "name": "Nigeria Data Protection Act, 2023 and GAID 2025",
+        "issuer": "Nigeria Data Protection Commission",
+        "used_for": [
+          "policyholder and claims data privacy"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "INS-LIC-001",
+      "rule_version": "2025.01",
+      "title": "NAICOM licence or insurance authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NAICOM licence, registration, authorization, or insurance institution approval evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "naicom",
+          "insurance licence",
+          "insurance license",
+          "registered insurer",
+          "insurance broker licence",
+          "authorization",
+          "authorisation"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NAICOM regulatory framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-AML-001",
+      "rule_version": "2025.01",
+      "title": "Insurance KYC/CDD/AML/CFT/CPF policy commitment is documented",
+      "regulatory_domain": "aml",
+      "summary": "Checks for KYC, customer due diligence, AML, CFT, CPF, sanctions, or suspicious transaction controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "kyc",
+          "customer due diligence",
+          "aml",
+          "cft",
+          "cpf",
+          "sanctions screening",
+          "suspicious transaction"
+        ],
+        "optional_signals": [
+          "beneficial owner",
+          "source of funds",
+          "politically exposed person",
+          "pep"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "source_basis": [
+          "NAICOM Insurance Industry Regulations 2025",
+          "NAICOM AML/CFT/CPF Regulations 2022"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-CONSUMER-001",
+      "rule_version": "2025.01",
+      "title": "Policyholder disclosure and product information are documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for policy terms, exclusions, premium, disclosure, claims process, or policyholder information evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "policyholder",
+          "premium",
+          "exclusion",
+          "claims process",
+          "disclosure",
+          "policy terms"
+        ],
+        "optional_signals": [
+          "cooling off",
+          "sum insured",
+          "benefit schedule"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "source_basis": [
+          "NAICOM regulatory framework",
+          "Federal Competition and Consumer Protection Act 2018"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-CONSUMER-002",
+      "rule_version": "2025.01",
+      "title": "Claims handling, complaints, or dispute-resolution process is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks whether insurance documents include claims procedure, complaint handling, dispute resolution, or escalation language.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "claim",
+          "claims handling",
+          "complaint",
+          "dispute resolution",
+          "ombudsman",
+          "appeal",
+          "grievance"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NAICOM regulatory framework",
+          "FCCPA 2018"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Policyholder personal-data protection controls are present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, data protection, confidentiality, or consent language in policyholder/claims data handling.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy",
+          "data protection",
+          "confidentiality",
+          "personal data",
+          "consent",
+          "policyholder data"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "NDPA GAID 2025"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Underwriting risk assessment or actuarial basis is documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for underwriting, risk assessment, actuarial review, pricing basis, or reserving evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "underwriting",
+          "risk assessment",
+          "actuarial",
+          "pricing basis",
+          "reserve",
+          "claims reserve"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NAICOM regulatory framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Insurance records and digital platforms have access/security controls",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for access control, authentication, audit logging, encryption, cybersecurity, or incident reporting controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "access control",
+          "authentication",
+          "audit log",
+          "encryption",
+          "cybersecurity",
+          "incident response"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPA 2023",
+          "Cybercrimes Act 2015 as amended 2024"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Reinsurance, capital, solvency, or risk-retention evidence is referenced where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for solvency, capital adequacy, reinsurance, risk retention, or regulatory reporting evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "solvency",
+          "capital adequacy",
+          "reinsurance",
+          "risk retention",
+          "regulatory return",
+          "statutory return"
+        ]
+      },
+      "metadata": {
+        "source_basis": [
+          "NAICOM regulatory framework"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    },
+    {
+      "rule_id": "INS-ABS-001",
+      "rule_version": "2025.01",
+      "title": "No evidence of unfair or misleading insurance representation is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Screens for prohibited-style wording suggesting guaranteed claims, hidden exclusions, or misleading product statements.",
+      "evaluation": {
+        "strategy": "absent_signals",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "prohibited_signals": [
+          "guaranteed claim approval",
+          "hidden exclusion",
+          "misleading representation",
+          "no disclosure required",
+          "conceal exclusion"
+        ],
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "FCCPA 2018",
+          "NAICOM market conduct expectations"
+        ],
+        "review_note": "Automated result is an evidence-based screening signal only and requires qualified human/legal review before reliance.",
+        "evidence_expectation": "Rule passes only when the uploaded document or document set contains matching evidence signals; absence or weak evidence should be reviewed by a human reviewer."
+      }
+    }
+  ]
+}

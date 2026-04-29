@@ -1,0 +1,389 @@
+{
+  "pack_id": "nigeria.tech",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "sector_pack": "tech",
+  "display_name": "Technology",
+  "status": "draft_starter_pack_requires_legal_review",
+  "generated_at": "2026-04-29",
+  "intended_engine": "jupitAIx compliance rule-pack registry/evaluator v1",
+  "requires_core_control_library": true,
+  "metadata": {
+    "scope_note": "Nigeria v1 sector overlay pack. Use together with nigeria_core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
+    "versioning_note": "This is a frozen starter snapshot. Do not mutate after use in reports; publish v2025_02 or later for changes.",
+    "official_sources_consulted": [
+      {
+        "name": "NITDA Code of Practice for Interactive Computer Service Platforms/Internet Intermediaries 2022",
+        "url": "https://nitda.gov.ng/wp-content/uploads/2022/10/APPROVED-NITDA-CODE-OF-PRACTIVE-FOR-INTERACTIVE-COMPUTER-SERVICE-PLATFORMS-INTERNET-INTERMEDIARIES-2022-002.pdf"
+      },
+      {
+        "name": "NITDA National Cloud Policy 2025",
+        "url": "https://nitda.gov.ng/?download_id=9152&sdm_process_download=1"
+      },
+      {
+        "name": "NITDA National Cloud Technical Document v1.03",
+        "url": "https://nitda.gov.ng/?download_id=9150&sdm_process_download=1"
+      },
+      {
+        "name": "ngCERT Cybercrimes Act 2024",
+        "url": "https://cert.gov.ng/ngcert/resources/CyberCrime__Prohibition_Prevention_etc__Act__2024.pdf"
+      },
+      {
+        "name": "NDPC NDP Act GAID 2025",
+        "url": "https://ndpc.gov.ng/wp-content/uploads/2025/07/NDP-ACT-GAID-2025-MARCH-20TH.pdf"
+      }
+    ],
+    "limitations": [
+      "This is not legal advice.",
+      "Rules encode document-evidence checks, not a final legal determination.",
+      "Each rule requires validation against current Nigerian laws, regulations, regulator circulars, directives, codes and guidance before production reliance."
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "TECH-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Privacy-by-design and personal-data protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Technology-service documents should evidence privacy-by-design, data protection, lawful basis, consent, data-subject rights, or processor controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy by design",
+          "data protection",
+          "personal data",
+          "lawful basis",
+          "consent",
+          "data subject",
+          "processor"
+        ],
+        "optional_signals": [
+          "DPIA",
+          "privacy impact"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPC GAID 2025",
+          "NDPC privacy-by-design materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Cybersecurity and incident-response controls are present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Technology documents should evidence cybersecurity controls, incident response, vulnerability management, access control, or security monitoring.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "cybersecurity",
+          "incident response",
+          "vulnerability",
+          "access control",
+          "security monitoring",
+          "encryption"
+        ],
+        "optional_signals": [
+          "penetration test",
+          "audit log"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Cybercrimes Act 2024",
+          "NITDA technology standards"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-CYBER-002",
+      "rule_version": "2025.01",
+      "title": "Critical information infrastructure protection is addressed where applicable",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Technology infrastructure documents should evidence CNII/critical information infrastructure assessment, protection plans, audit, or resilience controls where applicable.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "critical national information infrastructure",
+          "CNII",
+          "critical information infrastructure",
+          "protection plan",
+          "resilience",
+          "business continuity"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Cybercrimes Act 2024",
+          "CNII Order 2024"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Interactive platform / internet intermediary obligations are documented where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Platform documents should evidence content moderation, user complaints, unlawful content handling, government agency contact, or platform transparency controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "content moderation",
+          "unlawful content",
+          "user complaint",
+          "internet intermediary",
+          "interactive computer service platform",
+          "transparency"
+        ],
+        "optional_signals": [
+          "harmful content",
+          "misinformation"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NITDA Code of Practice for Interactive Computer Service Platforms/Internet Intermediaries 2022"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Cloud-service compliance and data-location controls are documented where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Cloud documents should evidence cloud-service listing/certification, data location, data residency, procurement controls, or technical standards.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "cloud service provider",
+          "data location",
+          "data residency",
+          "certified cloud",
+          "cloud policy",
+          "technical standards"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NITDA National Cloud Policy 2025",
+          "NITDA National Cloud Technical Document"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-LIC-001",
+      "rule_version": "2025.01",
+      "title": "NITDA approval, listing, clearance, or regulatory contact is referenced where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Technology project documents should evidence NITDA approval, certification, project clearance, listing, or relevant regulatory contact where applicable.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "NITDA",
+          "project clearance",
+          "certification",
+          "listed provider",
+          "approved provider",
+          "regulatory approval"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NITDA National Cloud Policy 2025",
+          "NITDA Act/IT project clearance materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-CONS-001",
+      "rule_version": "2025.01",
+      "title": "User complaint, takedown, or redress process is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "User-facing technology documents should evidence complaints, takedown, appeal, redress, support, or dispute handling.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "complaint",
+          "appeal",
+          "takedown",
+          "redress",
+          "user support",
+          "dispute"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NITDA Code of Practice for Interactive Computer Service Platforms/Internet Intermediaries 2022",
+          "FCCPC consumer protection expectations"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-REG-001",
+      "rule_version": "2025.01",
+      "title": "Corporate registration and local operating identity are present",
+      "regulatory_domain": "registration",
+      "summary": "Technology-service documents should reference corporate registration, Nigerian operating entity, RC number, or company registration.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "RC number",
+          "CAC",
+          "incorporated",
+          "registered company",
+          "Nigeria office",
+          "local representative"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NITDA Code of Practice large-service-platform expectations",
+          "corporate registration evidence"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-PRIV-002",
+      "rule_version": "2025.01",
+      "title": "Cross-border transfer or third-party processing controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Technology documents should evidence safeguards for processors, subprocessors, cloud vendors, or cross-border transfers where applicable.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "cross-border transfer",
+          "subprocessor",
+          "third party processor",
+          "data transfer",
+          "adequate protection",
+          "data processing agreement"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPC GAID 2025",
+          "National Cloud Technical Document"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-CYBER-003",
+      "rule_version": "2025.01",
+      "title": "Backup, disaster recovery, and continuity controls are present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Technology operations documents should evidence backup, disaster recovery, business continuity, recovery objectives, or contingency controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "backup",
+          "disaster recovery",
+          "business continuity",
+          "RTO",
+          "RPO",
+          "contingency"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NITDA technology/cloud standards",
+          "Cybercrimes Act 2024"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

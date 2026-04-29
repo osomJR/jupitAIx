@@ -1,0 +1,386 @@
+{
+  "pack_id": "nigeria.telecom",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "sector_pack": "telecom",
+  "display_name": "Telecom",
+  "status": "draft_starter_pack_requires_legal_review",
+  "generated_at": "2026-04-29",
+  "intended_engine": "jupitAIx compliance rule-pack registry/evaluator v1",
+  "requires_core_control_library": true,
+  "metadata": {
+    "scope_note": "Nigeria v1 sector overlay pack. Use together with nigeria_core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
+    "versioning_note": "This is a frozen starter snapshot. Do not mutate after use in reports; publish v2025_02 or later for changes.",
+    "official_sources_consulted": [
+      {
+        "name": "NCC Regulations and Guidelines portal",
+        "url": "https://ncc.gov.ng/operators/regulations-guidelines/regulations"
+      },
+      {
+        "name": "NCC Consumer Code of Practice Regulations 2024",
+        "url": "https://ncc.gov.ng/sites/default/files/2024-11/Legal_Regulations_Consumer_Code_of_Practice_Regulations_2024.pdf"
+      },
+      {
+        "name": "NCC Data Protection Communications Services materials",
+        "url": "https://ncc.gov.ng/media/116/view"
+      },
+      {
+        "name": "NCC Internet Code of Practice materials",
+        "url": "https://ncc.gov.ng/sites/default/files/NMIS-Internet_Code_Practice.pdf"
+      },
+      {
+        "name": "Cybercrimes Act 2024",
+        "url": "https://cert.gov.ng/ngcert/resources/CyberCrime__Prohibition_Prevention_etc__Act__2024.pdf"
+      },
+      {
+        "name": "NDPC NDP Act GAID 2025",
+        "url": "https://ndpc.gov.ng/wp-content/uploads/2025/07/NDP-ACT-GAID-2025-MARCH-20TH.pdf"
+      }
+    ],
+    "limitations": [
+      "This is not legal advice.",
+      "Rules encode document-evidence checks, not a final legal determination.",
+      "Each rule requires validation against current Nigerian laws, regulations, regulator circulars, directives, codes and guidance before production reliance."
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "TEL-LIC-001",
+      "rule_version": "2025.01",
+      "title": "NCC licence, permit, or authorization is evidenced",
+      "regulatory_domain": "licensing",
+      "summary": "Telecom documents should evidence NCC licence, permit, class licence, spectrum assignment, numbering authorization, or regulatory approval.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "NCC licence",
+          "NCC license",
+          "licensed by the Nigerian Communications Commission",
+          "spectrum",
+          "permit",
+          "numbering"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC Regulations and Guidelines portal",
+          "Nigerian Communications Commission regulatory materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Consumer code, complaints, and customer-care process is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Telecom customer-facing documents should evidence consumer-code compliance, complaints, customer care, dispute handling, or quality-of-service escalation.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "consumer code",
+          "complaint",
+          "customer care",
+          "dispute",
+          "quality of service",
+          "redress"
+        ],
+        "optional_signals": [
+          "subscriber"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC Consumer Code of Practice Regulations 2024"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Subscriber information privacy and data protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Telecom documents should evidence protection of subscriber information, privacy policy, consent, personal data, or data-protection controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "subscriber information",
+          "privacy policy",
+          "personal data",
+          "data protection",
+          "consent",
+          "confidentiality"
+        ],
+        "optional_signals": [
+          "data subject"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC Consumer Code of Practice Regulations 2024",
+          "NDPC GAID 2025"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Network/security incident controls are documented",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Telecom documents should evidence network security, incident response, access control, cybersecurity, abuse management, or continuity controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "network security",
+          "cybersecurity",
+          "incident response",
+          "access control",
+          "abuse",
+          "business continuity"
+        ],
+        "optional_signals": [
+          "monitoring"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC Internet Code of Practice materials",
+          "Cybercrimes Act 2024"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-CYBER-002",
+      "rule_version": "2025.01",
+      "title": "Critical communications infrastructure protection is addressed where applicable",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Telecom infrastructure documents should evidence critical infrastructure protection, CNII, network resilience, audit, or protection plans where applicable.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "critical infrastructure",
+          "critical national information infrastructure",
+          "CNII",
+          "network resilience",
+          "protection plan",
+          "audit"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Cybercrimes Act 2024",
+          "CNII Order 2024"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "SIM/subscriber registration controls are referenced where applicable",
+      "regulatory_domain": "registration",
+      "summary": "Telecom documents should evidence subscriber registration, SIM registration, NIN linkage, KYC, or verification controls where applicable.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "SIM registration",
+          "subscriber registration",
+          "NIN",
+          "KYC",
+          "verification",
+          "identity"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC subscriber registration/NIN linkage regulatory materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Service-quality, outage, or fault management is documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Telecom operational documents should evidence quality-of-service monitoring, outage handling, fault management, availability, or service restoration.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "quality of service",
+          "outage",
+          "fault management",
+          "availability",
+          "service restoration",
+          "network performance"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC consumer/quality-of-service regulatory materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-SECTOR-003",
+      "rule_version": "2025.01",
+      "title": "Internet access / online safety obligations are documented where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Internet service or platform-facing telecom documents should evidence cyber safety, online harm, abuse reporting, takedown, or user-safety process.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "internet access",
+          "online safety",
+          "abuse reporting",
+          "takedown",
+          "harmful content",
+          "cyber safety"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC Internet Code of Practice materials",
+          "NITDA Code of Practice for Internet Intermediaries"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-REG-001",
+      "rule_version": "2025.01",
+      "title": "Corporate and regulated operating identity is present",
+      "regulatory_domain": "registration",
+      "summary": "Telecom documents should reference corporate registration, operating entity name, RC number, service category, or NCC identifier.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "RC number",
+          "CAC",
+          "incorporated",
+          "registered company",
+          "service category",
+          "NCC identifier"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC licensing and corporate registration evidence expectations"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-PRIV-002",
+      "rule_version": "2025.01",
+      "title": "Data retention, disclosure, or lawful request handling is documented",
+      "regulatory_domain": "privacy",
+      "summary": "Telecom documents should evidence retention, lawful disclosure, law-enforcement request handling, confidentiality, or access controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "retention",
+          "lawful disclosure",
+          "law enforcement request",
+          "confidentiality",
+          "access control",
+          "disclosure"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NCC Consumer Code of Practice Regulations 2024",
+          "NDPC GAID 2025"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

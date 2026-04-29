@@ -1,0 +1,350 @@
+{
+  "pack_id": "maritime_and_shipping",
+  "pack_name": "Maritime and Shipping",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-04-29",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for shipping, ports, cabotage, maritime labour, vessel operations, marine safety/security, and maritime environmental documentation in Nigeria.",
+  "metadata": {
+    "scope": "Nigeria-only sector overlay controls for Maritime and Shipping. Intended to be used with nigeria_core_control_library.",
+    "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "NIMASA Act, 2007",
+        "issuer": "Federal Republic of Nigeria / NIMASA",
+        "used_for": [
+          "maritime safety",
+          "security",
+          "marine environment",
+          "shipping registration"
+        ]
+      },
+      {
+        "name": "Merchant Shipping Act, 2007",
+        "issuer": "Federal Republic of Nigeria",
+        "used_for": [
+          "ship registration",
+          "merchant shipping obligations"
+        ]
+      },
+      {
+        "name": "Coastal and Inland Shipping (Cabotage) Act, 2003",
+        "issuer": "Federal Republic of Nigeria / NIMASA",
+        "used_for": [
+          "cabotage",
+          "coastal trade",
+          "vessel restrictions"
+        ]
+      },
+      {
+        "name": "NIMASA legislation portal",
+        "issuer": "NIMASA",
+        "used_for": [
+          "legal instruments for maritime sector"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MAR-NIMASA-001",
+      "rule_version": "2025.01",
+      "title": "NIMASA regulatory authorization or compliance evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for NIMASA registration, approval, licence, permit, or regulatory compliance evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "NIMASA",
+          "maritime administration",
+          "shipping registration",
+          "vessel registration",
+          "licence",
+          "permit"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NIMASA Act 2007",
+          "Merchant Shipping Act 2007"
+        ]
+      }
+    },
+    {
+      "rule_id": "MAR-CAB-001",
+      "rule_version": "2025.01",
+      "title": "Cabotage compliance evidence is present where coastal trade is indicated",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for cabotage, coastal trade, inland shipping, Nigerian ownership/crewing/building, or waiver evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "cabotage",
+          "coastal trade",
+          "inland shipping",
+          "waiver",
+          "Nigerian crew",
+          "Nigerian vessel"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cabotage Act 2003"
+        ]
+      }
+    },
+    {
+      "rule_id": "MAR-SAFE-001",
+      "rule_version": "2025.01",
+      "title": "Maritime safety and security controls are present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for safety management, security plan, ISPS, incident reporting, emergency response, or vessel safety evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "safety management",
+          "security plan",
+          "ISPS",
+          "incident report",
+          "emergency response",
+          "vessel safety"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NIMASA Act 2007",
+          "Merchant Shipping Act 2007"
+        ]
+      }
+    },
+    {
+      "rule_id": "MAR-ENV-001",
+      "rule_version": "2025.01",
+      "title": "Marine environmental protection evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for pollution prevention, waste reception, ballast, oil spill, marine environment, or environmental controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "pollution prevention",
+          "marine environment",
+          "waste reception",
+          "oil spill",
+          "ballast",
+          "MARPOL"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NIMASA Act 2007",
+          "Merchant Shipping Act 2007"
+        ]
+      }
+    },
+    {
+      "rule_id": "MAR-LAB-001",
+      "rule_version": "2025.01",
+      "title": "Maritime labour or crew welfare evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for seafarer, crew welfare, maritime labour, manning, training, or certification evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "seafarer",
+          "crew welfare",
+          "maritime labour",
+          "manning",
+          "training certificate",
+          "crew list"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NIMASA Act 2007",
+          "Merchant Shipping Act 2007"
+        ]
+      }
+    },
+    {
+      "rule_id": "MAR-PORT-001",
+      "rule_version": "2025.01",
+      "title": "Port, cargo, or manifest documentation evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for bill of lading, cargo manifest, port clearance, vessel call, shipping document, or terminal documentation.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "bill of lading",
+          "cargo manifest",
+          "port clearance",
+          "vessel call",
+          "shipping document",
+          "terminal"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Merchant Shipping Act 2007",
+          "NIMASA/NPA operational requirements"
+        ]
+      }
+    },
+    {
+      "rule_id": "MAR-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Customer/shipper complaint or disclosure controls are present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for complaint, liability, claim, delivery terms, refund, or customer disclosure evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "required_signals": [
+          "complaint",
+          "claim",
+          "liability",
+          "delivery terms",
+          "customer",
+          "refund"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FCCPA 2018",
+          "maritime commercial documentation practices"
+        ]
+      }
+    },
+    {
+      "rule_id": "MAR-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Crew, passenger, or customer personal-data handling evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy or personal-data evidence relating to crew, passenger, shipper, consignee, or customer records.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "personal data",
+          "privacy",
+          "data protection",
+          "crew data",
+          "passenger data",
+          "customer data"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Nigerian compliance/legal reviewer must confirm applicability, legal sufficiency, sector context, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nigeria Data Protection Act 2023"
+        ]
+      }
+    }
+  ]
+}

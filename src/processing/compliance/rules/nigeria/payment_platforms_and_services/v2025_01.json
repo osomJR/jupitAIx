@@ -1,0 +1,427 @@
+{
+  "pack_id": "nigeria.payment_platforms_services",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "sector_pack": "payment_platforms_services",
+  "display_name": "Payment Platforms and Services",
+  "status": "draft_starter_pack_requires_legal_review",
+  "generated_at": "2026-04-29",
+  "intended_engine": "jupitAIx compliance rule-pack registry/evaluator v1",
+  "requires_core_control_library": true,
+  "metadata": {
+    "scope_note": "Nigeria v1 sector overlay pack. Use together with nigeria_core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
+    "versioning_note": "This is a frozen starter snapshot. Do not mutate after use in reports; publish v2025_02 or later for changes.",
+    "official_sources_consulted": [
+      {
+        "name": "CBN Payment Service Providers page",
+        "url": "https://www.cbn.gov.ng/PaymentsSystem/PSPs.html"
+      },
+      {
+        "name": "CBN Payments System Supervision",
+        "url": "https://www.cbn.gov.ng/PaymentsSystem/"
+      },
+      {
+        "name": "CBN Regulatory Framework for Mobile Payments Services in Nigeria",
+        "url": "https://www.cbn.gov.ng/OUT/CIRCULARS/BOD/2009/REGULATORY%20FRAMEWORK%20%20FOR%20MOBILE%20PAYMENTS%20SERVICES%20IN%20NIGERIA.PDF"
+      },
+      {
+        "name": "CBN Operational Rules and Regulations for Nigeria Central Switch",
+        "url": "https://www.cbn.gov.ng/OUT/CIRCULARS/BOD/2009/OPERATIONAL%20RULES%20AND%20REGULATIONS%20FOR%20THE%20NIGERIA%20CENTRAL%20SITCH%2C%20NCS.PDF"
+      },
+      {
+        "name": "CBN Payments System Vision 2025",
+        "url": "https://www.cbn.gov.ng/PaymentsSystem/PSV2025.html"
+      },
+      {
+        "name": "NDPC NDP Act GAID 2025",
+        "url": "https://ndpc.gov.ng/wp-content/uploads/2025/07/NDP-ACT-GAID-2025-MARCH-20TH.pdf"
+      }
+    ],
+    "limitations": [
+      "This is not legal advice.",
+      "Rules encode document-evidence checks, not a final legal determination.",
+      "Each rule requires validation against current Nigerian laws, regulations, regulator circulars, directives, codes and guidance before production reliance."
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "PSP-LIC-001",
+      "rule_version": "2025.01",
+      "title": "Payment service provider licence category is evidenced",
+      "regulatory_domain": "licensing",
+      "summary": "Payment-platform documents should evidence the relevant CBN payment-service licence category, approval, or regulated status.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "payment service provider",
+          "PSP licence",
+          "PSSP",
+          "switching",
+          "super switching",
+          "mobile money operator",
+          "payment solution service provider",
+          "licensed by the Central Bank"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Payment Service Providers page",
+          "CBN Payments System Supervision"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Transaction switching/processing obligations are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Switching or processing documents should evidence transaction switching, processing controls, settlement responsibilities, or participant obligations.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "switching",
+          "processing",
+          "settlement",
+          "participant",
+          "merchant",
+          "transaction"
+        ],
+        "optional_signals": [
+          "clearing",
+          "dispute",
+          "chargeback"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Operational Rules and Regulations for the Nigeria Central Switch"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Mobile-money scheme registration or scheme-code evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Mobile-money scheme documents should evidence scheme registration, scheme code, wallet/customer registration, or mobile-money operating controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "mobile money",
+          "scheme operator",
+          "scheme code",
+          "wallet",
+          "customer registration",
+          "mobile payment"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Regulatory Framework for Mobile Payments Services in Nigeria"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Payment-system risk and information-security controls are present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Payment platforms should evidence payment-system risk, information security, access control, incident response, or security monitoring.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "information security",
+          "payment system risk",
+          "access control",
+          "incident response",
+          "security monitoring",
+          "encryption"
+        ],
+        "optional_signals": [
+          "audit log",
+          "vulnerability",
+          "penetration test"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Payments System Risk and Information Security Management Framework materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-CYBER-002",
+      "rule_version": "2025.01",
+      "title": "Electronic payment channel control evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Payment-channel documents should evidence authentication, transaction validation, channel controls, or fraud monitoring.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "authentication",
+          "transaction validation",
+          "fraud monitoring",
+          "payment channel",
+          "PIN",
+          "OTP",
+          "tokenization"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN payment-channel guidelines and electronic banking materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Customer payment-data privacy and confidentiality are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Payment-platform documents should evidence privacy, personal-data handling, confidentiality, retention, or lawful disclosure controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "personal data",
+          "privacy",
+          "confidentiality",
+          "data protection",
+          "retention",
+          "lawful disclosure"
+        ],
+        "optional_signals": [
+          "processor",
+          "data subject",
+          "consent"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPC Nigeria Data Protection Act GAID 2025"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-AML-001",
+      "rule_version": "2025.01",
+      "title": "Payment transaction monitoring or AML escalation is referenced",
+      "regulatory_domain": "aml",
+      "summary": "Payment platforms should evidence transaction monitoring, AML controls, suspicious transaction escalation, or customer due diligence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "transaction monitoring",
+          "AML",
+          "suspicious transaction",
+          "customer due diligence",
+          "KYC",
+          "beneficial owner"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN AML/CFT/CPF supervisory resources"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Merchant/customer dispute and complaints handling is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Payment-platform documents should evidence customer complaints, merchant dispute handling, refunds, chargebacks, or redress procedures.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "complaint",
+          "dispute",
+          "refund",
+          "chargeback",
+          "redress",
+          "customer support"
+        ],
+        "optional_signals": [
+          "merchant",
+          "settlement"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "FCCPC consumer protection materials",
+          "CBN payments consumer expectations"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-SECTOR-003",
+      "rule_version": "2025.01",
+      "title": "Settlement, reconciliation, and exception handling are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Payment-platform documents should evidence settlement, reconciliation, exception handling, failed transaction handling, or dispute timelines.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "settlement",
+          "reconciliation",
+          "exception handling",
+          "failed transaction",
+          "settlement cycle",
+          "reversal"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN payments system rules and regulations"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-SECTOR-004",
+      "rule_version": "2025.01",
+      "title": "Open banking/API provider obligations are evidenced where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Open banking, API, or payment-data sharing documents should evidence API governance, participant registration, customer consent, or data-sharing controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "open banking",
+          "API",
+          "customer consent",
+          "data sharing",
+          "participant",
+          "API provider"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Operational Guidelines for Open Banking in Nigeria"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PSP-REG-001",
+      "rule_version": "2025.01",
+      "title": "Corporate registration and regulated operating identity are present",
+      "regulatory_domain": "registration",
+      "summary": "Payment-platform documents should reference company registration, RC number, incorporation, or formal regulated entity identity.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "RC number",
+          "CAC",
+          "incorporated",
+          "registered company",
+          "certificate of incorporation"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "Nigeria corporate registration evidence requirement"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

@@ -1,0 +1,461 @@
+{
+  "pack_id": "nigeria.banking_fintech",
+  "pack_version": "v2025_01",
+  "jurisdiction": "nigeria",
+  "sector_pack": "banking_fintech",
+  "display_name": "Banking and Fintech",
+  "status": "draft_starter_pack_requires_legal_review",
+  "generated_at": "2026-04-29",
+  "intended_engine": "jupitAIx compliance rule-pack registry/evaluator v1",
+  "requires_core_control_library": true,
+  "metadata": {
+    "scope_note": "Nigeria v1 sector overlay pack. Use together with nigeria_core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
+    "versioning_note": "This is a frozen starter snapshot. Do not mutate after use in reports; publish v2025_02 or later for changes.",
+    "official_sources_consulted": [
+      {
+        "name": "CBN AML/CFT/CPF supervisory resources",
+        "url": "https://www.cbn.gov.ng/supervision/AML-CFT/"
+      },
+      {
+        "name": "CBN AML/CFT Guidelines",
+        "url": "https://www.cbn.gov.ng/Documents/AML-CFT-Guidelines.html"
+      },
+      {
+        "name": "CBN Payments System Supervision",
+        "url": "https://www.cbn.gov.ng/PaymentsSystem/"
+      },
+      {
+        "name": "CBN BVN requirements page",
+        "url": "https://www.cbn.gov.ng/PaymentsSystem/BVN.html"
+      },
+      {
+        "name": "CBN Guidelines on Electronic Banking in Nigeria",
+        "url": "https://www.cbn.gov.ng/OUT/CIRCULARS/BSD/2007/GUIDELINES%20ON%20ELECTRONIC%20BANKING%20IN%20NIGERIA.PDF"
+      },
+      {
+        "name": "FCCPC digital/electronic/online consumer lending regulations/guidance",
+        "url": "https://fccpc.gov.ng/wp-content/uploads/2025/11/Digital-Electronic-Online-or-Non-Traditional-Consumer-Lending-Regulations-2025.pdf"
+      },
+      {
+        "name": "NDPC NDP Act GAID 2025",
+        "url": "https://ndpc.gov.ng/wp-content/uploads/2025/07/NDP-ACT-GAID-2025-MARCH-20TH.pdf"
+      }
+    ],
+    "limitations": [
+      "This is not legal advice.",
+      "Rules encode document-evidence checks, not a final legal determination.",
+      "Each rule requires validation against current Nigerian laws, regulations, regulator circulars, directives, codes and guidance before production reliance."
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "BF-AML-001",
+      "rule_version": "2025.01",
+      "title": "Customer due diligence and KYC evidence is present",
+      "regulatory_domain": "aml",
+      "summary": "Banking/fintech documents should evidence customer identification, verification, due diligence, or KYC controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "customer due diligence",
+          "know your customer",
+          "KYC",
+          "customer identification",
+          "beneficial owner",
+          "BVN",
+          "NIN"
+        ],
+        "optional_signals": [
+          "risk rating",
+          "onboarding",
+          "screening"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN AML/CFT/CPF resources",
+          "CBN BVN account/wallet requirements"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-AML-002",
+      "rule_version": "2025.01",
+      "title": "Suspicious transaction reporting or escalation process is documented",
+      "regulatory_domain": "aml",
+      "summary": "Banking/fintech documents should evidence suspicious transaction monitoring, internal escalation, or reporting controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "suspicious transaction",
+          "suspicious activity",
+          "STR",
+          "transaction monitoring",
+          "escalate to compliance",
+          "financial intelligence"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN AML/CFT Guidelines and supervisory resources"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-AML-003",
+      "rule_version": "2025.01",
+      "title": "Sanctions/PEP screening is referenced",
+      "regulatory_domain": "aml",
+      "summary": "Banking/fintech documents should evidence sanctions, politically exposed persons, watchlist, or adverse-media screening where relevant.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "sanctions screening",
+          "PEP",
+          "politically exposed person",
+          "watchlist",
+          "adverse media",
+          "terrorist financing"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN AML/CFT/CPF supervisory resources"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Information security governance is documented",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Banking/fintech documents should evidence security governance, ICT compliance, or information-security responsibility.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "information security",
+          "ICT compliance officer",
+          "security policy",
+          "access control",
+          "segregation of duties",
+          "incident response"
+        ],
+        "optional_signals": [
+          "audit log",
+          "vulnerability",
+          "risk assessment"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Guidelines on Electronic Banking in Nigeria",
+          "CBN Nigerian Payments System Risk and Information Security materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-CYBER-002",
+      "rule_version": "2025.01",
+      "title": "Electronic banking/payment channel controls are present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Digital banking or fintech documents should evidence controls over electronic banking, payment channels, applications, or third-party service providers.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "electronic banking",
+          "payment channel",
+          "third party service provider",
+          "switch operator",
+          "application security",
+          "service provider"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Guidelines on Electronic Banking in Nigeria"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Personal data and financial-data privacy handling is documented",
+      "regulatory_domain": "privacy",
+      "summary": "Banking/fintech documents should evidence privacy notices, data protection, lawful processing, consent, confidentiality, or data-subject rights.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy notice",
+          "data protection",
+          "personal data",
+          "consent",
+          "data subject",
+          "confidentiality"
+        ],
+        "optional_signals": [
+          "retention",
+          "lawful basis",
+          "processor"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "NDPC Nigeria Data Protection Act GAID 2025"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Consumer complaint and redress mechanism is documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Banking/fintech customer-facing documents should evidence complaints, dispute resolution, or customer redress channels.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "complaint",
+          "dispute resolution",
+          "redress",
+          "customer support",
+          "ombudsman",
+          "escalation"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "FCCPC consumer protection materials",
+          "CBN consumer protection expectations"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-CONS-002",
+      "rule_version": "2025.01",
+      "title": "Digital lending registration/compliance evidence is present where applicable",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Digital lending documents should evidence FCCPC registration/licensing/compliance where the business provides digital or non-traditional consumer lending.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "digital lending",
+          "FCCPC",
+          "consumer lending",
+          "lender registration",
+          "loan app",
+          "debt recovery"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "FCCPC Digital/Electronic/Online or Non-Traditional Consumer Lending Regulations 2025"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-LIC-001",
+      "rule_version": "2025.01",
+      "title": "CBN licence, approval, or authorization is referenced",
+      "regulatory_domain": "licensing",
+      "summary": "Banking/fintech documents should evidence the relevant CBN licence, approval, authorization, or regulated status.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "CBN licence",
+          "CBN license",
+          "licensed by the Central Bank",
+          "authorised by the Central Bank",
+          "approved by CBN",
+          "payment service bank",
+          "microfinance bank"
+        ],
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Payments System Supervision",
+          "CBN licensing/approval materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-REG-001",
+      "rule_version": "2025.01",
+      "title": "Corporate registration and regulated-entity identity evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Banking/fintech documents should include or reference corporate registration, RC number, regulated entity name, or incorporation evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "RC number",
+          "CAC",
+          "incorporated",
+          "registered company",
+          "certificate of incorporation",
+          "company registration"
+        ],
+        "on_missing": "warning",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "General Nigeria corporate registration evidence requirement"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-SECTOR-001",
+      "rule_version": "2025.01",
+      "title": "Open banking/API consent and authorization evidence is present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Open banking or API-sharing documents should evidence customer consent, authorization, API governance, or participant controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "open banking",
+          "API",
+          "customer consent",
+          "data sharing",
+          "authorization",
+          "participant"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Operational Guidelines for Open Banking in Nigeria"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-SECTOR-002",
+      "rule_version": "2025.01",
+      "title": "Agent banking or wallet operations controls are present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Agent banking, wallet, or mobile-money documents should evidence agent oversight, wallet tiering, transaction limits, or scheme controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "agent banking",
+          "agent oversight",
+          "wallet",
+          "mobile money",
+          "transaction limit",
+          "scheme operator"
+        ],
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "source_basis": [
+          "CBN Payments System Supervision",
+          "CBN Mobile Money/Agent Banking framework materials"
+        ],
+        "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}
