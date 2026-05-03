@@ -102,10 +102,10 @@ class FFmpegAudioPreparationBackend:
     """
     Real media-preparation backend.
 
-    - Audio inputs are passed through unchanged.
-    - Video inputs are converted into a temporary mono 16k WAV suitable for ASR.
-    - Optional noise removal is left intentionally minimal at this layer; if your
-      ASR provider supports noise suppression natively, prefer that in ASRClient.
+    - Audio inputs are passed through unchanged when background-noise removal is off.
+    - Audio inputs are converted to a temporary mono 16k WAV when background-noise removal is on.
+    - Video inputs are always converted into a temporary mono 16k WAV suitable for ASR.
+    - Optional background-noise removal uses conservative FFmpeg filters only.
     """
 
     def __init__(self) -> None:
@@ -120,30 +120,57 @@ class FFmpegAudioPreparationBackend:
         remove_background_noise: bool,
     ) -> str:
         normalized_media_type = _normalize_media_type(media_type)
-        _ = _normalize_bool(remove_background_noise, field_name="remove_background_noise")
+        normalized_remove_background_noise = _normalize_bool(
+            remove_background_noise,
+            field_name="remove_background_noise",
+        )
 
         input_path = Path(_normalize_file_reference(file_reference))
         if not input_path.exists():
             raise FileNotFoundError(f"Media file not found: {input_path}")
 
-        if normalized_media_type == "audio":
+        # If this is plain audio and the user did not request noise cleanup,
+        # send the original file directly to ASR.
+        if normalized_media_type == "audio" and not normalized_remove_background_noise:
             return str(input_path)
 
-        output_path = Path(self._tmpdir.name) / f"{input_path.stem}.wav"
+        output_path = Path(self._tmpdir.name) / f"{input_path.stem}.prepared.wav"
+
         cmd = [
             "ffmpeg",
             "-y",
             "-i",
             str(input_path),
-            "-vn",
-            "-acodec",
-            "pcm_s16le",
-            "-ar",
-            "16000",
-            "-ac",
-            "1",
-            str(output_path),
         ]
+
+        # Video input: ignore video stream and extract audio only.
+        if normalized_media_type == "video":
+            cmd.append("-vn")
+
+        # Conservative cleanup:
+        # - highpass removes low-frequency rumble
+        # - lowpass removes high-frequency hiss
+        # - afftdn performs light frequency-domain denoising
+        # - loudnorm stabilizes volume for ASR
+        if normalized_remove_background_noise:
+            cmd.extend(
+                [
+                    "-af",
+                    "highpass=f=80,lowpass=f=7800,afftdn=nf=-25,loudnorm=I=-18:TP=-2:LRA=11",
+                ]
+            )
+
+        cmd.extend(
+            [
+                "-acodec",
+                "pcm_s16le",
+                "-ar",
+                "16000",
+                "-ac",
+                "1",
+                str(output_path),
+            ]
+        )
 
         try:
             subprocess.run(
@@ -153,12 +180,18 @@ class FFmpegAudioPreparationBackend:
                 stderr=subprocess.DEVNULL,
             )
         except FileNotFoundError as exc:
-            raise RuntimeError("ffmpeg is required for video transcription but was not found on PATH.") from exc
+            raise RuntimeError(
+                "ffmpeg is required for transcription audio preparation but was not found on PATH."
+            ) from exc
         except subprocess.CalledProcessError as exc:
-            raise RuntimeError("ffmpeg failed while extracting audio from video.") from exc
+            raise RuntimeError(
+                "ffmpeg failed while preparing audio for transcription."
+            ) from exc
 
         if not output_path.exists():
-            raise RuntimeError("Audio extraction completed without producing an output file.")
+            raise RuntimeError(
+                "Audio preparation completed without producing an output file."
+            )
 
         return str(output_path)
 
@@ -314,7 +347,9 @@ class TranscribeProcessor:
             remove_background_noise=normalized_remove_background_noise,
         )
 
-        prepared_media_format = "wav" if normalized_media_type == "video" else normalized_media_format
+        prepared_media_format = (
+    Path(prepared_audio).suffix.lstrip(".").lower() or normalized_media_format
+)
 
         raw_transcript = self.asr_backend.transcribe(
             audio_reference=prepared_audio,

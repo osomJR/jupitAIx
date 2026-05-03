@@ -31,7 +31,7 @@ from src.schema import (
     FeatureType,
     RedactionRequest,
 )
-from src.validation import build_file_result, validate_analyzer_request, validate_analyzer_response
+from src.validation import build_document_file_result, validate_analyzer_request, validate_analyzer_response
 
 DEFAULT_PDF_RENDER_SCALE = 2.0
 DEFAULT_BLACK = (0, 0, 0)
@@ -226,7 +226,7 @@ def _output_path(source_path: Path, output_dir: Path, suffix: str = "_redacted")
 
 def _build_redaction_response(*, request: AnalyzerRequest, output_path: Path) -> AnalyzerResponse:
     input_payload, _ = _ensure_redaction_request(request)
-    result = build_file_result(
+    result = build_document_file_result(
         filename=output_path.name,
         output_format=_FILE_OUTPUT_MAP[input_payload.metadata.input_format],
         file_size_mb=round(output_path.stat().st_size / (1024 * 1024), 4),

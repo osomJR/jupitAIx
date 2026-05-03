@@ -4,11 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping, Optional, Union
 
-from processing.conversion.convert import convert_document
-from processing.llm.explain import explain_text
-from processing.llm.generate_answers import generate_answers_text
-from processing.llm.generate_questions import generate_questions_text
-from processing.llm.grammar_correct import grammar_correct_text
+from .processing.conversion.convert import convert_document
+from .processing.llm.explain import explain_text
+from .processing.llm.generate_answers import generate_answers_text
+from .processing.llm.generate_questions import generate_questions_text
+from .processing.llm.grammar_correct import grammar_correct_text
 from .schema import (
     AnalyzerRequest,
     AnalyzerResponse,
@@ -35,9 +35,9 @@ from .schema import (
     TranscriptionRequest,
     TranslationRequest,
 )
-from processing.llm.summarize import summarize_text
-from processing.asr.transcribe import transcribe_media
-from processing.llm.translate import translate_text
+from .processing.llm.summarize import summarize_text
+from .processing.asr.transcribe import transcribe_media
+from .processing.llm.translate import translate_text
 from .validation import (
     build_answer_generation_file_result,
     build_answer_generation_inline_result,
@@ -49,7 +49,7 @@ from .validation import (
     validate_analyzer_request,
     validate_analyzer_response,
 )
-from processing.llm.writer import write_document
+from .processing.llm.writer import write_document
 
 
 TextResult = Union[InlineTextResult, DocumentFileResult]

@@ -29,7 +29,7 @@ from src.schema import (
     FeatureType,
     SensitiveDataType,
 )
-from src.validation import build_file_result, validate_analyzer_request, validate_analyzer_response
+from src.validation import build_document_file_result, validate_analyzer_request, validate_analyzer_response
 
 DEFAULT_PDF_RENDER_SCALE = 2.0
 
@@ -207,7 +207,7 @@ def _ensure_mask_request(request: AnalyzerRequest) -> tuple[DocumentPayload, Dat
 
 def _build_masking_response(*, request: AnalyzerRequest, output_path: Path) -> AnalyzerResponse:
     input_payload, _ = _ensure_mask_request(request)
-    result = build_file_result(
+    result = build_document_file_result(
         filename=output_path.name,
         output_format=_FILE_OUTPUT_MAP[input_payload.metadata.input_format],
         file_size_mb=round(output_path.stat().st_size / (1024 * 1024), 4),

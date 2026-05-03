@@ -30,8 +30,8 @@ from fastapi import HTTPException
 
 
 DEFAULT_MODEL = os.getenv("ASR_MODEL", "nova-3")
-DEFAULT_REQUEST_TIMEOUT_SECONDS = float(os.getenv("ASR_TIMEOUT_SECONDS", "120"))
-DEFAULT_PROVIDER_TIMEOUT_SECONDS = float(os.getenv("ASR_PROVIDER_TIMEOUT_SECONDS", "90"))
+DEFAULT_REQUEST_TIMEOUT_SECONDS = float(os.getenv("ASR_TIMEOUT_SECONDS", "180"))
+DEFAULT_PROVIDER_TIMEOUT_SECONDS = float(os.getenv("ASR_PROVIDER_TIMEOUT_SECONDS", "120"))
 DEFAULT_BASE_URL = os.getenv("DEEPGRAM_BASE_URL", "https://api.deepgram.com/v1/listen")
 
 
@@ -44,6 +44,8 @@ class ASRClientConfig:
     - api_key defaults to DEEPGRAM_API_KEY
     - base_url defaults to Deepgram prerecorded /listen endpoint
     - model defaults to ASR_MODEL or nova-3
+    - language_mode defaults to multilingual so single-language and mixed-language
+      uploads are handled without requiring a UI toggle.
     """
 
     api_key: Optional[str] = os.getenv("DEEPGRAM_API_KEY")
@@ -51,6 +53,7 @@ class ASRClientConfig:
     model: str = DEFAULT_MODEL
     request_timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS
     provider_timeout_seconds: float = DEFAULT_PROVIDER_TIMEOUT_SECONDS
+    language_mode: str = os.getenv("ASR_LANGUAGE_MODE", "multilingual")
 
 
 class ASRClient:
@@ -135,6 +138,13 @@ class ASRClient:
             "diarize": "true" if diarize_speakers else "false",
         }
 
+        language_mode = self._normalize_language_mode(self.config.language_mode)
+
+        if language_mode == "multilingual":
+            query_params["language"] = "multi"
+        else:
+            query_params["detect_language"] = "true"
+
         if diarize_speakers:
             query_params["utterances"] = "true"
 
@@ -192,19 +202,51 @@ class ASRClient:
         diarized_text = ""
         if diarize_speakers:
             utterances = results.get("utterances") or []
-            speaker_lines: list[str] = []
+            speaker_blocks: list[str] = []
+
+            current_speaker_label: str | None = None
+            current_parts: list[str] = []
+
+            def flush_current_block() -> None:
+                nonlocal current_speaker_label, current_parts
+
+                text = " ".join(part.strip() for part in current_parts if part.strip()).strip()
+                if not text:
+                    current_speaker_label = None
+                    current_parts = []
+                    return
+
+                if current_speaker_label:
+                    speaker_blocks.append(f"{current_speaker_label}: {text}")
+                else:
+                    speaker_blocks.append(text)
+
+                current_speaker_label = None
+                current_parts = []
 
             for utterance in utterances:
                 transcript = str(utterance.get("transcript") or "").strip()
                 if not transcript:
                     continue
-                speaker = utterance.get("speaker")
-                if speaker is None:
-                    speaker_lines.append(transcript)
-                else:
-                    speaker_lines.append(f"Speaker {speaker}: {transcript}")
 
-            diarized_text = "\n".join(speaker_lines).strip()
+                raw_speaker = utterance.get("speaker")
+                speaker_label = None
+
+                if raw_speaker is not None:
+                    try:
+                        # Deepgram speaker ids are zero-based; display them as one-based.
+                        speaker_label = f"Speaker {int(raw_speaker) + 1}"
+                    except (TypeError, ValueError):
+                        speaker_label = f"Speaker {raw_speaker}"
+
+                if speaker_label != current_speaker_label:
+                    flush_current_block()
+                    current_speaker_label = speaker_label
+
+                current_parts.append(transcript)
+
+            flush_current_block()
+            diarized_text = "\n".join(speaker_blocks).strip()
 
         channel_text = ""
         channels = results.get("channels") or []
@@ -247,6 +289,31 @@ class ASRClient:
         if normalized not in {"mp3", "mp4", "mkv", "mov", "wav"}:
             raise ValueError("media_format must be one of: mp3, mp4, mkv, mov, wav.")
         return normalized
+    @staticmethod
+    def _normalize_language_mode(language_mode: str) -> str:
+        if not isinstance(language_mode, str):
+            raise TypeError("language_mode must be a string.")
+
+        normalized = language_mode.strip().lower().replace("-", "_")
+
+        aliases = {
+            "multi": "multilingual",
+            "multilingual": "multilingual",
+            "code_switching": "multilingual",
+            "codeswitching": "multilingual",
+            "auto": "auto_detect",
+            "auto_detect": "auto_detect",
+            "detect": "auto_detect",
+            "detect_language": "auto_detect",
+        }
+
+        resolved = aliases.get(normalized)
+        if resolved is None:
+            raise ValueError(
+                "language_mode must be either 'multilingual' or 'auto_detect'."
+            )
+
+        return resolved
 
     @staticmethod
     def _content_type_for(media_format: str, file_path: str) -> str:

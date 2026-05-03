@@ -10,9 +10,6 @@ import {
   XCircle,
   CheckCircle2,
   FileType,
-  RefreshCw,
-  FileText,
-  Image as ImageIcon,
   Repeat,
   Download,
 } from "lucide-react";
@@ -360,7 +357,7 @@ export default function ConvertPage() {
       if (backendMessage) {
         previewLines.push("", backendMessage);
       } else {
-        previewLines.push("", t.conversionMatchesRules);
+        previewLines.push("");
       }
 
       setConversionResult(previewLines.join("\n"));
@@ -372,62 +369,58 @@ export default function ConvertPage() {
   }
 
   return (
-    <main className="app-shell">
-      <div className="relative isolate overflow-hidden">
+    <main className="app-shell min-h-screen overflow-x-hidden">
+      <div className="relative isolate min-h-screen overflow-x-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 
-        <div className="relative mx-auto max-w-5xl px-6 py-12 md:px-8 md:py-16">
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="mb-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {common.back}
-          </button>
+        <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-5 md:px-6 lg:py-6">
+          <header className="mb-4 shrink-0">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => router.push("/")}
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                {common.back}
+              </button>
 
-          <section className="mb-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
-              <Sparkles className="h-4 w-4" />
-              {t.badge}
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+                <Sparkles className="h-4 w-4" />
+                {t.badge}
+              </div>
             </div>
 
-            <div className="mt-6 max-w-3xl">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            <div className="mt-4">
+              <h1 className="max-w-full text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:whitespace-nowrap lg:text-[2.65rem] lg:leading-tight xl:text-5xl">
                 {t.title}
               </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-white/70 md:text-base">
                 {t.description}
               </p>
             </div>
-          </section>
+          </header>
 
-          <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
             <form
               onSubmit={handleSubmit}
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl md:p-8"
+              className="relative min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
 
-              <div className="relative">
+              <div className="relative flex h-full min-h-0 flex-col">
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className="rounded-3xl border border-dashed border-white/15 bg-white/5 p-8 text-center transition hover:border-white/25 hover:bg-white/10"
+                  className="rounded-2xl border border-dashed border-white/15 bg-white/5 p-4 text-center transition hover:border-white/25 hover:bg-white/10 md:p-5"
                 >
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                    <Upload className="h-7 w-7 text-cyan-300" />
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                    <Upload className="h-5 w-5 text-cyan-300" />
                   </div>
 
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-base font-semibold text-white">
                     {t.uploadTitle}
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-white/65">
-                    {t.allowedInputs}{" "}
-                    <span className="font-medium text-white">
-                      .pdf, .docx, .jpg, .jpeg, .png
-                    </span>
-                  </p>
 
                   <input
                     ref={fileInputRef}
@@ -440,21 +433,21 @@ export default function ConvertPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                    className="mt-3 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
                   >
                     {common.chooseFile}
                   </button>
                 </div>
 
                 {selectedFile && isValidFile && (
-                  <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                  <div className="mt-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3">
                     <div className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
-                      <div>
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
+                      <div className="min-w-0">
                         <p className="font-medium text-emerald-100">
                           {common.fileAccepted}
                         </p>
-                        <p className="mt-1 text-sm text-emerald-100/80">
+                        <p className="mt-1 truncate text-sm text-emerald-100/80">
                           {selectedFile.name} • {formatBytes(selectedFile.size)}
                         </p>
                         <p className="mt-1 text-sm text-emerald-100/80">
@@ -467,52 +460,48 @@ export default function ConvertPage() {
                 )}
 
                 {selectedFile && isValidFile && (
-                  <div className="mt-6 grid gap-4 md:grid-cols-2">
-                    <div>
-                      <label className="block">
-                        <span className="mb-3 block text-sm font-medium text-white/80">
-                          {t.from}
-                        </span>
-                        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/85">
-                          <FileType className="h-4 w-4 text-cyan-300" />
-                          {inputExtension}
-                        </div>
-                      </label>
-                    </div>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-medium text-white/80">
+                        {t.from}
+                      </span>
+                      <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/85">
+                        <FileType className="h-4 w-4 text-cyan-300" />
+                        {inputExtension}
+                      </div>
+                    </label>
 
-                    <div>
-                      <label className="block">
-                        <span className="mb-3 block text-sm font-medium text-white/80">
-                          {t.convertTo}
-                        </span>
-                        <select
-                          value={targetExtension}
-                          onChange={(e) => {
-                            setTargetExtension(e.target.value);
-                            setError("");
-                            resetResultState();
-                          }}
-                          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/40 focus:bg-white/10"
-                        >
-                          {allowedOutputs.map((ext) => (
-                            <option
-                              key={ext}
-                              value={ext}
-                              className="bg-slate-900 text-white"
-                            >
-                              {ext}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                    </div>
+                    <label className="block">
+                      <span className="mb-2 block text-sm font-medium text-white/80">
+                        {t.convertTo}
+                      </span>
+                      <select
+                        value={targetExtension}
+                        onChange={(e) => {
+                          setTargetExtension(e.target.value);
+                          setError("");
+                          resetResultState();
+                        }}
+                        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300/40 focus:bg-white/10"
+                      >
+                        {allowedOutputs.map((ext) => (
+                          <option
+                            key={ext}
+                            value={ext}
+                            className="bg-slate-900 text-white"
+                          >
+                            {ext}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                   </div>
                 )}
 
                 {selectedFile && isValidFile && (
-                  <div className="mt-5 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4">
+                  <div className="mt-3 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
                     <div className="flex items-start gap-3">
-                      <Repeat className="mt-0.5 h-5 w-5 text-cyan-300" />
+                      <Repeat className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
                       <div className="text-sm leading-6 text-cyan-100">
                         {t.allowedOutputsFor}{" "}
                         <span className="font-semibold">{inputExtension}</span>:{" "}
@@ -525,39 +514,41 @@ export default function ConvertPage() {
                 )}
 
                 {error && (
-                  <div className="mt-5 rounded-2xl border border-red-400/20 bg-red-400/10 p-4">
+                  <div className="mt-3 rounded-2xl border border-red-400/20 bg-red-400/10 p-3">
                     <div className="flex items-start gap-3">
-                      <XCircle className="mt-0.5 h-5 w-5 text-red-300" />
+                      <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-300" />
                       <p className="text-sm leading-6 text-red-100">{error}</p>
                     </div>
                   </div>
                 )}
 
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <button
-                    type="submit"
-                    disabled={!canSubmit}
-                    className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${
-                      canSubmit
-                        ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
-                        : "cursor-not-allowed bg-white/10 text-white/40"
-                    }`}
-                  >
-                    {isSubmitting ? common.converting : common.convert}
-                  </button>
-
-                  {downloadInfo?.url && (
+                <div className="mt-auto pt-4">
+                  <div className="flex flex-wrap items-center gap-3">
                     <button
-                      type="button"
-                      onClick={handleDownload}
-                      className="inline-flex items-center gap-2 rounded-2xl border border-cyan-300/30 bg-cyan-400/10 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/15"
+                      type="submit"
+                      disabled={!canSubmit}
+                      className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
+                        canSubmit
+                          ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
+                          : "cursor-not-allowed bg-white/10 text-white/40"
+                      }`}
                     >
-                      <Download className="h-4 w-4" />
-                      {downloadLabel}
+                      {isSubmitting ? common.converting : common.convert}
                     </button>
-                  )}
 
-                  <div className="text-sm text-white/55">
+                    {downloadInfo?.url && (
+                      <button
+                        type="button"
+                        onClick={handleDownload}
+                        className="inline-flex items-center gap-2 rounded-2xl border border-cyan-300/30 bg-cyan-400/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/15"
+                      >
+                        <Download className="h-4 w-4" />
+                        {downloadLabel}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/55">
                     {t.conversionLabel}{" "}
                     <span className="font-medium text-white/85">
                       {inputExtension || "—"} → {targetExtension || "—"}
@@ -567,31 +558,33 @@ export default function ConvertPage() {
               </div>
             </form>
 
-            <aside className="space-y-6">
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl lg:sticky lg:top-6">
-                <h2 className="text-lg font-semibold text-white">
-                  {t.conversionOutput}
-                </h2>
-                <p className="mt-1 text-sm text-white/55">
-                  {common.previewArea}
-                </p>
+            <aside className="min-h-0">
+              <div className="flex min-h-[270px] flex-col rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5 lg:max-h-[calc(100vh-11rem)]">
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-lg font-semibold text-white">
+                    {t.conversionOutput || "Conversion result"}
+                  </h2>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/55">
+                    {inputExtension || "—"} → {targetExtension || "—"}
+                  </span>
+                </div>
 
-                <div className="mt-4 rounded-2xl border border-white/10 bg-[#081120] p-4">
+                <div className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-4 max-h-[420px] lg:max-h-[calc(100vh-16rem)]">
                   {conversionResult ? (
-                    <div className="space-y-4">
-                      <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
+                    <div className="flex h-full min-h-0 flex-col gap-3">
+                      <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 text-white/80 md:text-sm">
                         {conversionResult}
                       </pre>
 
                       {downloadInfo?.url && (
-                        <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                        <div className="shrink-0 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3">
                           <div className="flex items-start gap-3">
-                            <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
-                            <div>
+                            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
+                            <div className="min-w-0">
                               <p className="font-medium text-emerald-100">
                                 {downloadReadyLabel}
                               </p>
-                              <p className="mt-1 text-sm text-emerald-100/80">
+                              <p className="mt-1 truncate text-sm text-emerald-100/80">
                                 {downloadInfo.filename}
                               </p>
                               <button
@@ -608,75 +601,12 @@ export default function ConvertPage() {
                       )}
                     </div>
                   ) : (
-                    <p className="text-sm leading-6 text-white/45">
-                      {t.previewText}
-                    </p>
+                    <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.03] p-4 text-center">
+                      <p className="max-w-sm text-sm leading-6 text-white/45">
+                        {t.previewText}
+                      </p>
+                    </div>
                   )}
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                    <RefreshCw className="h-5 w-5 text-cyan-300" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-white">
-                      {t.allowedConversions}
-                    </h2>
-                    <p className="text-sm text-white/55">
-                      {t.strictConversionMatrix}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-sm leading-6 text-white/70">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">{t.pdfWordTitle}</p>
-                    <p className="mt-1 text-white/65">{t.pdfWordDescription}</p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
-                      {t.jpgWordPdfTitle}
-                    </p>
-                    <p className="mt-1 text-white/65">
-                      {t.jpgWordPdfDescription}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">{t.pngJpgTitle}</p>
-                    <p className="mt-1 text-white/65">{t.pngJpgDescription}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <h2 className="text-lg font-semibold text-white">
-                  {t.inputCoverage}
-                </h2>
-                <p className="mt-1 text-sm text-white/55">
-                  {t.supportedUploadTypes}
-                </p>
-
-                <div className="mt-4 space-y-3 text-sm leading-6 text-white/70">
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <FileText className="h-4 w-4 text-cyan-300" />
-                    <span>.pdf</span>
-                  </div>
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <FileText className="h-4 w-4 text-cyan-300" />
-                    <span>.docx</span>
-                  </div>
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <ImageIcon className="h-4 w-4 text-cyan-300" />
-                    <span>.jpg / .jpeg</span>
-                  </div>
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <ImageIcon className="h-4 w-4 text-cyan-300" />
-                    <span>.png</span>
-                  </div>
                 </div>
               </div>
             </aside>

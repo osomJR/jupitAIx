@@ -92,9 +92,9 @@ export const homePageTranslations = {
     enabledActions: [
       {
         key: "convert",
-        name: "Convert",
+        name: "File Conversion",
         route: "/convert",
-        description: "Transform files and content into the format you need.",
+        description: "Convert files and documents to the formats you need",
       },
       {
         key: "summarize",
@@ -124,9 +124,9 @@ export const homePageTranslations = {
     lockedActions: [
       {
         key: "transcribe",
-        name: "Transcribe",
+        name: "Transcribe audio and video",
         route: "/transcribe",
-        description: "Convert audio and speech into accurate text.",
+        description: "Convert speech to accurate text.",
       },
       {
         key: "questions",
@@ -197,10 +197,10 @@ export const homePageTranslations = {
     enabledActions: [
       {
         key: "convert",
-        name: "Convertir",
+        name: "Conversion de fichier",
         route: "/convert",
         description:
-          "Transformez vos fichiers et contenus dans le format souhaité.",
+          "Convertissez vos fichiers et documents dans les formats dont vouz avez besoin",
       },
       {
         key: "summarize",
@@ -232,10 +232,9 @@ export const homePageTranslations = {
     lockedActions: [
       {
         key: "transcribe",
-        name: "Transcrire",
+        name: "Transcrire des fichiers audio et vidéo",
         route: "/transcribe",
-        description:
-          "Convertissez l’audio et la parole en texte avec précision.",
+        description: "Convertir la parole en texte avec précision.",
       },
       {
         key: "questions",
@@ -273,15 +272,12 @@ export const homePageTranslations = {
 };
 export const convertPageTranslations = {
   en: {
-    badge: "Convert documents and images",
-    title: "Convert files across the supported formats you need",
-    description:
-      "Upload a PDF, Word document, JPG, JPEG, or PNG. Only allowed conversion paths can be selected.",
-    uploadTitle: "Upload a file to convert",
-    allowedInputs: "Allowed inputs:",
-    conversionOutput: "Conversion output",
-    previewText:
-      "Your conversion result will appear here after you choose a valid input file and an allowed target format.",
+    badge: "Convert documents, files and images",
+    title: "Convert files across several formats",
+    description: "Upload PDF, Word document, JPG, JPEG, or PNG.",
+    uploadTitle: "Upload file or document",
+    conversionOutput: "Conversion result",
+    previewText: "Download appears here after file conversion.",
 
     unsupportedFileType:
       "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed.",
@@ -289,6 +285,8 @@ export const convertPageTranslations = {
     chooseFileToConvert: "Please choose a file to convert.",
     invalidConversion: "This conversion combination is not allowed.",
     conversionFailed: "Something went wrong while converting the file.",
+    missingDownloadUrl:
+      "Conversion finished, but the backend did not return a download URL.",
 
     conversionCompleted: "Conversion completed.",
     inputFile: "Input file",
@@ -296,28 +294,13 @@ export const convertPageTranslations = {
     outputExtension: "Output extension",
     downloadReady: "Download ready",
     convertedFile: "Converted file",
-    outputReadyText: "Your converted file is ready to download.",
-    conversionMatchesRules:
-      "The selected conversion matches the allowed document conversion rules.",
-
+    outputReadyText: "Your converted file is ready for download.",
     detectedType: "Detected type:",
     from: "From",
     convertTo: "Convert to",
     allowedOutputsFor: "Allowed outputs for",
     none: "none",
     conversionLabel: "Conversion:",
-
-    allowedConversions: "Allowed conversions",
-    strictConversionMatrix: "Strict conversion matrix",
-    inputCoverage: "Input coverage",
-    supportedUploadTypes: "Supported upload types",
-
-    pdfWordTitle: "PDF ↔ Word",
-    pdfWordDescription: ".pdf → .docx and .docx → .pdf",
-    jpgWordPdfTitle: "JPG / JPEG → PDF or Word",
-    jpgWordPdfDescription: ".jpg / .jpeg → .pdf or .docx",
-    pngJpgTitle: "PNG → JPG / JPEG",
-    pngJpgDescription: ".png → .jpg or .jpeg",
 
     pdfDocument: "PDF document",
     wordDocument: "Word document",
@@ -326,15 +309,14 @@ export const convertPageTranslations = {
     unknownFile: "Unknown file",
   },
   fr: {
-    badge: "Convertir des documents et des images",
-    title: "Convertissez vos fichiers selon les formats pris en charge",
+    badge: "Convertir des documents, fichiers et images",
+    title: "Convertir des fichiers dans plusieurs formats",
     description:
-      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG. Seuls les chemins de conversion autorisés peuvent être sélectionnés.",
-    uploadTitle: "Téléversez un fichier à convertir",
-    allowedInputs: "Entrées autorisées :",
+      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG.",
+    uploadTitle: "Téléverser un fichier ou un document",
     conversionOutput: "Résultat de la conversion",
     previewText:
-      "Le résultat de la conversion apparaîtra ici après avoir choisi un fichier valide et un format cible autorisé.",
+      "Le téléchargement apparaîtra ici après la conversion du fichier.",
 
     unsupportedFileType:
       "Type de fichier non pris en charge : {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés.",
@@ -344,6 +326,8 @@ export const convertPageTranslations = {
     invalidConversion: "Cette combinaison de conversion n’est pas autorisée.",
     conversionFailed:
       "Une erreur s’est produite lors de la conversion du fichier.",
+    missingDownloadUrl:
+      "La conversion est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement.",
 
     conversionCompleted: "Conversion terminée.",
     inputFile: "Fichier d’entrée",
@@ -352,27 +336,12 @@ export const convertPageTranslations = {
     downloadReady: "Téléchargement prêt",
     convertedFile: "Fichier converti",
     outputReadyText: "Votre fichier converti est prêt à être téléchargé.",
-    conversionMatchesRules:
-      "La conversion sélectionnée respecte les règles de conversion autorisées.",
-
     detectedType: "Type détecté :",
     from: "De",
     convertTo: "Convertir vers",
     allowedOutputsFor: "Sorties autorisées pour",
     none: "aucune",
     conversionLabel: "Conversion :",
-
-    allowedConversions: "Conversions autorisées",
-    strictConversionMatrix: "Matrice de conversion stricte",
-    inputCoverage: "Couverture des entrées",
-    supportedUploadTypes: "Types de fichiers pris en charge",
-
-    pdfWordTitle: "PDF ↔ Word",
-    pdfWordDescription: ".pdf → .docx et .docx → .pdf",
-    jpgWordPdfTitle: "JPG / JPEG → PDF ou Word",
-    jpgWordPdfDescription: ".jpg / .jpeg → .pdf ou .docx",
-    pngJpgTitle: "PNG → JPG / JPEG",
-    pngJpgDescription: ".png → .jpg ou .jpeg",
 
     pdfDocument: "Document PDF",
     wordDocument: "Document Word",
@@ -763,13 +732,11 @@ export const translatePageTranslations = {
 };
 export const transcribePageTranslations = {
   en: {
-    badge: "AI transcription",
-    title: "Transcribe audio and video into inline text",
-    description:
-      "Upload an approved audio or video file and receive faithful written text inline. Output is always displayed as transcript text only (.txt), never as a download artifact.",
-    uploadTitle: "Upload an audio or video file",
+    badge: "Transcription",
+    title: "Transcribe audio and video",
+    description: "Upload audio (.mp3) or video (.mp4, .mkv, .mov).",
+    uploadTitle: "Upload audio or video",
     allowedFileInputs: "Allowed inputs: .mp3, .mp4, .mkv, .mov",
-    outputExtensionWillBe: "Output extension will be",
     unsupportedFileType: "Unsupported file type: {ext}",
     fileTooLarge:
       "File is too large. Maximum size for this media type is {maxSize} MB.",
@@ -781,45 +748,22 @@ export const transcribePageTranslations = {
     transcriptionFailed: "Transcription request failed.",
     validatingMedia: "Checking media...",
     transcriptOutput: "Transcript output",
-    previewText:
-      "Your transcript will appear here as inline text after processing.",
-    policySubtitle: "Aligned with the transcription product contract.",
-    allowedUploadsLabel: "Allowed uploads",
-    limitsLabel: "Hard limits",
-    limitsValueAudio: "Audio (.mp3): max 10 MB, max 2 minutes",
-    limitsValueVideo: "Video (.mp4, .mkv, .mov): max 25 MB, max 3 minutes",
-    inlineInputLabel: "Inline input",
-    inlineInputValue: "Not allowed. Transcription accepts media files only.",
-    rejectedAutomaticallyLabel: "Rejected automatically",
-    rejectedAutomaticallyValue:
-      "Unsupported media extensions and files above the configured size or duration limits.",
-    outputRuleLabel: "Output rule",
-    outputRuleValue:
-      "Always inline text only (.txt). No downloadable artifact.",
-    processingRulesTitle: "Processing rules",
-    processingRulesSubtitle: "Behavior follows the transcription processor.",
-    preserveLanguageTitle: "Preserve language and speech style",
-    preserveLanguageDescription:
-      "The transcript keeps the original language and speaking style as recognized.",
-    noRewriteTitle: "No rewriting",
-    noRewriteDescription:
-      "No paraphrasing, summarizing, translation, or interpretation is applied.",
-    videoHandlingTitle: "Video handling",
-    videoHandlingDescription:
-      "Video is handled by extracting audio first, then running ASR, then applying minimal cleanup.",
+    previewText: "Your transcript will appear here after processing.",
+
     transcriptOptionsTitle: "Transcription options",
-    transcriptOptionsSubtitle: "These match the processor toggles.",
+    transcriptOptionsSubtitle: "Choose how the transcript should be processed.",
     preserveFillerWordsLabel: "Preserve filler words",
     preserveFillerWordsHelp: "Keep words like “um”, “uh”, and similar fillers.",
     removeBackgroundNoiseLabel: "Remove background noise",
     removeBackgroundNoiseHelp:
-      "Optional and minimal background-noise cleanup only.",
+      "Apply optional minimal background-noise cleanup.",
     diarizeSpeakersLabel: "Separate speakers",
     diarizeSpeakersHelp:
-      "Keep this on by default. Separation is applied only when acoustically detectable.",
+      "Separate speakers only when they are acoustically detectable.",
+
     transcriptReady: "Transcript ready",
     transcriptReadyText:
-      "The spoken content has been converted into inline written text.",
+      "The spoken content has been converted into written text.",
     transcriptMetaLabel: "Transcript format",
     transcriptMetaValue: ".txt inline text only",
     detectedTypeLabel: "Detected media type",
@@ -829,67 +773,40 @@ export const transcribePageTranslations = {
     unknownType: "Unknown",
   },
   fr: {
-    badge: "Transcription IA",
-    title: "Transcrire l’audio et la vidéo en texte inline",
+    badge: "Transcription",
+    title: "Transcrire l’audio et la vidéo",
     description:
-      "Téléversez un fichier audio ou vidéo autorisé et recevez un texte fidèle affiché inline. La sortie est toujours du texte (.txt), jamais un artefact téléchargeable.",
+      "Téléversez un fichier audio (.mp3) ou vidéo (.mp4, .mkv, .mov).",
     uploadTitle: "Téléverser un fichier audio ou vidéo",
     allowedFileInputs: "Entrées autorisées : .mp3, .mp4, .mkv, .mov",
-    outputExtensionWillBe: "L’extension de sortie sera",
     unsupportedFileType: "Type de fichier non pris en charge : {ext}",
     fileTooLarge:
-      "Le fichier est trop volumineux. Taille maximale pour ce type de média : {maxSize} MB.",
+      "Le fichier est trop volumineux. La taille maximale pour ce type de média est de {maxSize} Mo.",
     mediaTooLong:
-      "Le média est trop long. Durée maximale pour ce type de média : {maxDuration}.",
+      "Le média est trop long. La durée maximale pour ce type de média est de {maxDuration}.",
     couldNotReadDuration:
       "Impossible de lire la durée du média. Veuillez essayer un autre fichier.",
     chooseFileToTranscribe: "Veuillez choisir un fichier audio ou vidéo.",
     transcriptionFailed: "La requête de transcription a échoué.",
     validatingMedia: "Vérification du média...",
-    transcriptOutput: "Sortie de transcription",
-    previewText:
-      "Votre transcription apparaîtra ici en texte inline après le traitement.",
-    policySubtitle: "Aligné sur le contrat produit de transcription.",
-    allowedUploadsLabel: "Téléversements autorisés",
-    limitsLabel: "Limites strictes",
-    limitsValueAudio: "Audio (.mp3) : max 10 MB, max 2 minutes",
-    limitsValueVideo: "Vidéo (.mp4, .mkv, .mov) : max 25 MB, max 3 minutes",
-    inlineInputLabel: "Entrée inline",
-    inlineInputValue:
-      "Non autorisée. La transcription accepte uniquement les fichiers média.",
-    rejectedAutomaticallyLabel: "Rejeté automatiquement",
-    rejectedAutomaticallyValue:
-      "Extensions non prises en charge et fichiers au-dessus des limites de taille ou de durée.",
-    outputRuleLabel: "Règle de sortie",
-    outputRuleValue:
-      "Toujours du texte inline uniquement (.txt). Aucun fichier téléchargeable.",
-    processingRulesTitle: "Règles de traitement",
-    processingRulesSubtitle:
-      "Le comportement suit le processeur de transcription.",
-    preserveLanguageTitle: "Préserver la langue et le style de parole",
-    preserveLanguageDescription:
-      "La transcription conserve la langue d’origine et le style de parole reconnus.",
-    noRewriteTitle: "Aucune réécriture",
-    noRewriteDescription:
-      "Aucune reformulation, synthèse, traduction ou interprétation n’est appliquée.",
-    videoHandlingTitle: "Traitement vidéo",
-    videoHandlingDescription:
-      "La vidéo est traitée via extraction audio, puis ASR, puis nettoyage minimal.",
+    transcriptOutput: "Résultat de la transcription",
+    previewText: "Votre transcription apparaîtra ici après le traitement.",
+
     transcriptOptionsTitle: "Options de transcription",
     transcriptOptionsSubtitle:
-      "Ces options correspondent aux paramètres du processeur.",
+      "Choisissez comment la transcription doit être traitée.",
     preserveFillerWordsLabel: "Préserver les mots de remplissage",
     preserveFillerWordsHelp:
       "Conserver les mots comme « euh », « hum » et équivalents.",
     removeBackgroundNoiseLabel: "Réduire le bruit de fond",
     removeBackgroundNoiseHelp:
-      "Nettoyage du bruit de fond optionnel et minimal uniquement.",
+      "Appliquer un nettoyage minimal et optionnel du bruit de fond.",
     diarizeSpeakersLabel: "Séparer les intervenants",
     diarizeSpeakersHelp:
-      "Laisser activé par défaut. La séparation n’est appliquée que si elle est détectable acoustiquement.",
+      "Séparer les intervenants uniquement lorsqu’ils sont détectables acoustiquement.",
+
     transcriptReady: "Transcription prête",
-    transcriptReadyText:
-      "Le contenu parlé a été converti en texte écrit inline.",
+    transcriptReadyText: "Le contenu parlé a été converti en texte écrit.",
     transcriptMetaLabel: "Format de transcription",
     transcriptMetaValue: ".txt texte inline uniquement",
     detectedTypeLabel: "Type de média détecté",
