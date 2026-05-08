@@ -1,0 +1,223 @@
+{
+  "pack_id": "media",
+  "pack_name": "Media",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for broadcasters, publishers, digital media, advertising/media operations, broadcasting authorisations, editorial governance, complaints, and audience/subscriber data in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Media. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "National Communications Authority licensing and authorisation",
+        "issuer": "National Communications Authority",
+        "used_for": [
+          "broadcasting authorisation",
+          "radio/FM/TV broadcasting",
+          "spectrum authorisations"
+        ]
+      },
+      {
+        "name": "National Media Commission Act, 1993 (Act 449)",
+        "issuer": "National Media Commission / Parliament of Ghana",
+        "used_for": [
+          "media independence",
+          "journalistic standards",
+          "complaints"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "subscriber/audience/source/employee data privacy"
+        ]
+      },
+      {
+        "name": "Electronic Communications Act and NCA legal instruments",
+        "issuer": "National Communications Authority",
+        "used_for": [
+          "broadcasting and communications legal framework"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MEDIA-NCA-001",
+      "rule_version": "2025.01",
+      "title": "Broadcasting authorisation evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NCA broadcasting authorisation, FM radio authorisation, TV broadcasting authorisation, spectrum, or licence evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "National Communications Authority",
+          "NCA",
+          "broadcasting authorisation",
+          "broadcasting authorization",
+          "FM broadcasting",
+          "television broadcasting",
+          "spectrum",
+          "licence",
+          "license"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NCA licensing and authorisation",
+          "Electronic Communications Act / NCA legal instruments"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MEDIA-NMC-001",
+      "rule_version": "2025.01",
+      "title": "Editorial standards, complaint-handling, or media responsibility evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for journalistic standards, correction, complaint handling, right of reply, editorial policy, or National Media Commission references.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "journalistic standards",
+          "complaint",
+          "correction",
+          "right of reply",
+          "editorial policy",
+          "National Media Commission",
+          "NMC"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "National Media Commission Act, 1993 (Act 449)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MEDIA-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Audience, subscriber, source, or employee data-protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy notice, source confidentiality, subscriber data, consent, retention, and data security evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy notice",
+          "data protection",
+          "subscriber data",
+          "audience data",
+          "source confidentiality",
+          "consent",
+          "retention"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MEDIA-CONTENT-001",
+      "rule_version": "2025.01",
+      "title": "Content governance or publication approval controls are documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for content review, advertising clearance, accuracy, misleading claims, complaint escalation, or takedown controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "content review",
+          "advertising",
+          "misleading",
+          "accuracy",
+          "complaint",
+          "takedown",
+          "approval"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "National Media Commission Act, 1993",
+          "NCA broadcasting authorisation framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

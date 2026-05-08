@@ -1,0 +1,254 @@
+{
+  "pack_id": "energy_and_power",
+  "pack_name": "Energy and Power Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Canadian energy, power, pipeline, electricity, nuclear, environmental, safety, authorization, and regulatory compliance documents.",
+  "metadata": {
+    "scope": "Canada sector overlay for Energy and Power. Intended to be applied with canada_core_control_library. Federal starter pack; provincial/territorial energy regulator obligations may also apply.",
+    "source_note": "Source basis is mapped from official Canadian federal/provincial/territorial legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Canadian Energy Regulator Act",
+        "issuer": "Parliament of Canada / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/C-15.1/",
+        "used_for": [
+          "pipeline and power-line authorization",
+          "energy project compliance",
+          "CER mandate"
+        ]
+      },
+      {
+        "name": "Nuclear Safety and Control Act",
+        "issuer": "Canadian Nuclear Safety Commission / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/N-28.3/",
+        "used_for": [
+          "nuclear licensing",
+          "radiation safety",
+          "CNSC compliance"
+        ]
+      },
+      {
+        "name": "Canadian Environmental Protection Act compliance and enforcement",
+        "issuer": "Environment and Climate Change Canada",
+        "url": "https://www.canada.ca/en/environment-climate-change/services/canadian-environmental-protection-act-registry/compliance-enforcement.html",
+        "used_for": [
+          "environmental compliance",
+          "pollution prevention",
+          "enforcement"
+        ]
+      },
+      {
+        "name": "Baseline Cyber Security Controls for Small and Medium Organizations",
+        "issuer": "Canadian Centre for Cyber Security",
+        "url": "https://www.cyber.gc.ca/en/guidance/baseline-cyber-security-controls-small-and-medium-organizations",
+        "used_for": [
+          "cybersecurity baseline",
+          "incident response",
+          "access control",
+          "patching",
+          "backups"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "POWER-CER-001",
+      "rule_version": "2025.01",
+      "title": "CER authorization, order, permit, or licence evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Canadian Energy Regulator approvals, pipeline certificate, power-line permit/licence, order, or compliance condition evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Canadian Energy Regulator",
+          "CER",
+          "certificate",
+          "permit",
+          "licence",
+          "license",
+          "order",
+          "authorization"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canadian Energy Regulator Act"
+        ]
+      }
+    },
+    {
+      "rule_id": "POWER-SAFE-001",
+      "rule_version": "2025.01",
+      "title": "Safety, emergency management, or incident reporting evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for safety plans, emergency management, incident reporting, integrity management, or corrective action evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "safety plan",
+          "emergency management",
+          "incident report",
+          "integrity management",
+          "corrective action",
+          "hazard"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CER safety/compliance expectations"
+        ]
+      }
+    },
+    {
+      "rule_id": "POWER-NUC-001",
+      "rule_version": "2025.01",
+      "title": "Nuclear licence or radiation safety evidence is present where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for CNSC licence, nuclear safety, radiation protection, dosimetry, or nuclear security evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CNSC",
+          "nuclear licence",
+          "Nuclear Safety and Control Act",
+          "radiation protection",
+          "dosimetry",
+          "nuclear security"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Nuclear Safety and Control Act / CNSC"
+        ]
+      }
+    },
+    {
+      "rule_id": "POWER-ENV-001",
+      "rule_version": "2025.01",
+      "title": "Environmental compliance or pollution-prevention evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for environmental assessment, pollution prevention, emissions, spill reporting, waste management, or CEPA evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "environmental assessment",
+          "pollution prevention",
+          "emissions",
+          "spill reporting",
+          "waste management",
+          "CEPA"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CEPA / Environment and Climate Change Canada"
+        ]
+      }
+    },
+    {
+      "rule_id": "POWER-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Critical infrastructure cybersecurity evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for incident response, access control, patching, backup, monitoring, and business continuity evidence for energy operations.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "incident response",
+          "access control",
+          "patching",
+          "backup",
+          "monitoring",
+          "business continuity"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canadian Centre for Cyber Security baseline controls"
+        ]
+      }
+    }
+  ]
+}

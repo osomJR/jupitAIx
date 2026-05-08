@@ -1,0 +1,218 @@
+{
+  "pack_id": "agriculture",
+  "pack_name": "Agriculture",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for agricultural producers, exporters, processors, aggregators, input dealers, and agribusiness documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Agriculture. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Plants and Fertilizer Act, 2010 (Act 803) / PPRSD mandate",
+        "issuer": "Parliament of Ghana / Ministry of Food and Agriculture PPRSD",
+        "used_for": [
+          "plant protection",
+          "phytosanitary certificates",
+          "import permits",
+          "seed and fertilizer regulation"
+        ]
+      },
+      {
+        "name": "Food and Drugs Authority mandate under Public Health Act, 2012 (Act 851)",
+        "issuer": "Food and Drugs Authority Ghana",
+        "used_for": [
+          "food safety",
+          "regulated food products",
+          "food export/import controls"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Parliament of Ghana / Data Protection Commission",
+        "used_for": [
+          "privacy",
+          "personal data processing",
+          "data controller registration"
+        ]
+      },
+      {
+        "name": "Companies Act, 2019 (Act 992)",
+        "issuer": "Parliament of Ghana / Office of the Registrar of Companies",
+        "used_for": [
+          "corporate registration",
+          "accounting records",
+          "directors and governance"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "AGRI-PPRSD-001",
+      "rule_version": "2025.01",
+      "title": "Phytosanitary, plant protection, or import/export permit evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for PPRSD, phytosanitary certificate, plant quarantine, import permit, export certificate, SPS, or pest-control evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "PPRSD",
+          "phytosanitary",
+          "plant quarantine",
+          "import permit",
+          "export certificate",
+          "SPS",
+          "pest control"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Plants and Fertilizer Act, 2010 (Act 803) / PPRSD mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AGRI-FDA-001",
+      "rule_version": "2025.01",
+      "title": "Food safety or FDA regulated-product evidence is present where agricultural products enter food chains",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for food safety, FDA registration, product approval, food hygiene, or food standard evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Food and Drugs Authority",
+          "FDA",
+          "food safety",
+          "product registration",
+          "food hygiene",
+          "food standard",
+          "Public Health Act"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Public Health Act, 2012 (Act 851)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AGRI-TRACE-001",
+      "rule_version": "2025.01",
+      "title": "Traceability, batch, or origin evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for farm-origin, batch, lot, supplier, traceability, or quality-assurance records.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "traceability",
+          "batch number",
+          "lot number",
+          "farm origin",
+          "supplier record",
+          "quality assurance"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PPRSD mandate",
+          "FDA food safety mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AGRI-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Farmer, worker, supplier, or customer personal-data handling evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy and personal-data handling evidence in agribusiness documents.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "personal data",
+          "farmer data",
+          "supplier information",
+          "privacy notice",
+          "consent",
+          "Data Protection Commission"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

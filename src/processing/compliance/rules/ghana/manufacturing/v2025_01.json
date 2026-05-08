@@ -1,0 +1,227 @@
+{
+  "pack_id": "manufacturing",
+  "pack_name": "Manufacturing",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for manufacturing, processing, assembly, quality assurance, product safety, environmental controls, and regulated-product documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Manufacturing. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Ghana Standards Authority mandate and functions",
+        "issuer": "Ghana Standards Authority",
+        "used_for": [
+          "standards",
+          "testing",
+          "inspection",
+          "certification",
+          "product conformity"
+        ]
+      },
+      {
+        "name": "Public Health Act, 2012 (Act 851) / FDA Ghana mandate",
+        "issuer": "Food and Drugs Authority / Ministry of Health",
+        "used_for": [
+          "regulated products",
+          "food/drug/cosmetic/medical-device controls"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "employee/customer/supplier data processing"
+        ]
+      },
+      {
+        "name": "Cybersecurity Act, 2020 (Act 1038)",
+        "issuer": "Cyber Security Authority",
+        "used_for": [
+          "cybersecurity services and cyber-risk controls where applicable"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MFG-GSA-001",
+      "rule_version": "2025.01",
+      "title": "GSA standards, testing, inspection, or certification evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for Ghana Standards Authority standards, product certification, conformity assessment, testing, inspection, calibration, or quality documentation.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Ghana Standards Authority",
+          "GSA",
+          "standard",
+          "product certification",
+          "conformity assessment",
+          "testing",
+          "inspection",
+          "calibration"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ghana Standards Authority mandate and functions"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MFG-FDA-001",
+      "rule_version": "2025.01",
+      "title": "FDA regulated-product approval or registration evidence is present where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for FDA Ghana registration, approval, licence, inspection, or regulated-product controls for food, drugs, medical devices, cosmetics, or household chemicals.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Food and Drugs Authority",
+          "FDA Ghana",
+          "Public Health Act",
+          "product registration",
+          "marketing authorization",
+          "inspection",
+          "medical device",
+          "cosmetic"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Public Health Act, 2012 (Act 851)",
+          "FDA Ghana mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MFG-QMS-001",
+      "rule_version": "2025.01",
+      "title": "Quality management and batch/control records evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks whether manufacturing documentation contains quality assurance, batch records, traceability, non-conformance, corrective action, or inspection evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "quality assurance",
+          "quality control",
+          "batch record",
+          "traceability",
+          "non-conformance",
+          "corrective action",
+          "inspection"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed",
+        "optional_signals": [
+          "SOP",
+          "GMP",
+          "test report"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ghana Standards Authority mandate and functions",
+          "FDA Ghana regulated-product framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MFG-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Employee, customer, or supplier data-protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy notice, data protection, consent, purpose limitation, retention, or security controls in manufacturing documentation.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy notice",
+          "data protection",
+          "personal data",
+          "consent",
+          "retention",
+          "security measures"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)",
+          "Data Protection Commission registration guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

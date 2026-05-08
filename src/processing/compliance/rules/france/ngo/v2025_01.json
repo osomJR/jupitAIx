@@ -1,0 +1,223 @@
+{
+  "pack_id": "ngo",
+  "pack_name": "NGO",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French associations, NGOs, foundations, donor-funded bodies, charities, civil-society organizations, and nonprofit documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for NGO. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Law of 1 July 1901 and freedom of association guidance",
+        "issuer": "Associations.gouv.fr",
+        "url": "https://associations.gouv.fr/la-loi-1901-et-la-liberte-dassociation",
+        "used_for": [
+          "association formation",
+          "governance",
+          "nonprofit status"
+        ]
+      },
+      {
+        "name": "Declaration and publication of a 1901 association",
+        "issuer": "Associations.gouv.fr",
+        "url": "https://associations.gouv.fr/declaration-initiale.html",
+        "used_for": [
+          "association declaration",
+          "legal personality",
+          "JOAFE publication"
+        ]
+      },
+      {
+        "name": "National Register of Associations",
+        "issuer": "Associations.gouv.fr",
+        "url": "https://associations.gouv.fr/le-registre-national-des-associations",
+        "used_for": [
+          "RNA registration",
+          "association identifier"
+        ]
+      },
+      {
+        "name": "Association accounting regulation guidance",
+        "issuer": "Associations.gouv.fr",
+        "url": "https://associations.gouv.fr/reglementation-comptable",
+        "used_for": [
+          "accounting",
+          "funding",
+          "financial governance"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "NGO-FR-1901-001",
+      "rule_version": "2025.01",
+      "title": "Association-law or nonprofit-governance evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for loi 1901 association, statutes, object, members, governance, general assembly, or nonprofit purpose evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "association loi 1901",
+          "statuts",
+          "objet de l'association",
+          "assemblée générale",
+          "bureau",
+          "conseil d'administration"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Law of 1 July 1901 and association guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "NGO-FR-DECL-001",
+      "rule_version": "2025.01",
+      "title": "Declaration, publication, RNA, or legal-capacity evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for prefecture declaration, JOAFE publication, RNA number, legal personality, or capacity evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "déclaration en préfecture",
+          "JOAFE",
+          "numéro RNA",
+          "registre national des associations",
+          "personnalité morale",
+          "capacité juridique"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Declaration and publication of a 1901 association",
+          "National Register of Associations"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "NGO-FR-FIN-001",
+      "rule_version": "2025.01",
+      "title": "Accounting, donation, subsidy, or financial-governance evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for accounts, treasurer report, subsidy, donations, audit, budget approval, or financial-governance evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "comptabilité",
+          "trésorier",
+          "subvention",
+          "don",
+          "budget",
+          "approbation des comptes",
+          "rapport financier"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Association accounting regulation guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "NGO-FR-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Member, donor, beneficiary, or volunteer data privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for personal data, donor data, beneficiary records, volunteer/member privacy, GDPR/RGPD, or retention evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "données personnelles",
+          "donateur",
+          "bénéficiaire",
+          "adhérent",
+          "bénévole",
+          "RGPD",
+          "politique de confidentialité"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "GDPR/RGPD",
+          "CNIL guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

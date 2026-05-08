@@ -396,30 +396,54 @@ class StructuredExtractionRequest(BaseModel):
 
 class ComplianceJurisdiction(str, Enum):
     nigeria = "nigeria"
+    us = "us"
+    uk = "uk"
+    sa = "sa"
+    canada = "canada"
+    france = "france"
+    togo = "togo"
+    ghana = "ghana"
 
 
 class ComplianceSectorPack(str, Enum):
+    
+    # Country-specific or legacy core packs
+    
     nigeria_core_control_library = "nigeria_core_control_library"
+    core_control_library = "core_control_library"
+
+    # Shared sector packs
+    
+    accounting = "accounting"
+    agriculture = "agriculture"
+    aviation = "aviation"
     banking_and_fintech = "banking_and_fintech"
     payment_platforms_and_services = "payment_platforms_and_services"
-    accounting = "accounting"
-    legal_and_law = "legal_and_law"
-    health = "health"
-    media = "media"
-    tech = "tech"
-    telecom = "telecom"
-    oil_and_gas = "oil_and_gas"
     energy_and_power = "energy_and_power"
+    health = "health"
+    insurance = "insurance"
+
+    # Keep both names for compatibility with existing and new folder conventions
+    
+    legal_and_law = "legal_and_law"
+    law_and_legal = "law_and_legal"
     manufacturing = "manufacturing"
+    maritime_and_shipping = "maritime_and_shipping"
+    media = "media"
+    mining = "mining"
+    ngo = "ngo"
+    oil_and_gas = "oil_and_gas"
     pharmaceuticals = "pharmaceuticals"
     sports = "sports"
-    mining = "mining"
-    agriculture = "agriculture"
-    maritime = "maritime"
-    insurance = "insurance"
-    ngo = "ngo"
-    aviation = "aviation"
+    tech = "tech"
+    telecom = "telecom"
 
+def compliance_core_pack_for_jurisdiction(
+    jurisdiction: ComplianceJurisdiction,
+) -> ComplianceSectorPack:
+    if jurisdiction == ComplianceJurisdiction.nigeria:
+        return ComplianceSectorPack.nigeria_core_control_library
+    return ComplianceSectorPack.core_control_library
 
 class ComplianceRegulatoryDomain(str, Enum):
     privacy = "privacy"
@@ -440,7 +464,7 @@ class ComplianceReportVariant(str, Enum):
 
 class ComplianceRequest(BaseModel):
     feature: Literal[FeatureType.compliance]
-    jurisdiction: Literal[ComplianceJurisdiction.nigeria] = ComplianceJurisdiction.nigeria
+    jurisdiction: ComplianceJurisdiction = ComplianceJurisdiction.nigeria
     sector_packs: List[ComplianceSectorPack] = Field(
         default_factory=lambda: [ComplianceSectorPack.nigeria_core_control_library],
         min_length=1,
@@ -454,13 +478,15 @@ class ComplianceRequest(BaseModel):
         packs = set(self.sector_packs)
         if not packs:
             raise ValueError("At least one compliance sector pack must be supplied.")
-        if (
-            ComplianceSectorPack.nigeria_core_control_library not in packs
-            and any(pack != ComplianceSectorPack.nigeria_core_control_library for pack in packs)
-        ):
+
+        required_core_pack = compliance_core_pack_for_jurisdiction(self.jurisdiction)
+
+        if required_core_pack not in packs:
             raise ValueError(
-                "When sector-specific packs are requested, nigeria_core_control_library must also be included."
+                f"When sector-specific packs are requested for {self.jurisdiction.value}, "
+                f"{required_core_pack.value} must also be included."
             )
+
         return self
 
 
@@ -906,7 +932,7 @@ class ComplianceCounts(BaseModel):
 
 
 class ComplianceMachineReadableReport(BaseModel):
-    jurisdiction: Literal[ComplianceJurisdiction.nigeria] = ComplianceJurisdiction.nigeria
+    jurisdiction: ComplianceJurisdiction = ComplianceJurisdiction.nigeria
     sector_packs: List[ComplianceSectorPack] = Field(..., min_length=1)
     rule_pack_versions: List[RulePackVersion] = Field(default_factory=list)
     counts: ComplianceCounts

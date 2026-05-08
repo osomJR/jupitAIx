@@ -1,0 +1,216 @@
+{
+  "pack_id": "energy_and_power",
+  "pack_name": "Energy and Power",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for electricity, natural gas, energy utilities, generation, transmission, distribution, sale, tariff, safety, and energy-sector documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Energy and Power. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Energy Commission Act, 1997 (Act 541)",
+        "issuer": "Parliament of Ghana / Energy Commission",
+        "used_for": [
+          "electricity licensing",
+          "natural gas licensing",
+          "energy-resource regulation"
+        ]
+      },
+      {
+        "name": "Public Utilities Regulatory Commission Act, 1997 (Act 538)",
+        "issuer": "Parliament of Ghana / PURC",
+        "used_for": [
+          "utility tariff regulation",
+          "consumer service",
+          "public utility oversight"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Parliament of Ghana / Data Protection Commission",
+        "used_for": [
+          "privacy",
+          "personal data processing",
+          "data controller registration"
+        ]
+      },
+      {
+        "name": "Cybersecurity Act, 2020 (Act 1038)",
+        "issuer": "Parliament of Ghana / Cyber Security Authority",
+        "used_for": [
+          "cybersecurity governance",
+          "critical information infrastructure",
+          "incident and cyber-risk controls"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "POWER-EC-001",
+      "rule_version": "2025.01",
+      "title": "Energy Commission licence or authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Energy Commission licence, electricity or natural gas authorization, generation, transmission, distribution, wholesale supply, or sale licence evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Energy Commission",
+          "electricity licence",
+          "generation licence",
+          "transmission licence",
+          "distribution licence",
+          "natural gas licence",
+          "wholesale supply"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Energy Commission Act, 1997 (Act 541)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "POWER-PURC-001",
+      "rule_version": "2025.01",
+      "title": "PURC tariff, consumer-service, or utility-service evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for PURC tariff approval, utility consumer service, service quality, complaint, or billing evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "PURC",
+          "tariff",
+          "consumer service",
+          "billing",
+          "complaint",
+          "service quality",
+          "utility"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Public Utilities Regulatory Commission Act, 1997 (Act 538)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "POWER-SAFE-001",
+      "rule_version": "2025.01",
+      "title": "Energy safety, technical standard, or operational control evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for safety, technical standards, maintenance, operational controls, metering, or emergency procedures.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "safety",
+          "technical standard",
+          "maintenance",
+          "metering",
+          "emergency procedure",
+          "operational control"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Energy Commission Act, 1997 (Act 541)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "POWER-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Critical energy infrastructure cybersecurity or continuity evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for cyber-risk, continuity, access control, incident, or critical infrastructure evidence in energy operations.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "critical infrastructure",
+          "cybersecurity",
+          "access control",
+          "incident response",
+          "business continuity",
+          "SCADA"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybersecurity Act, 2020 (Act 1038)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

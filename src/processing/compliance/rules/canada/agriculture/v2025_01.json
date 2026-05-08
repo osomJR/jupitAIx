@@ -1,0 +1,256 @@
+{
+  "pack_id": "agriculture",
+  "pack_name": "Agriculture",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for agricultural producers, exporters, processors, grain handlers, importers, and related agribusiness documentation in Canada.",
+  "metadata": {
+    "scope": "Canada sector overlay controls for Agriculture. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/provincial/territorial legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Safe Food for Canadians Regulations preventive food safety controls",
+        "issuer": "Canadian Food Inspection Agency",
+        "url": "https://inspection.canada.ca/en/food-safety-industry/toolkit-food-businesses/preventive-food-safety-controls",
+        "used_for": [
+          "food safety controls",
+          "preventive control plans",
+          "import/export food operations"
+        ]
+      },
+      {
+        "name": "Plant import procedures under the Plant Protection Act",
+        "issuer": "Canadian Food Inspection Agency",
+        "url": "https://inspection.canada.ca/en/plant-health/invasive-species/plant-import",
+        "used_for": [
+          "plant import permits",
+          "phytosanitary controls",
+          "plant protection"
+        ]
+      },
+      {
+        "name": "Animal and animal-product import permit guidance",
+        "issuer": "Canadian Food Inspection Agency",
+        "url": "https://inspection.canada.ca/en/animal-health/terrestrial-animals/imports/permit-application",
+        "used_for": [
+          "animal health import permits",
+          "zoosanitary documentation"
+        ]
+      },
+      {
+        "name": "Canadian Grain Commission licensing guidance",
+        "issuer": "Canadian Grain Commission",
+        "url": "https://www.grainscanada.gc.ca/en/licences/",
+        "used_for": [
+          "grain dealer licensing",
+          "elevator licensing",
+          "producer payment protection"
+        ]
+      },
+      {
+        "name": "Pest Control Products Act and pesticide compliance guidance",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/pest-control-products/pesticides-compliance-enforcement.html",
+        "used_for": [
+          "pesticide registration",
+          "pesticide import/manufacture/distribution/use"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "AGRI-CFIA-001",
+      "rule_version": "2025.01",
+      "title": "Preventive food safety controls or PCP evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for Safe Food for Canadians preventive control, PCP, food licence, traceability, import/export food controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "preventive control plan",
+          "PCP",
+          "Safe Food for Canadians",
+          "food licence",
+          "traceability",
+          "CFIA"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Safe Food for Canadians Regulations / CFIA guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-PLANT-001",
+      "rule_version": "2025.01",
+      "title": "Plant import or phytosanitary control evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for CFIA plant import permits, phytosanitary certificates, plant protection, or pest-control import conditions.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "plant import permit",
+          "phytosanitary certificate",
+          "Plant Protection Act",
+          "plant protection",
+          "CFIA permit",
+          "import requirements"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Plant Protection Act / CFIA plant import guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-ANIMAL-001",
+      "rule_version": "2025.01",
+      "title": "Animal health import permit or zoosanitary evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for animal health import permit, zoosanitary certificate, live animal, animal product, or by-product control evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "animal health import permit",
+          "zoosanitary certificate",
+          "live animal",
+          "animal product",
+          "by-product",
+          "CFIA/ACIA"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Health of Animals Regulations / CFIA animal import guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-GRAIN-001",
+      "rule_version": "2025.01",
+      "title": "Canadian Grain Commission licence or grain-dealer compliance evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for grain dealer licence, elevator licence, producer payment protection, or Canadian Grain Commission evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Canadian Grain Commission",
+          "grain dealer licence",
+          "primary elevator",
+          "terminal elevator",
+          "process elevator",
+          "security to producers"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canada Grain Act / Canadian Grain Commission licensing guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "AGRI-PEST-001",
+      "rule_version": "2025.01",
+      "title": "Pesticide registration, import, or label-use evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for Health Canada/PMRA pesticide registration, import, distribution, or label-compliance evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Pest Control Products Act",
+          "PMRA",
+          "pesticide registration",
+          "registered by Health Canada",
+          "label directions",
+          "pest control product"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Pest Control Products Act / Health Canada pesticide compliance guidance"
+        ]
+      }
+    }
+  ]
+}

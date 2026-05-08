@@ -1,0 +1,222 @@
+{
+  "pack_id": "aviation",
+  "pack_name": "Aviation",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French airlines, airports, aviation operators, ground handlers, maintenance organizations, training organizations, and aviation service providers.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Aviation. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Direction générale de l'aviation civile regulatory materials",
+        "issuer": "DGAC",
+        "url": "https://www.ecologie.gouv.fr/direction-generale-laviation-civile-dgac",
+        "used_for": [
+          "aviation oversight",
+          "operator authorization",
+          "safety"
+        ]
+      },
+      {
+        "name": "European Union Aviation Safety Agency regulatory framework",
+        "issuer": "EASA",
+        "url": "https://www.easa.europa.eu/",
+        "used_for": [
+          "airworthiness",
+          "safety management",
+          "maintenance",
+          "operations"
+        ]
+      },
+      {
+        "name": "French passenger rights and air transport consumer guidance",
+        "issuer": "DGAC / Ministry of Transport",
+        "url": "https://www.ecologie.gouv.fr/politiques-publiques/passagers-aeriens-vos-droits",
+        "used_for": [
+          "passenger rights",
+          "claims",
+          "consumer information"
+        ]
+      },
+      {
+        "name": "CNIL/GDPR guidance",
+        "issuer": "CNIL",
+        "url": "https://www.cnil.fr/fr/comprendre-le-rgpd",
+        "used_for": [
+          "passenger and employee data privacy"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "AV-FR-DGAC-001",
+      "rule_version": "2025.01",
+      "title": "DGAC/EASA licence, certificate, or approval evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for air operator certificate, DGAC/EASA approval, licence, certificate, or aviation authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "DGAC",
+          "EASA",
+          "certificat de transporteur aérien",
+          "AOC",
+          "agrément",
+          "licence",
+          "certificat"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "DGAC regulatory materials",
+          "EASA regulatory framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AV-FR-SMS-001",
+      "rule_version": "2025.01",
+      "title": "Safety management or operational safety evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for safety management system, occurrence reporting, risk assessment, airworthiness, maintenance, or operational safety controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "système de gestion de la sécurité",
+          "SMS",
+          "sécurité aérienne",
+          "compte rendu d'événement",
+          "navigabilité",
+          "maintenance"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "DGAC/EASA aviation safety framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AV-FR-PAX-001",
+      "rule_version": "2025.01",
+      "title": "Passenger rights or complaints evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for passenger-rights disclosures, complaints, compensation, delay, cancellation, denied boarding, or assistance evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "droits des passagers",
+          "réclamation",
+          "indemnisation",
+          "retard",
+          "annulation",
+          "refus d'embarquement"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "DGAC passenger rights guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AV-FR-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Passenger/crew data-protection evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy notices, passenger data, crew records, biometric/identity processing, or GDPR controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "données passagers",
+          "données personnelles",
+          "RGPD",
+          "PNR",
+          "équipage",
+          "pièce d'identité"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "GDPR/RGPD",
+          "CNIL guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

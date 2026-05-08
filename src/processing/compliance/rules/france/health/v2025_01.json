@@ -1,0 +1,218 @@
+{
+  "pack_id": "health",
+  "pack_name": "Health",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French healthcare providers, health facilities, health data, clinical services, medical devices, and health-sector regulated documents.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Health. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Haute Autorité de Santé quality and certification materials",
+        "issuer": "HAS",
+        "url": "https://www.has-sante.fr/",
+        "used_for": [
+          "quality of care",
+          "certification",
+          "clinical governance"
+        ]
+      },
+      {
+        "name": "French health ministry and regional health agency framework",
+        "issuer": "Ministry of Health / ARS",
+        "url": "https://sante.gouv.fr/",
+        "used_for": [
+          "health facility governance",
+          "public health controls"
+        ]
+      },
+      {
+        "name": "CNIL health-data and GDPR guidance",
+        "issuer": "CNIL",
+        "url": "https://www.cnil.fr/fr/comprendre-le-rgpd",
+        "used_for": [
+          "health data privacy",
+          "sensitive data"
+        ]
+      },
+      {
+        "name": "French Medical Council professional ethics materials",
+        "issuer": "Conseil national de l'Ordre des médecins",
+        "url": "https://www.conseil-national.medecin.fr/",
+        "used_for": [
+          "medical confidentiality",
+          "professional ethics"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "HEALTH-FR-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Patient confidentiality and health-data privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for patient confidentiality, medical secrecy, health data, consent, GDPR/RGPD, or secure health-data handling evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "secret médical",
+          "confidentialité patient",
+          "données de santé",
+          "RGPD",
+          "consentement",
+          "dossier médical"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "GDPR/RGPD",
+          "CNIL health-data guidance",
+          "medical secrecy framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "HEALTH-FR-QUAL-001",
+      "rule_version": "2025.01",
+      "title": "Quality, certification, or clinical governance evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for HAS certification, quality management, care pathway, clinical governance, or adverse-event evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "HAS",
+          "certification",
+          "qualité des soins",
+          "parcours de soins",
+          "événement indésirable",
+          "gestion des risques"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "HAS quality and certification materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "HEALTH-FR-AUTH-001",
+      "rule_version": "2025.01",
+      "title": "Health facility authorization or ARS evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for ARS authorization, health facility approval, healthcare activity authorization, or regulated professional status evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "ARS",
+          "autorisation sanitaire",
+          "établissement de santé",
+          "activité de soins",
+          "agrément",
+          "professionnel de santé"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "French health ministry / ARS framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "HEALTH-FR-MEDDEV-001",
+      "rule_version": "2025.01",
+      "title": "Medical product/device regulatory evidence is present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for medical device, CE marking, pharmacovigilance, materiovigilance, ANSM, or health-product safety evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "ANSM",
+          "dispositif médical",
+          "marquage CE",
+          "pharmacovigilance",
+          "matériovigilance",
+          "produit de santé"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ANSM/health product regulatory framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

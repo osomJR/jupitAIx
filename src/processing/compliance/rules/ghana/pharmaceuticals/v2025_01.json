@@ -1,0 +1,224 @@
+{
+  "pack_id": "pharmaceuticals",
+  "pack_name": "Pharmaceuticals",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for pharmaceutical manufacturing, importation, distribution, pharmacy practice, drug registration, clinical trials, medical devices, and regulated-health-product documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Pharmaceutials. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Public Health Act, 2012 (Act 851) / FDA Ghana mandate",
+        "issuer": "Food and Drugs Authority / Ministry of Health",
+        "used_for": [
+          "food and drugs regulation",
+          "product registration",
+          "clinical trials",
+          "medical devices"
+        ]
+      },
+      {
+        "name": "FDA Ghana Drug Registration & Inspection",
+        "issuer": "Food and Drugs Authority",
+        "used_for": [
+          "drug registration",
+          "inspection",
+          "safety and quality"
+        ]
+      },
+      {
+        "name": "Pharmacy Act, 1994 (Act 489) / Pharmacy Council Ghana mandate",
+        "issuer": "Pharmacy Council Ghana",
+        "used_for": [
+          "pharmacy practice",
+          "registered pharmacists",
+          "professional standards"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "patient/customer/trial-subject data privacy"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "PHAR-FDA-001",
+      "rule_version": "2025.01",
+      "title": "FDA product registration, inspection, or authorisation evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for FDA Ghana registration, product approval, inspection, clinical trial authorisation, medical-device, medicine, or regulated-product evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Food and Drugs Authority",
+          "FDA Ghana",
+          "product registration",
+          "drug registration",
+          "clinical trial",
+          "medical device",
+          "marketing authorization",
+          "inspection"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Public Health Act, 2012 (Act 851)",
+          "FDA Ghana Drug Registration & Inspection mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PHAR-PCG-001",
+      "rule_version": "2025.01",
+      "title": "Pharmacy Council premises, professional, or practice-control evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for Pharmacy Council registration, pharmacist licence, pharmacy premises, professional conduct, or practice standards evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Pharmacy Council",
+          "pharmacist",
+          "pharmacy premises",
+          "professional conduct",
+          "registered pharmacist",
+          "practice standards"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Pharmacy Act, 1994 (Act 489)",
+          "Pharmacy Council Ghana mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PHAR-QA-001",
+      "rule_version": "2025.01",
+      "title": "Drug quality, safety monitoring, or traceability evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for GMP, quality assurance, batch number, expiry date, safety monitoring, adverse event, recall, or traceability evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "GMP",
+          "quality assurance",
+          "batch number",
+          "expiry date",
+          "safety monitoring",
+          "adverse event",
+          "recall",
+          "traceability"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FDA Ghana mandate under Public Health Act, 2012 (Act 851)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PHAR-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Patient, customer, trial-subject, or employee data-protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for data protection, consent, health information, trial-subject confidentiality, retention, or security controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "data protection",
+          "consent",
+          "health information",
+          "patient",
+          "trial subject",
+          "confidentiality",
+          "retention"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)",
+          "FDA clinical trial oversight"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

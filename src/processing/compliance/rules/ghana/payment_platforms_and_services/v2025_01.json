@@ -1,0 +1,228 @@
+{
+  "pack_id": "payment_platforms_and_services",
+  "pack_name": "Payment Platforms and Services",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for Ghana payment service providers, e-money issuers, switches, payment aggregators, fintech platforms, and payment-service documentation.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Payment Platforms and Services. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Payment Systems and Services Act, 2019 (Act 987)",
+        "issuer": "Bank of Ghana / Republic of Ghana",
+        "used_for": [
+          "payment-service licensing",
+          "e-money",
+          "payment systems",
+          "customer recourse"
+        ]
+      },
+      {
+        "name": "Bank of Ghana licensing and authorisation of payment service providers",
+        "issuer": "Bank of Ghana",
+        "used_for": [
+          "PSP licensing",
+          "authorisation",
+          "financial inclusion",
+          "payment-system supervision"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "customer/payment data privacy"
+        ]
+      },
+      {
+        "name": "Cybersecurity Act, 2020 (Act 1038)",
+        "issuer": "Cyber Security Authority",
+        "used_for": [
+          "cybersecurity governance",
+          "incident response",
+          "critical information infrastructure"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "PAY-BOG-001",
+      "rule_version": "2025.01",
+      "title": "Bank of Ghana PSP licence or authorisation evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Bank of Ghana payment service provider licence, e-money issuer authorisation, payment system licence, or approval evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Bank of Ghana",
+          "payment service provider",
+          "PSP licence",
+          "PSP license",
+          "e-money issuer",
+          "payment system licence",
+          "authorization",
+          "authorisation"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Payment Systems and Services Act, 2019 (Act 987)",
+          "Bank of Ghana PSP licensing notice"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PAY-CUST-001",
+      "rule_version": "2025.01",
+      "title": "Customer transparency, recourse, complaints, or dispute-resolution evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for fees disclosure, terms, complaints, dispute resolution, refund, reversal, customer recourse, or fair treatment controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "fees",
+          "complaint",
+          "dispute",
+          "refund",
+          "reversal",
+          "customer recourse",
+          "fair treatment",
+          "terms"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Payment Systems and Services Act, 2019 (Act 987)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PAY-AML-001",
+      "rule_version": "2025.01",
+      "title": "KYC, AML, transaction monitoring, or suspicious-activity controls are documented",
+      "regulatory_domain": "aml",
+      "summary": "Checks for KYC, customer due diligence, transaction monitoring, beneficial owner, sanctions, suspicious transaction, or AML controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "KYC",
+          "know your customer",
+          "customer due diligence",
+          "transaction monitoring",
+          "beneficial owner",
+          "sanctions",
+          "suspicious transaction"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Payment Systems and Services Act, 2019 (Act 987)",
+          "Anti-Money Laundering Act, 2020 (Act 1044)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PAY-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Payment-security, cybersecurity, or incident-response controls are documented",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for information security, cybersecurity, incident response, fraud monitoring, encryption, access control, or audit logging evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "cybersecurity",
+          "information security",
+          "incident response",
+          "fraud monitoring",
+          "encryption",
+          "access control",
+          "audit log"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybersecurity Act, 2020 (Act 1038)",
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

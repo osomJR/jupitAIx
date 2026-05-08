@@ -1,0 +1,292 @@
+{
+  "pack_id": "core_control_library",
+  "pack_name": "Core Control Library",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Cross-sector baseline compliance controls for Canada v1. Designed to be applied together with sector-specific overlays. Rules are evidence-driven and deterministic; absence of evidence does not by itself constitute legal non-compliance.",
+  "metadata": {
+    "scope": "Canada baseline controls for document/document-set review. Includes federal privacy, cybersecurity, AML/ATF, electronic marketing, consumer protection, and evidence controls. Provincial/territorial obligations may also apply and require human review.",
+    "source_note": "Source basis is mapped from official Canadian federal/provincial/territorial legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Personal Information Protection and Electronic Documents Act (PIPEDA)",
+        "issuer": "Parliament of Canada / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/",
+        "used_for": [
+          "privacy",
+          "personal information",
+          "private-sector data protection"
+        ]
+      },
+      {
+        "name": "Privacy Act",
+        "issuer": "Parliament of Canada / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/P-21/",
+        "used_for": ["federal public-sector personal information"]
+      },
+      {
+        "name": "Canada's Anti-Spam Legislation (CASL) guidance",
+        "issuer": "Canadian Radio-television and Telecommunications Commission",
+        "url": "https://crtc.gc.ca/eng/internet/anti/reg.htm",
+        "used_for": [
+          "commercial electronic messages",
+          "consent",
+          "unsubscribe",
+          "sender identification"
+        ]
+      },
+      {
+        "name": "Proceeds of Crime (Money Laundering) and Terrorist Financing Act and FINTRAC guidance",
+        "issuer": "FINTRAC",
+        "url": "https://fintrac-canafe.canada.ca/act-loi/1-eng",
+        "used_for": [
+          "AML/ATF",
+          "client identification",
+          "record keeping",
+          "compliance programs"
+        ]
+      },
+      {
+        "name": "Competition Act deceptive marketing guidance",
+        "issuer": "Competition Bureau Canada",
+        "url": "https://competition-bureau.canada.ca/en/deceptive-marketing-practices/types-deceptive-marketing-practices/misleading-representations-and-deceptive-marketing-practices",
+        "used_for": [
+          "consumer protection",
+          "false or misleading representations"
+        ]
+      },
+      {
+        "name": "Baseline Cyber Security Controls for Small and Medium Organizations",
+        "issuer": "Canadian Centre for Cyber Security",
+        "url": "https://www.cyber.gc.ca/en/guidance/baseline-cyber-security-controls-small-and-medium-organizations",
+        "used_for": [
+          "cybersecurity baseline",
+          "incident response",
+          "access control",
+          "patching",
+          "backups"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "CCCL-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Privacy notice or personal-information handling disclosure evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for PIPEDA-style privacy notice, privacy policy, data protection notice, or personal-information handling language.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy notice",
+          "privacy policy",
+          "personal information",
+          "data protection notice",
+          "privacy statement",
+          "collection use disclosure"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["PIPEDA"]
+      }
+    },
+    {
+      "rule_id": "CCCL-PRIV-002",
+      "rule_version": "2025.01",
+      "title": "Consent, purpose, and access/correction evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for evidence of consent, purpose specification, access, correction, or withdrawal language related to personal information.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "consent",
+          "purpose",
+          "access to personal information",
+          "correction",
+          "withdraw consent",
+          "individual rights"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["PIPEDA fair information principles"]
+      }
+    },
+    {
+      "rule_id": "CCCL-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Cybersecurity incident response and access-control evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for incident response, patching, authentication, access control, backup, or encryption evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "incident response",
+          "patching",
+          "multi-factor authentication",
+          "access control",
+          "backup",
+          "encryption"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["Canadian Centre for Cyber Security baseline controls"]
+      }
+    },
+    {
+      "rule_id": "CCCL-CASL-001",
+      "rule_version": "2025.01",
+      "title": "CASL consent, sender identification, and unsubscribe evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks commercial electronic message documents for consent, identification/contact information, and unsubscribe mechanism evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "express consent",
+          "implied consent",
+          "unsubscribe",
+          "commercial electronic message",
+          "sender identification",
+          "contact information"
+        ],
+        "min_count": 3
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["CRTC CASL guidance"]
+      }
+    },
+    {
+      "rule_id": "CCCL-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/ATF compliance program or client-identification evidence is present where applicable",
+      "regulatory_domain": "aml",
+      "summary": "Checks for FINTRAC-style compliance program, client identification, record keeping, reporting, or risk assessment evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "compliance program",
+          "client identification",
+          "record keeping",
+          "FINTRAC",
+          "suspicious transaction",
+          "risk assessment"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["PCMLTFA / FINTRAC guidance"]
+      }
+    },
+    {
+      "rule_id": "CCCL-CONS-001",
+      "rule_version": "2025.01",
+      "title": "False or misleading representation control evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for truthful advertising, substantiation, disclosure, or anti-misrepresentation controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "false or misleading",
+          "misleading representation",
+          "substantiation",
+          "material information",
+          "advertising claim",
+          "consumer disclosure"
+        ]
+      },
+      "metadata": {
+        "control_type": "baseline",
+        "applicability": "cross_sector",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["Competition Act deceptive marketing guidance"]
+      }
+    }
+  ]
+}

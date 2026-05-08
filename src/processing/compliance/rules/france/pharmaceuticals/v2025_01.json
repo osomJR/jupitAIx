@@ -1,0 +1,221 @@
+{
+  "pack_id": "pharmaceuticals",
+  "pack_name": "Pharmaceuticals",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French pharmaceutical manufacturing, importation, distribution, marketing authorization, pharmacovigilance, medical products, and regulated-drug documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Pharmaceuticals. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "ANSM medicine and health-product safety materials",
+        "issuer": "ANSM",
+        "url": "https://ansm.sante.fr/",
+        "used_for": [
+          "medicine authorization",
+          "pharmacovigilance",
+          "product safety"
+        ]
+      },
+      {
+        "name": "ANSM pharmacovigilance materials",
+        "issuer": "ANSM",
+        "url": "https://ansm.sante.fr/page/la-pharmacovigilance",
+        "used_for": [
+          "adverse-event reporting",
+          "medicine monitoring"
+        ]
+      },
+      {
+        "name": "French health-product regulatory framework",
+        "issuer": "Ministry of Health / ANSM",
+        "url": "https://sante.gouv.fr/",
+        "used_for": [
+          "regulated health products",
+          "medical devices",
+          "distribution controls"
+        ]
+      },
+      {
+        "name": "CNIL/GDPR guidance",
+        "issuer": "CNIL",
+        "url": "https://www.cnil.fr/fr/comprendre-le-rgpd",
+        "used_for": [
+          "privacy",
+          "data protection",
+          "data-subject rights"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "PHAR-FR-AMM-001",
+      "rule_version": "2025.01",
+      "title": "Marketing authorization or product-approval evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for AMM, ANSM, marketing authorization, product approval, registration, or regulated medicine evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "AMM",
+          "autorisation de mise sur le marché",
+          "ANSM",
+          "médicament",
+          "autorisation",
+          "enregistrement"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ANSM medicine authorization materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PHAR-FR-PV-001",
+      "rule_version": "2025.01",
+      "title": "Pharmacovigilance or adverse-event reporting evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for pharmacovigilance, adverse-event reporting, signal management, risk-management plan, or medicine-safety monitoring evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "pharmacovigilance",
+          "effet indésirable",
+          "déclaration",
+          "signalement",
+          "plan de gestion des risques",
+          "sécurité du médicament"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ANSM pharmacovigilance materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PHAR-FR-GMP-001",
+      "rule_version": "2025.01",
+      "title": "Manufacturing, quality, batch, or GMP evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for GMP/BPF, batch release, quality control, manufacturing authorization, traceability, or distribution controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "BPF",
+          "bonnes pratiques de fabrication",
+          "contrôle qualité",
+          "libération de lot",
+          "traçabilité",
+          "autorisation de fabrication",
+          "distribution"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ANSM regulated health-product framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PHAR-FR-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Patient/customer health-data privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for health data, patient data, pharmacovigilance privacy, GDPR/RGPD, consent, retention, or data-subject rights evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "données de santé",
+          "données personnelles",
+          "RGPD",
+          "patient",
+          "consentement",
+          "durée de conservation"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "GDPR/RGPD",
+          "CNIL health-data guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

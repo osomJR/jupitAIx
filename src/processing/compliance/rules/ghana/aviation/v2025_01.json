@@ -1,0 +1,218 @@
+{
+  "pack_id": "aviation",
+  "pack_name": "Aviation",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for airlines, aviation operators, airports, ground handlers, maintenance organizations, aviation training, and aviation service providers in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Aviation. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Ghana Civil Aviation Act, 2004 (Act 678) / GCAA mandate",
+        "issuer": "Ghana Civil Aviation Authority",
+        "used_for": [
+          "aviation licensing",
+          "air operator oversight",
+          "aerodrome certification",
+          "air navigation services"
+        ]
+      },
+      {
+        "name": "Ghana Civil Aviation Directives",
+        "issuer": "Ghana Civil Aviation Authority",
+        "used_for": [
+          "air navigation",
+          "safety management",
+          "operational procedures"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Parliament of Ghana / Data Protection Commission",
+        "used_for": [
+          "privacy",
+          "personal data processing",
+          "data controller registration"
+        ]
+      },
+      {
+        "name": "Cybersecurity Act, 2020 (Act 1038)",
+        "issuer": "Parliament of Ghana / Cyber Security Authority",
+        "used_for": [
+          "cybersecurity governance",
+          "critical information infrastructure",
+          "incident and cyber-risk controls"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "AVN-GCAA-001",
+      "rule_version": "2025.01",
+      "title": "GCAA licence, certificate, permit, or approval evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for GCAA licence, air operator certificate, aerodrome certificate, permit, approval, or aviation authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "GCAA",
+          "air operator certificate",
+          "AOC",
+          "licence",
+          "license",
+          "aerodrome certificate",
+          "approval",
+          "permit"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Civil Aviation Act, 2004 (Act 678)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AVN-SAFE-001",
+      "rule_version": "2025.01",
+      "title": "Aviation safety management or operational safety evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for safety management system, hazard identification, operational procedure, airworthiness, maintenance, or flight safety evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "safety management system",
+          "SMS",
+          "hazard",
+          "airworthiness",
+          "maintenance programme",
+          "flight safety",
+          "operational procedure"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ghana Civil Aviation Directives"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AVN-ANS-001",
+      "rule_version": "2025.01",
+      "title": "Air navigation, communication, or aerodrome procedure evidence is present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for air navigation service, radio communication, ATS, aerodrome operation, or search-and-rescue evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "air navigation",
+          "air traffic services",
+          "ATS",
+          "aerodrome",
+          "radio communication",
+          "search and rescue"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ghana Civil Aviation Directives"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AVN-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Passenger, crew, or traveller personal-data handling evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, passenger-data, crew-data, booking-data, or data protection evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "passenger data",
+          "crew data",
+          "booking data",
+          "personal data",
+          "privacy notice",
+          "data protection"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

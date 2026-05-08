@@ -1,0 +1,218 @@
+{
+  "pack_id": "pharmaceuticals",
+  "pack_name": "Pharmaceuticals",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for pharmaceutical drugs, biologics, drug establishment licensing, market authorization, GMP, labelling, advertising, pharmacovigilance, and compliance documentation in Canada.",
+  "metadata": {
+    "scope": "Canada-only sector overlay controls for Pharmaceuticals. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/regulatory sources available at rule-pack publication time. Provincial/territorial obligations may apply and are not exhaustively encoded. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Drug products",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/drug-products.html",
+        "used_for": [
+          "drug regulation",
+          "market authorization",
+          "safety efficacy quality"
+        ]
+      },
+      {
+        "name": "Drug products legislation and guidelines",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/drug-products/legislation-guidelines.html",
+        "used_for": [
+          "Food and Drugs Act",
+          "Food and Drug Regulations",
+          "pharmaceutical drugs"
+        ]
+      },
+      {
+        "name": "Classification of products under the Food and Drugs Act",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/classification-products-food-drugs-act.html",
+        "used_for": [
+          "product classification",
+          "pharmaceuticals",
+          "biologics",
+          "NHPs"
+        ]
+      },
+      {
+        "name": "Drugs and health products compliance and enforcement",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/compliance-enforcement/what-new.html",
+        "used_for": [
+          "compliance and enforcement",
+          "drug establishment licensing",
+          "inspector policies"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "PHAR-HC-001",
+      "rule_version": "2025.01",
+      "title": "Health Canada market authorization or drug-product approval evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for DIN, NOC, market authorization, Health Canada approval, or drug product authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "DIN",
+          "Drug Identification Number",
+          "Notice of Compliance",
+          "NOC",
+          "market authorization",
+          "Health Canada approval"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Health Canada drug products materials"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-DEL-002",
+      "rule_version": "2025.01",
+      "title": "Drug Establishment Licence or establishment control evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Drug Establishment Licence, DEL, establishment licence, manufacturing, importing, distribution, or testing evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Drug Establishment Licence",
+          "Drug Establishment License",
+          "DEL",
+          "establishment licence",
+          "manufacturing",
+          "importing",
+          "distribution"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Health Canada drug products legislation and compliance materials"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-GMP-003",
+      "rule_version": "2025.01",
+      "title": "GMP and quality-system evidence is documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for GMP, quality assurance, batch records, validation, quality control, or release controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "GMP",
+          "good manufacturing practices",
+          "quality assurance",
+          "batch record",
+          "validation",
+          "quality control"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Food and Drug Regulations / Health Canada pharmaceutical compliance"
+        ]
+      }
+    },
+    {
+      "rule_id": "PHAR-LABEL-004",
+      "rule_version": "2025.01",
+      "title": "Drug labelling, advertising, or safety communication controls are documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for labelling, prescribing information, adverse reaction, recall, pharmacovigilance, or advertising controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "labelling",
+          "labeling",
+          "prescribing information",
+          "adverse reaction",
+          "recall",
+          "pharmacovigilance",
+          "advertising"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Health Canada Food and Drugs Act classification and compliance materials"
+        ]
+      }
+    }
+  ]
+}

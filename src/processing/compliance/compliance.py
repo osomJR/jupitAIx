@@ -11,7 +11,7 @@ Purpose:
 
 Design notes:
 - stateless and deterministic
-- scope is limited to Nigeria and configured Nigerian sector packs for v1
+- scope is limited to configured jurisdiction and sector rule packs for v1
 - findings are derived strictly from the provided documents only
 - human review is always required before reliance or final export
 - real regulatory content is loaded from versioned rule packs; this file is the engine,

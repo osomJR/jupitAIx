@@ -1,0 +1,259 @@
+{
+  "pack_id": "health",
+  "pack_name": "Health",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for healthcare providers, health facilities, medical professionals, health insurance, health data, clinical services, and regulated health-sector documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Health. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Public Health Act, 2012 (Act 851)",
+        "issuer": "Parliament of Ghana / Ministry of Health / FDA Ghana",
+        "used_for": [
+          "public health",
+          "food and drugs",
+          "clinical trials",
+          "regulated health products"
+        ]
+      },
+      {
+        "name": "Ghana Health Service and Teaching Hospitals Act, 1996 (Act 525)",
+        "issuer": "Parliament of Ghana / Ghana Health Service",
+        "used_for": [
+          "health service governance",
+          "health institutions"
+        ]
+      },
+      {
+        "name": "Health Professions Regulatory Bodies Act, 2013 (Act 857)",
+        "issuer": "Parliament of Ghana / Health professional councils",
+        "used_for": [
+          "professional registration",
+          "practice standards",
+          "discipline"
+        ]
+      },
+      {
+        "name": "National Health Insurance Act, 2012 (Act 852)",
+        "issuer": "Parliament of Ghana / NHIA",
+        "used_for": [
+          "health insurance scheme",
+          "NHIA claims and accreditation"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Parliament of Ghana / Data Protection Commission",
+        "used_for": [
+          "privacy",
+          "personal data processing",
+          "data controller registration"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "HEALTH-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Patient confidentiality and health-record privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for patient confidentiality, medical records, health information privacy, consent, or sensitive data evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "patient confidentiality",
+          "medical record",
+          "health record",
+          "patient privacy",
+          "consent",
+          "sensitive personal data"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)",
+          "Public Health Act, 2012 (Act 851)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "HEALTH-PROF-001",
+      "rule_version": "2025.01",
+      "title": "Health professional registration or licensing evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for Medical and Dental Council, Nursing and Midwifery Council, Pharmacy Council, Allied Health, or professional registration evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Medical and Dental Council",
+          "Nursing and Midwifery Council",
+          "Pharmacy Council",
+          "Allied Health",
+          "registered practitioner",
+          "licence",
+          "license"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Health Professions Regulatory Bodies Act, 2013 (Act 857)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "HEALTH-FAC-001",
+      "rule_version": "2025.01",
+      "title": "Health facility governance or Ghana Health Service evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for Ghana Health Service, teaching hospital, facility governance, institutional policy, or health service standards evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Ghana Health Service",
+          "teaching hospital",
+          "health facility",
+          "clinical governance",
+          "service standard",
+          "facility policy"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ghana Health Service and Teaching Hospitals Act, 1996 (Act 525)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "HEALTH-NHIA-001",
+      "rule_version": "2025.01",
+      "title": "NHIA accreditation, claims, or health-insurance evidence is present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for NHIA, National Health Insurance Scheme, provider accreditation, claims, or private health insurance evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "NHIA",
+          "National Health Insurance",
+          "provider accreditation",
+          "claims",
+          "health insurance",
+          "scheme member"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "National Health Insurance Act, 2012 (Act 852)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "HEALTH-FDA-001",
+      "rule_version": "2025.01",
+      "title": "FDA regulated health-product or clinical-trial evidence is present where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for FDA Ghana, drug registration, medical device, clinical trial, product approval, or regulated-product evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Food and Drugs Authority",
+          "FDA",
+          "drug registration",
+          "medical device",
+          "clinical trial",
+          "product approval"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Public Health Act, 2012 (Act 851)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

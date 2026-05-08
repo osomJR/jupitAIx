@@ -1,0 +1,221 @@
+{
+  "pack_id": "agriculture",
+  "pack_name": "Agriculture",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French agricultural producers, exporters, processors, cooperatives, agribusiness operators, and food-chain documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Agriculture. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "DGAL food safety, animal health, and plant health control framework",
+        "issuer": "Ministry of Agriculture / DGAL",
+        "url": "https://agriculture.gouv.fr/securite-des-aliments-qui-controle-quoi",
+        "used_for": [
+          "food safety",
+          "official controls",
+          "animal and plant health"
+        ]
+      },
+      {
+        "name": "French food-hygiene regulation guidance",
+        "issuer": "Ministry of Agriculture / DGAL",
+        "url": "https://agriculture.gouv.fr/la-reglementation-sur-lhygiene-des-aliments",
+        "used_for": [
+          "food hygiene",
+          "HACCP",
+          "official controls"
+        ]
+      },
+      {
+        "name": "DGAL surveillance and control plans",
+        "issuer": "Ministry of Agriculture / DGAL",
+        "url": "https://agriculture.gouv.fr/plans-de-surveillance-et-de-controle",
+        "used_for": [
+          "monitoring plans",
+          "contaminants",
+          "food-chain controls"
+        ]
+      },
+      {
+        "name": "DGCCRF food/product consumer-protection materials",
+        "issuer": "DGCCRF",
+        "url": "https://www.economie.gouv.fr/dgccrf",
+        "used_for": [
+          "consumer information",
+          "labelling",
+          "commercial practices"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "AGRI-DGAL-001",
+      "rule_version": "2025.01",
+      "title": "Food-safety or hygiene-control evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for food safety, hygiene package, HACCP, sanitary plan, official controls, or DGAL evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "sécurité sanitaire",
+          "HACCP",
+          "hygiène alimentaire",
+          "DGAL",
+          "plan de maîtrise sanitaire",
+          "contrôle sanitaire"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "DGAL food safety and hygiene guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AGRI-TRACE-001",
+      "rule_version": "2025.01",
+      "title": "Traceability and batch/lot evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for farm-to-fork traceability, lot, batch, origin, recall, or withdrawal evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "traçabilité",
+          "lot",
+          "origine",
+          "retrait",
+          "rappel",
+          "chaîne alimentaire"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "DGAL official controls",
+          "EU food hygiene package"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AGRI-PHYTO-001",
+      "rule_version": "2025.01",
+      "title": "Animal/plant health or phytosanitary evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for animal health, plant health, veterinary/phytosanitary certificate, disease monitoring, or pest-control evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "phytosanitaire",
+          "santé animale",
+          "santé végétale",
+          "certificat sanitaire",
+          "vétérinaire",
+          "organisme nuisible"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "DGAL animal and plant health framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "AGRI-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Consumer-facing labelling or product information evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for product labelling, origin claims, allergens, composition, pricing, or consumer information.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "étiquetage",
+          "allergènes",
+          "composition",
+          "origine",
+          "information consommateur",
+          "DGCCRF"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "DGCCRF consumer/product information materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

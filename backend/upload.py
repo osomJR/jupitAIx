@@ -157,6 +157,8 @@ def build_uploaded_document_payload(
     - explain
     - redact
     - data_mask
+    - structured_extract
+    - compliance
     - generate_questions
     - generate_answers
     """
@@ -237,6 +239,8 @@ def _validate_document_action(action: FeatureType) -> None:
         FeatureType.explain,
         FeatureType.redact,
         FeatureType.data_mask,
+        FeatureType.structured_extract,
+        FeatureType.compliance,
         FeatureType.generate_questions,
         FeatureType.generate_answers,
     }
@@ -258,7 +262,12 @@ def _allowed_document_suffixes_for_action(action: FeatureType) -> set[str]:
     }:
         return TEXT_AI_DOCUMENT_SUFFIXES
 
-    if action in {FeatureType.redact, FeatureType.data_mask}:
+    if action in {
+        FeatureType.redact,
+        FeatureType.data_mask,
+        FeatureType.structured_extract,
+        FeatureType.compliance,
+    }:
         return PRIVACY_DOCUMENT_SUFFIXES
 
     raise UploadError(f"Unsupported document upload action: {action.value}.")

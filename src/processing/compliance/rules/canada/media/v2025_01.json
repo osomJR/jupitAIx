@@ -1,0 +1,212 @@
+{
+  "pack_id": "media",
+  "pack_name": "Media",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for broadcasters, online media, streaming, news/content providers, advertising, publishing, and digital media documentation in Canada.",
+  "metadata": {
+    "scope": "Canada-only sector overlay controls for Media. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/regulatory sources available at rule-pack publication time. Provincial/territorial obligations may apply and are not exhaustively encoded. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "CRTC Acts and regulations",
+        "issuer": "CRTC",
+        "url": "https://crtc.gc.ca/eng/statutes-lois.htm",
+        "used_for": [
+          "Broadcasting Act",
+          "Online News Act",
+          "CASL",
+          "regulatory responsibilities"
+        ]
+      },
+      {
+        "name": "Broadcasting Act",
+        "issuer": "Justice Canada",
+        "url": "https://laws.justice.gc.ca/eng/acts/B-9.01/",
+        "used_for": [
+          "broadcasting regulation",
+          "broadcasting undertakings",
+          "regulations"
+        ]
+      },
+      {
+        "name": "CRTC broadcasting framework modernization materials",
+        "issuer": "CRTC",
+        "url": "https://crtc.gc.ca/eng/industr/modern/plan.htm",
+        "used_for": [
+          "online streaming",
+          "modernized broadcasting framework"
+        ]
+      },
+      {
+        "name": "Competition Act advertising and misleading claims guidance",
+        "issuer": "Competition Bureau Canada",
+        "url": "https://competition-bureau.canada.ca/en",
+        "used_for": [
+          "misleading advertising",
+          "consumer-facing representations"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MEDIA-CRTC-001",
+      "rule_version": "2025.01",
+      "title": "CRTC broadcasting or online undertaking evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for CRTC, broadcasting undertaking, online undertaking, registration, licence, or regulatory filing evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CRTC",
+          "broadcasting undertaking",
+          "online undertaking",
+          "broadcasting licence",
+          "broadcasting license",
+          "registration"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CRTC Acts and regulations; Broadcasting Act"
+        ]
+      }
+    },
+    {
+      "rule_id": "MEDIA-CANCON-002",
+      "rule_version": "2025.01",
+      "title": "Canadian-content or contribution obligations are addressed where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for Canadian content, contribution, online streaming, broadcasting framework, or discoverability evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Canadian content",
+          "CanCon",
+          "contribution",
+          "online streaming",
+          "discoverability",
+          "Broadcasting Act"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CRTC broadcasting framework modernization"
+        ]
+      }
+    },
+    {
+      "rule_id": "MEDIA-ADV-003",
+      "rule_version": "2025.01",
+      "title": "Advertising and misleading-claims controls are documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for advertising review, substantiation, misleading representation, or consumer-facing claim controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "advertising",
+          "advertisement",
+          "substantiation",
+          "misleading",
+          "consumer claim",
+          "Competition Act"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Competition Bureau advertising/misleading representations materials"
+        ]
+      }
+    },
+    {
+      "rule_id": "MEDIA-CASL-004",
+      "rule_version": "2025.01",
+      "title": "Commercial electronic message or anti-spam compliance evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for CASL, consent, unsubscribe, sender identification, or commercial electronic message controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CASL",
+          "commercial electronic message",
+          "unsubscribe",
+          "express consent",
+          "implied consent",
+          "sender identification"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CRTC CASL responsibilities"
+        ]
+      }
+    }
+  ]
+}

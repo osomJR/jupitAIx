@@ -1,0 +1,227 @@
+{
+  "pack_id": "tech",
+  "pack_name": "Technology",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for software providers, IT service providers, digital platforms, cloud/e-government vendors, cybersecurity service providers, and technology documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Technology. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "National Information Technology Agency Act, 2008 (Act 771) / NITA mandate",
+        "issuer": "National Information Technology Agency",
+        "used_for": [
+          "IT policy implementation",
+          "ICT standards",
+          "technology services"
+        ]
+      },
+      {
+        "name": "Cybersecurity Act, 2020 (Act 1038) and CSA licensing/accreditation",
+        "issuer": "Cyber Security Authority",
+        "used_for": [
+          "cybersecurity service provider licensing",
+          "critical information infrastructure",
+          "incident response"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "personal data processing and controller/processor registration"
+        ]
+      },
+      {
+        "name": "GovCert / Ghana CERT under NITA",
+        "issuer": "National Information Technology Agency",
+        "used_for": [
+          "incident coordination",
+          "threat reporting",
+          "digital infrastructure protection"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "TECH-NITA-001",
+      "rule_version": "2025.01",
+      "title": "NITA, IT-service, or ICT standards evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for NITA registration, IT service provider evidence, ICT standards, e-government, certification, or technology-service compliance.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "NITA",
+          "National Information Technology Agency",
+          "IT service provider",
+          "ICT standard",
+          "e-government",
+          "certification",
+          "technology service"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NITA Act, 2008 (Act 771)",
+          "NITA mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-CSA-001",
+      "rule_version": "2025.01",
+      "title": "Cybersecurity service provider licensing or accreditation evidence is present where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for CSA licence, cybersecurity service provider, cybersecurity establishment accreditation, professional accreditation, or VAPT/GRC/managed service evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Cyber Security Authority",
+          "CSA",
+          "cybersecurity service provider",
+          "licence",
+          "license",
+          "accreditation",
+          "VAPT",
+          "managed cybersecurity",
+          "GRC"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybersecurity Act, 2020 (Act 1038)",
+          "CSA licensing and accreditation"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Data-controller, processor, privacy, or data-protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy notice, data protection, controller/processor, consent, data subject rights, retention, security, or DPC registration evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy notice",
+          "data protection",
+          "controller",
+          "processor",
+          "consent",
+          "data subject",
+          "retention",
+          "DPC registration"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)",
+          "Data Protection Commission registration guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TECH-IR-001",
+      "rule_version": "2025.01",
+      "title": "Incident response, vulnerability, access-control, or security-governance evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for incident response, vulnerability management, access control, monitoring, encryption, backup, risk assessment, or GovCert/CERT evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "incident response",
+          "vulnerability",
+          "access control",
+          "monitoring",
+          "encryption",
+          "backup",
+          "risk assessment",
+          "CERT"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybersecurity Act, 2020 (Act 1038)",
+          "GovCert under NITA"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

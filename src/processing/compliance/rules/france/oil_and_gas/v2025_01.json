@@ -1,0 +1,225 @@
+{
+  "pack_id": "oil_and_gas",
+  "pack_name": "Oil and Gas",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French petroleum exploration, production, storage, pipelines, downstream facilities, decommissioning, safety, environmental, and hydrocarbons documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Oil and Gas. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Hydrocarbon resources of France and mining-code framework",
+        "issuer": "Ministry for Ecological Transition",
+        "url": "https://www.ecologie.gouv.fr/politiques-publiques/ressources-hydrocarbures-france",
+        "used_for": [
+          "hydrocarbon exploration",
+          "mining titles",
+          "concessions",
+          "works authorizations"
+        ]
+      },
+      {
+        "name": "Installations Classées pour la Protection de l’Environnement (ICPE)",
+        "issuer": "Ministry for Ecological Transition",
+        "url": "https://www.ecologie.gouv.fr/politiques-publiques/installations-classees-protection-lenvironnement",
+        "used_for": [
+          "industrial environmental permitting",
+          "risk prevention",
+          "ICPE controls"
+        ]
+      },
+      {
+        "name": "Industrial emissions framework",
+        "issuer": "Ministry for Ecological Transition",
+        "url": "https://www.ecologie.gouv.fr/politiques-publiques/emissions-industrielles",
+        "used_for": [
+          "industrial emissions",
+          "IED",
+          "pollution prevention"
+        ]
+      },
+      {
+        "name": "Technological risk framework",
+        "issuer": "Ministry for Ecological Transition",
+        "url": "https://www.ecologie.gouv.fr/politiques-publiques/risques-technologiques-",
+        "used_for": [
+          "hazardous substances",
+          "pipelines",
+          "technological risk",
+          "Seveso"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "OILGAS-FR-TITLE-001",
+      "rule_version": "2025.01",
+      "title": "Hydrocarbon mining title, exploration permit, or concession evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for hydrocarbons, mining title, exclusive research permit, concession, authorization of works, or mining-code evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "hydrocarbures",
+          "permis exclusif de recherches",
+          "concession",
+          "titre minier",
+          "autorisation de travaux",
+          "code minier"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Hydrocarbon resources and mining-code framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "OILGAS-FR-ENV-001",
+      "rule_version": "2025.01",
+      "title": "Environmental authorization, emissions, or pollution-control evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for environmental authorization, ICPE, IED, emissions, water/soil protection, pollution control, or site rehabilitation evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "autorisation environnementale",
+          "ICPE",
+          "IED",
+          "émissions",
+          "pollution",
+          "réhabilitation",
+          "rejets"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ICPE framework",
+          "Industrial emissions framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "OILGAS-FR-HSE-001",
+      "rule_version": "2025.01",
+      "title": "HSE, technological-risk, or emergency-response evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for HSE, safety case, emergency plan, Seveso, pipeline safety, hazardous substance, or accident-prevention evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "HSE",
+          "sécurité",
+          "plan d'urgence",
+          "Seveso",
+          "canalisation",
+          "substances dangereuses",
+          "prévention des accidents"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Technological risk framework",
+          "ICPE framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "OILGAS-FR-CLOSE-001",
+      "rule_version": "2025.01",
+      "title": "Closure, decommissioning, well security, or rehabilitation evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for decommissioning, field closure, well security, dismantling, cleanup, rehabilitation, or cessation evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "démantèlement",
+          "fermeture du gisement",
+          "mise en sécurité des puits",
+          "réhabilitation du site",
+          "cessation d'activité",
+          "nettoyage"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Hydrocarbon resources of France framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

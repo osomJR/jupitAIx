@@ -1,0 +1,209 @@
+{
+  "pack_id": "ngo",
+  "pack_name": "NGO / Not-for-Profit",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for federally incorporated not-for-profits, charities, foundations, associations, social enterprises, donor-funded bodies, and civil-society documentation in Canada.",
+  "metadata": {
+    "scope": "Canada-only sector overlay controls for NGO / Not-for-Profit. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/regulatory sources available at rule-pack publication time. Provincial/territorial obligations may apply and are not exhaustively encoded. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Not-for-profit corporations",
+        "issuer": "Corporations Canada / ISED",
+        "url": "https://ised-isde.canada.ca/site/corporations-canada/en/not-profit-corporations",
+        "used_for": [
+          "federal not-for-profit incorporation",
+          "by-laws",
+          "corporate maintenance"
+        ]
+      },
+      {
+        "name": "Reporting obligations under Canada Not-for-profit Corporations Act",
+        "issuer": "Corporations Canada / ISED",
+        "url": "https://ised-isde.canada.ca/site/corporations-canada/en/not-profit-corporations/your-reporting-obligations-under-canada-not-profit-corporations-act-nfp-act",
+        "used_for": [
+          "annual returns",
+          "corporate reporting"
+        ]
+      },
+      {
+        "name": "Creating a not-for-profit corporation and charity registration note",
+        "issuer": "Corporations Canada / ISED",
+        "url": "https://ised-isde.canada.ca/site/corporations-canada/en/not-profit-corporations/creating-not-profit-corporation",
+        "used_for": [
+          "articles",
+          "charitable purpose and CRA registration routing"
+        ]
+      },
+      {
+        "name": "Social enterprise / charities compliance guidance references",
+        "issuer": "Innovation, Science and Economic Development Canada / CRA references",
+        "url": "https://ised-isde.canada.ca/site/ised/en/social-enterprises-canada/creating-and-maintaining-social-enterprise",
+        "used_for": [
+          "charities guidance",
+          "compliance checklists"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "NGO-CNCA-001",
+      "rule_version": "2025.01",
+      "title": "Federal not-for-profit incorporation or governing-document evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for Canada Not-for-profit Corporations Act incorporation, articles, by-laws, certificate, or Corporations Canada evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Canada Not-for-profit Corporations Act",
+          "articles of incorporation",
+          "by-laws",
+          "certificate of incorporation",
+          "Corporations Canada"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Corporations Canada not-for-profit corporation materials"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-REPORT-002",
+      "rule_version": "2025.01",
+      "title": "Annual return or corporate maintenance evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for annual return, registered office, directors, corporate maintenance, or Corporations Canada filing evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "annual return",
+          "registered office",
+          "directors",
+          "corporate maintenance",
+          "Corporations Canada filing"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Corporations Canada reporting obligations"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-CHARITY-003",
+      "rule_version": "2025.01",
+      "title": "CRA charity registration or donation-receipting evidence is present where applicable",
+      "regulatory_domain": "registration",
+      "summary": "Checks for CRA charitable registration, official donation receipts, charitable purposes, or Income Tax Act routing.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CRA",
+          "charitable registration",
+          "official donation receipt",
+          "registered charity",
+          "charitable purposes",
+          "Income Tax Act"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ISED not-for-profit creation guidance and CRA charity routing"
+        ]
+      }
+    },
+    {
+      "rule_id": "NGO-PRIV-004",
+      "rule_version": "2025.01",
+      "title": "Donor, beneficiary, member, or volunteer privacy controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for donor, beneficiary, member, volunteer, privacy, consent, or personal information controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "donor data",
+          "beneficiary data",
+          "member information",
+          "volunteer information",
+          "privacy",
+          "personal information",
+          "consent"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PIPEDA and Canadian privacy baseline; canada_core_control_library"
+        ]
+      }
+    }
+  ]
+}

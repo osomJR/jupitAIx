@@ -1,0 +1,225 @@
+{
+  "pack_id": "payment_platforms_and_services",
+  "pack_name": "Payment Platforms and Services",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French payment institutions, electronic-money institutions, payment platforms, payment-service providers, crypto-asset service providers, and related digital-finance documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Payment Platforms and Services. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "ACPR banking, payment, and prudential supervision",
+        "issuer": "ACPR / Banque de France",
+        "url": "https://acpr.banque-france.fr/fr/accueil-acpr",
+        "used_for": [
+          "payment institutions",
+          "electronic money",
+          "prudential supervision"
+        ]
+      },
+      {
+        "name": "AMF PSAN/PSCA registration and approval materials",
+        "issuer": "AMF",
+        "url": "https://www.amf-france.org/fr/espace-professionnels/fintech/mes-relations-avec-lamf/prestataires-de-services-sur-actifs-numeriques-psan/obtenir-un-enregistrement-un-agrement-psan",
+        "used_for": [
+          "crypto-asset services",
+          "PSAN/PSCA",
+          "registration",
+          "AML/CFT"
+        ]
+      },
+      {
+        "name": "ACPR AML/CFT supervisory materials",
+        "issuer": "ACPR",
+        "url": "https://acpr.banque-france.fr/fr/nos-missions/lutter-contre-le-blanchiment",
+        "used_for": [
+          "AML/CFT",
+          "customer due diligence",
+          "risk classification"
+        ]
+      },
+      {
+        "name": "CNIL/GDPR guidance",
+        "issuer": "CNIL",
+        "url": "https://www.cnil.fr/fr/comprendre-le-rgpd",
+        "used_for": [
+          "privacy",
+          "data protection",
+          "data-subject rights"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "PAY-FR-ACPR-001",
+      "rule_version": "2025.01",
+      "title": "Payment or electronic-money authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for payment institution, electronic-money institution, ACPR authorization, agent, distributor, or regulated payment-service evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "établissement de paiement",
+          "établissement de monnaie électronique",
+          "ACPR",
+          "agrément",
+          "agent de paiement",
+          "services de paiement",
+          "distributeur de monnaie électronique"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ACPR payment supervision"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PAY-FR-PSAN-001",
+      "rule_version": "2025.01",
+      "title": "PSAN/PSCA registration or crypto-service authorization evidence is present where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for PSAN/PSCA, AMF registration, crypto-asset custody, exchange, trading platform, or digital-asset service evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "PSAN",
+          "PSCA",
+          "AMF",
+          "actifs numériques",
+          "crypto-actifs",
+          "conservation d'actifs numériques",
+          "plateforme de négociation"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "AMF PSAN/PSCA registration and approval materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PAY-FR-AML-001",
+      "rule_version": "2025.01",
+      "title": "Payment AML/CFT and customer due-diligence evidence is present",
+      "regulatory_domain": "aml",
+      "summary": "Checks for KYC/CDD, beneficial owner, AML/CFT, suspicious transaction, sanctions screening, or TRACFIN evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "KYC",
+          "vigilance client",
+          "bénéficiaire effectif",
+          "LCB-FT",
+          "TRACFIN",
+          "déclaration de soupçon",
+          "gel des avoirs"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ACPR AML/CFT supervisory materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "PAY-FR-SEC-001",
+      "rule_version": "2025.01",
+      "title": "Payment security, authentication, or fraud-control evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for strong customer authentication, payment security, fraud monitoring, incident management, access control, or encryption evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "authentification forte",
+          "sécurité des paiements",
+          "fraude",
+          "incident",
+          "contrôle d'accès",
+          "chiffrement",
+          "surveillance"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ACPR payment supervision",
+          "ANSSI cybersecurity guidance"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

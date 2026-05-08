@@ -1,0 +1,274 @@
+{
+  "pack_id": "banking_and_fintech",
+  "pack_name": "Banking and Fintech",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for banks, credit products, fintechs, payment service providers, digital wallets, money-service businesses, and financial technology documentation in Canada.",
+  "metadata": {
+    "scope": "Canada sector overlay controls for Banking and Fintech. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/provincial/territorial legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Retail Payment Activities Act supervisory framework",
+        "issuer": "Bank of Canada",
+        "url": "https://www.bankofcanada.ca/core-functions/retail-payments-supervision/supervisory-framework-supervision/",
+        "used_for": [
+          "payment service provider registration",
+          "operational risk",
+          "end-user funds safeguarding"
+        ]
+      },
+      {
+        "name": "Retail payments registration framework",
+        "issuer": "Bank of Canada",
+        "url": "https://www.bankofcanada.ca/core-functions/retail-payments-supervision/supervisory-framework-registration/",
+        "used_for": [
+          "payment service provider registration scope"
+        ]
+      },
+      {
+        "name": "Proceeds of Crime (Money Laundering) and Terrorist Financing Act and FINTRAC guidance",
+        "issuer": "FINTRAC",
+        "url": "https://fintrac-canafe.canada.ca/act-loi/1-eng",
+        "used_for": [
+          "AML/ATF",
+          "client identification",
+          "record keeping",
+          "compliance programs"
+        ]
+      },
+      {
+        "name": "Financial Consumer Protection Framework",
+        "issuer": "Financial Consumer Agency of Canada",
+        "url": "https://www.canada.ca/en/financial-consumer-agency/services/industry/commissioner-decisions-guidance/financial-consumer-protection-framework.html",
+        "used_for": [
+          "bank consumer protection",
+          "complaints",
+          "disclosure",
+          "fair treatment"
+        ]
+      },
+      {
+        "name": "Personal Information Protection and Electronic Documents Act (PIPEDA)",
+        "issuer": "Parliament of Canada / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/",
+        "used_for": [
+          "privacy",
+          "personal information",
+          "private-sector data protection"
+        ]
+      },
+      {
+        "name": "Baseline Cyber Security Controls for Small and Medium Organizations",
+        "issuer": "Canadian Centre for Cyber Security",
+        "url": "https://www.cyber.gc.ca/en/guidance/baseline-cyber-security-controls-small-and-medium-organizations",
+        "used_for": [
+          "cybersecurity baseline",
+          "incident response",
+          "access control",
+          "patching",
+          "backups"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "BF-RPAA-001",
+      "rule_version": "2025.01",
+      "title": "Payment service provider registration or RPAA scope evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for payment service provider registration, RPAA scope, Bank of Canada supervision, or payment function evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Retail Payment Activities Act",
+          "RPAA",
+          "payment service provider",
+          "PSP registration",
+          "Bank of Canada",
+          "payment function"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Bank of Canada RPAA registration/supervision framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "BF-RISK-001",
+      "rule_version": "2025.01",
+      "title": "Operational risk and end-user fund safeguarding evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for operational risk management, incident response, funds safeguarding, significant change, or annual reporting evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "operational risk",
+          "incident response",
+          "safeguarding end-user funds",
+          "annual report",
+          "significant change",
+          "risk management framework"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Bank of Canada RPAA supervision framework"
+        ]
+      }
+    },
+    {
+      "rule_id": "BF-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/ATF customer due diligence and reporting evidence is present",
+      "regulatory_domain": "aml",
+      "summary": "Checks for FINTRAC compliance program, KYC, suspicious transaction reporting, sanctions/PEP screening, or record keeping evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "FINTRAC",
+          "know your client",
+          "KYC",
+          "suspicious transaction",
+          "record keeping",
+          "PEP",
+          "sanctions"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PCMLTFA / FINTRAC guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "BF-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Financial consumer disclosure or complaint-handling evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for consumer disclosure, complaint handling, fees, credit terms, or Financial Consumer Protection Framework evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "complaint handling",
+          "consumer disclosure",
+          "fees",
+          "interest rate",
+          "credit agreement",
+          "FCAC"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FCAC financial consumer protection materials"
+        ]
+      }
+    },
+    {
+      "rule_id": "BF-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Financial-data privacy and cybersecurity evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for personal financial information controls, privacy notices, authentication, encryption, and access control evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "personal information",
+          "privacy policy",
+          "financial information",
+          "authentication",
+          "encryption",
+          "access control"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PIPEDA / Canadian Centre for Cyber Security baseline controls"
+        ]
+      }
+    }
+  ]
+}

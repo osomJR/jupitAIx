@@ -1,0 +1,265 @@
+{
+  "pack_id": "banking_and_fintech",
+  "pack_name": "Banking and Fintech",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for banks, specialised deposit-taking institutions, payment service providers, electronic money issuers, fintech platforms, lenders, and financial technology documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Banking and Fintech. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Banks and Specialised Deposit-Taking Institutions Act, 2016 (Act 930)",
+        "issuer": "Parliament of Ghana / Bank of Ghana",
+        "used_for": [
+          "banking licensing",
+          "prudential oversight",
+          "permissible activities"
+        ]
+      },
+      {
+        "name": "Payment Systems and Services Act, 2019 (Act 987)",
+        "issuer": "Parliament of Ghana / Bank of Ghana",
+        "used_for": [
+          "payment service providers",
+          "electronic money issuers",
+          "consumer protection",
+          "technology security"
+        ]
+      },
+      {
+        "name": "Securities Industry Act, 2016 (Act 929)",
+        "issuer": "Parliament of Ghana / Securities and Exchange Commission Ghana",
+        "used_for": [
+          "capital market intermediaries",
+          "securities licensing"
+        ]
+      },
+      {
+        "name": "Anti-Money Laundering Act, 2020 (Act 1044)",
+        "issuer": "Parliament of Ghana / Financial Intelligence Centre",
+        "used_for": [
+          "AML/CFT",
+          "customer due diligence",
+          "suspicious transaction reporting"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Parliament of Ghana / Data Protection Commission",
+        "used_for": [
+          "privacy",
+          "personal data processing",
+          "data controller registration"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "BF-BOG-001",
+      "rule_version": "2025.01",
+      "title": "Bank of Ghana licence, authorization, or regulated-status evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Bank of Ghana licence, specialised deposit-taking authorization, payment service licence, electronic-money issuer licence, or regulated status evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Bank of Ghana",
+          "BoG",
+          "licence",
+          "license",
+          "authorised by the Bank of Ghana",
+          "payment service provider",
+          "electronic money issuer"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Banks and SDI Act 2016",
+          "Payment Systems and Services Act 2019"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-AML-001",
+      "rule_version": "2025.01",
+      "title": "Customer due diligence and KYC evidence is present",
+      "regulatory_domain": "aml",
+      "summary": "Checks for customer identification, verification, due diligence, beneficial ownership, transaction monitoring, or suspicious transaction evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "customer due diligence",
+          "know your customer",
+          "KYC",
+          "beneficial owner",
+          "transaction monitoring",
+          "suspicious transaction",
+          "Financial Intelligence Centre"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Anti-Money Laundering Act, 2020 (Act 1044)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-PAY-001",
+      "rule_version": "2025.01",
+      "title": "Payment-service technology, security, or control evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for payment system security, fraud monitoring, cyber-security policy, authorization controls, certification, or interoperability evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "fraud monitoring",
+          "cyber-security policy",
+          "payment system",
+          "authorization",
+          "third-party certification",
+          "interoperability",
+          "security controls"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Payment Systems and Services Act, 2019 (Act 987)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Financial consumer protection and complaint-redress evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for fair treatment, transparent fees, complaints handling, redress, customer rights, or responsible conduct evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "fair treatment",
+          "transparent",
+          "complaints handling",
+          "redress",
+          "customer rights",
+          "consumer protection",
+          "fees and charges"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Payment Systems and Services Act, 2019 (Act 987)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "BF-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Customer financial-data privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for customer privacy, personal data, financial information, transaction data, or data-protection evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "customer privacy",
+          "financial information",
+          "transaction data",
+          "personal data",
+          "data protection",
+          "privacy notice"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+{
+  "pack_id": "oil_and_gas",
+  "pack_name": "Oil and Gas",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for Ghana upstream petroleum, downstream petroleum, local content, licensing, HSE, metering, distribution, and petroleum operations documentation.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Oil and Gas. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Petroleum Commission Act, 2011 (Act 821) and Petroleum Commission mandate",
+        "issuer": "Petroleum Commission Ghana",
+        "used_for": [
+          "upstream petroleum regulation",
+          "petroleum resource management"
+        ]
+      },
+      {
+        "name": "Petroleum (Local Content and Local Participation) Regulations, 2013 (L.I. 2204)",
+        "issuer": "Petroleum Commission Ghana",
+        "used_for": [
+          "local content",
+          "local participation",
+          "local office",
+          "sub-plans"
+        ]
+      },
+      {
+        "name": "National Petroleum Authority Act, 2005 (Act 691)",
+        "issuer": "National Petroleum Authority",
+        "used_for": [
+          "downstream petroleum regulation",
+          "sale/marketing/distribution of petroleum products"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "employee/customer/vendor data handling"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "OILGAS-PC-001",
+      "rule_version": "2025.01",
+      "title": "Petroleum Commission authorization, contract, or upstream regulatory evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Petroleum Commission registration, approval, permit, petroleum agreement, upstream operator status, or regulatory filing evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Petroleum Commission",
+          "upstream petroleum",
+          "petroleum agreement",
+          "operator",
+          "permit",
+          "approval",
+          "authorization",
+          "authorisation"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Petroleum Commission Act, 2011 (Act 821)",
+          "Petroleum Commission mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "OILGAS-LC-001",
+      "rule_version": "2025.01",
+      "title": "Local content and local participation evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for local content plan, local participation, Ghanaian company preference, local office, training, succession, or procurement forecasts.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "local content",
+          "local participation",
+          "local office",
+          "succession plan",
+          "training",
+          "Ghanaian company",
+          "procurement"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Petroleum (Local Content and Local Participation) Regulations, 2013 (L.I. 2204)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "OILGAS-NPA-001",
+      "rule_version": "2025.01",
+      "title": "Downstream NPA licence, permit, or product-distribution evidence is present where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NPA licence, downstream petroleum authorization, bulk distribution, retail, storage, transport, or petroleum product marketing controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "National Petroleum Authority",
+          "NPA",
+          "downstream petroleum",
+          "bulk distribution",
+          "petroleum product",
+          "storage",
+          "retail",
+          "licence",
+          "license"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "National Petroleum Authority Act, 2005 (Act 691)",
+          "NPA mandate"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "OILGAS-HSE-001",
+      "rule_version": "2025.01",
+      "title": "HSE, environmental, emergency, or incident reporting evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for health, safety, environment, incident reporting, emergency response, spill, waste, or environmental management evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "health and safety",
+          "HSE",
+          "environmental",
+          "incident report",
+          "emergency response",
+          "spill",
+          "waste"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Petroleum Commission regulatory framework",
+          "National Petroleum Authority downstream oversight"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

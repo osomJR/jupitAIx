@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 import os
+from pathlib import Path
 from typing import Any, Mapping, Union
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
@@ -28,10 +29,22 @@ from src.processing.data_protection.orchestration import (
 from src.processing.data_protection.redaction.redact import (
     preview_redaction_candidates,
 )
+
+from src.processing.compliance.compliance import run_compliance
+from src.processing.compliance.registry import RuleRegistryError
+from src.processing.structured_extraction.structured_extraction import (
+    run_structured_extraction,
+)
+
 from src.schema import (
     AnalyzerRequest,
     AnalyzerResponse,
     AnswerGenerationRequest,
+    ComplianceJurisdiction,
+    ComplianceRegulatoryDomain,
+    ComplianceReportVariant,
+    ComplianceRequest,
+    ComplianceSectorPack,
     ConversionOutputFormat,
     ConversionRequest,
     DataMaskingRequest,
@@ -44,11 +57,16 @@ from src.schema import (
     RedactionMaskingDocumentType,
     RedactionRequest,
     SensitiveDataType,
+    StructuredDataOutputFormat,
+    StructuredExtractionDocumentClass,
+    StructuredExtractionRequest,
+    StructuredExtractionResultShape,
     SummarizationRequest,
     SystemLanguage,
     TranscriptionRequest,
     TranslationRequest,
 )
+
 from src.storage.artifacts import LocalArtifactStorage
 
 API_V1_ANALYZER_PREFIX = "/analyzer"
@@ -70,6 +88,8 @@ GENERATED_ACTIONS = {
     FeatureType.explain,
     FeatureType.generate_questions,
     FeatureType.generate_answers,
+    FeatureType.structured_extract,
+    FeatureType.compliance,
 }
 
 DEFAULT_PRIVACY_OUTPUT_DIR = os.getenv("PRIVACY_OUTPUT_DIR", "outputs/privacy")
@@ -177,7 +197,78 @@ def _run_privacy_request(
         )
     except HTTPException as exc:
         raise to_http_exception(exc) from exc
+    
+def _download_url_for_storage_key(storage_key: str | None) -> str | None:
+    if not isinstance(storage_key, str) or not storage_key.strip():
+        return None
+    return f"/api/v1/analyzer/artifacts/{storage_key.strip()}"
 
+
+def _ensure_download_url(response: AnalyzerResponse) -> AnalyzerResponse:
+    result = response.result
+    storage_key = getattr(result, "storage_key", None)
+    download_url = getattr(result, "download_url", None)
+
+    if storage_key and not download_url and hasattr(result, "download_url"):
+        result.download_url = _download_url_for_storage_key(storage_key)
+
+    return response
+
+
+def _run_standalone_feature_request(
+    request: AnalyzerRequest,
+) -> AnalyzerResponse:
+    try:
+        if request.action == FeatureType.structured_extract:
+            return _ensure_download_url(run_structured_extraction(request))
+
+        if request.action == FeatureType.compliance:
+            return _ensure_download_url(run_compliance(request))
+
+        raise ValueError(f"Unsupported standalone feature: {request.action.value}")
+    except HTTPException:
+        raise
+    except RuleRegistryError as exc:
+        raise _bad_request(str(exc)) from exc
+    except UploadError as exc:
+        raise _bad_request(str(exc)) from exc
+    except ValueError as exc:
+        raise _bad_request(str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise _bad_request(str(exc)) from exc
+    except TypeError as exc:
+        raise _bad_request(str(exc)) from exc
+    except RuntimeError as exc:
+        raise _service_unavailable(str(exc)) from exc
+
+
+def _clean_repeated_strings(values: list[str] | None) -> list[str]:
+    if not values:
+        return []
+
+    cleaned: list[str] = []
+    seen: set[str] = set()
+
+    for value in values:
+        text = str(value).strip()
+        if not text or text in seen:
+            continue
+        cleaned.append(text)
+        seen.add(text)
+
+    return cleaned
+
+
+def _default_compliance_sector_packs(
+    jurisdiction: ComplianceJurisdiction,
+) -> list[ComplianceSectorPack]:
+    if (
+        jurisdiction == ComplianceJurisdiction.nigeria
+        and hasattr(ComplianceSectorPack, "nigeria_core_control_library")
+    ):
+        return [ComplianceSectorPack.nigeria_core_control_library]
+
+    return [ComplianceSectorPack.core_control_library]
 
 def _privacy_payload_kwargs(
     *,
@@ -654,19 +745,141 @@ def data_mask_route(
     )
     return _serialize_processed_result(processed)
 
+@router.post(
+    "/structured-extraction",
+    response_model=AnalyzerResponse,
+    dependencies=[Depends(rate_limit_for_feature(FeatureType.structured_extract))],
+)
+def structured_extraction_route(
+    current_user: AuthenticatedUser = Depends(get_current_user),
+    file: UploadFile = File(...),
+    document_classes: list[StructuredExtractionDocumentClass] | None = Form(default=None),
+    selected_fields: list[str] | None = Form(default=None),
+    output_format: StructuredDataOutputFormat = Form(StructuredDataOutputFormat.json),
+    result_shape: StructuredExtractionResultShape = Form(
+        StructuredExtractionResultShape.machine_readable
+    ),
+    system_language: SystemLanguage = Form(SystemLanguage.english),
+) -> AnalyzerResponse:
+    try:
+        input_payload = build_uploaded_document_payload(
+            action=FeatureType.structured_extract,
+            upload=file,
+        )
+    except UploadError as exc:
+        raise _bad_request(str(exc)) from exc
+    except ValueError as exc:
+        raise _bad_request(str(exc)) from exc
+
+    payload = StructuredExtractionRequest(
+        feature=FeatureType.structured_extract,
+        document_classes=document_classes or [],
+        selected_fields=_clean_repeated_strings(selected_fields),
+        output_format=output_format,
+        result_shape=result_shape,
+        allow_external_knowledge=False,
+        require_human_review=True,
+    )
+
+    request = AnalyzerRequest(
+        action=FeatureType.structured_extract,
+        input=input_payload,
+        payload=payload,
+        policy=_policy_for_action(FeatureType.structured_extract),
+        system_language=system_language,
+    )
+
+    return _run_standalone_feature_request(request)
+
+@router.post(
+    "/compliance",
+    response_model=AnalyzerResponse,
+    dependencies=[Depends(rate_limit_for_feature(FeatureType.compliance))],
+)
+def compliance_route(
+    current_user: AuthenticatedUser = Depends(get_current_user),
+    file: UploadFile = File(...),
+    jurisdiction: ComplianceJurisdiction = Form(ComplianceJurisdiction.nigeria),
+    sector_packs: list[ComplianceSectorPack] | None = Form(default=None),
+    regulatory_domains: list[ComplianceRegulatoryDomain] | None = Form(default=None),
+    report_variant: ComplianceReportVariant = Form(
+        ComplianceReportVariant.human_readable_report
+    ),
+    system_language: SystemLanguage = Form(SystemLanguage.english),
+) -> AnalyzerResponse:
+    try:
+        input_payload = build_uploaded_document_payload(
+            action=FeatureType.compliance,
+            upload=file,
+        )
+    except UploadError as exc:
+        raise _bad_request(str(exc)) from exc
+    except ValueError as exc:
+        raise _bad_request(str(exc)) from exc
+
+    resolved_sector_packs = (
+        sector_packs
+        if sector_packs
+        else _default_compliance_sector_packs(jurisdiction)
+    )
+
+    payload = ComplianceRequest(
+        feature=FeatureType.compliance,
+        jurisdiction=jurisdiction,
+        sector_packs=resolved_sector_packs,
+        regulatory_domains=regulatory_domains or [],
+        report_variant=report_variant,
+        require_human_review=True,
+    )
+
+    request = AnalyzerRequest(
+        action=FeatureType.compliance,
+        input=input_payload,
+        payload=payload,
+        policy=_policy_for_action(FeatureType.compliance),
+        system_language=system_language,
+    )
+
+    return _run_standalone_feature_request(request)
 
 @router.get("/artifacts/{storage_key:path}")
 def download_artifact(storage_key: str):
     storage = LocalArtifactStorage()
+
     try:
         path = storage.resolve_storage_key(storage_key)
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        if path.exists():
+            return FileResponse(path=str(path), filename=path.name)
+    except ValueError:
+        pass
 
-    if not path.exists():
+    normalized_key = storage_key.strip().replace("\\", "/")
+    candidate = Path(normalized_key)
+
+    if candidate.is_absolute():
+        raise HTTPException(status_code=400, detail="Artifact path must be relative.")
+
+    if any(part == ".." for part in candidate.parts):
+        raise HTTPException(
+            status_code=400,
+            detail="Artifact path must not contain parent-directory traversal.",
+        )
+
+    if not candidate.exists() or not candidate.is_file():
         raise HTTPException(status_code=404, detail="Artifact not found.")
 
-    return FileResponse(path=str(path), filename=path.name)
+    allowed_roots = {
+        Path("artifacts").resolve(),
+        Path("outputs").resolve(),
+    }
 
+    resolved = candidate.resolve()
+    if not any(str(resolved).startswith(str(root)) for root in allowed_roots):
+        raise HTTPException(
+            status_code=400,
+            detail="Artifact path is outside the allowed artifact directories.",
+        )
+
+    return FileResponse(path=str(resolved), filename=resolved.name)
 
 __all__ = ["router", "API_V1_ANALYZER_PREFIX"]

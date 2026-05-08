@@ -1,0 +1,222 @@
+{
+  "pack_id": "media",
+  "pack_name": "Media",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French audiovisual, broadcasting, publishing, digital media, advertising, accessibility, creation-support, and platform/content-governance documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Media. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Arcom audiovisual and digital communication regulation",
+        "issuer": "Arcom",
+        "url": "https://www.arcom.fr/",
+        "used_for": [
+          "audiovisual regulation",
+          "broadcasting",
+          "pluralism",
+          "content obligations"
+        ]
+      },
+      {
+        "name": "Arcom accessibility obligations for audiovisual media services",
+        "issuer": "Arcom",
+        "url": "https://www.arcom.fr/nous-connaitre/nos-missions/garantir-le-pluralisme-et-la-cohesion-sociale/accessibilite-des-services-donnant-acces-des-services-de-medias-audiovisuels",
+        "used_for": [
+          "accessibility",
+          "audiovisual media services",
+          "digital service access"
+        ]
+      },
+      {
+        "name": "Arcom creation and production obligations",
+        "issuer": "Arcom",
+        "url": "https://www.arcom.fr/nous-connaitre/nos-missions/promouvoir-et-proteger-la-creation",
+        "used_for": [
+          "production investment",
+          "broadcast quotas",
+          "copyright and lawful offers"
+        ]
+      },
+      {
+        "name": "CNIL/GDPR guidance",
+        "issuer": "CNIL",
+        "url": "https://www.cnil.fr/fr/comprendre-le-rgpd",
+        "used_for": [
+          "privacy",
+          "data protection",
+          "data-subject rights"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MEDIA-FR-ARCOM-001",
+      "rule_version": "2025.01",
+      "title": "Arcom authorization, declaration, or audiovisual-service evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Arcom, audiovisual service, editor/distributor status, channel authorization, radio frequency, or declaration evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Arcom",
+          "service de médias audiovisuels",
+          "éditeur de service",
+          "distributeur de service",
+          "autorisation",
+          "convention",
+          "fréquence"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Arcom audiovisual regulatory framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MEDIA-FR-CONTENT-001",
+      "rule_version": "2025.01",
+      "title": "Content standards, pluralism, or moderation evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for pluralism, protection of minors, hate-speech, content moderation, editorial responsibility, or signalement controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "pluralisme",
+          "protection des mineurs",
+          "modération",
+          "contenu illicite",
+          "signalement",
+          "responsabilité éditoriale",
+          "haine en ligne"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Arcom content-governance materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MEDIA-FR-ACCESS-001",
+      "rule_version": "2025.01",
+      "title": "Audiovisual accessibility evidence is present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for accessibility, subtitles, audio description, accessible app/site, or services giving access to audiovisual content.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "accessibilité",
+          "sous-titrage",
+          "audiodescription",
+          "services de médias audiovisuels",
+          "application accessible",
+          "handicap"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Arcom accessibility obligations for audiovisual media services"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MEDIA-FR-CREATION-001",
+      "rule_version": "2025.01",
+      "title": "Creation, production, quota, or rights-protection evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for French/European work quotas, production investment, copyright, neighbouring rights, lawful offer, or music quota evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "œuvres françaises",
+          "œuvres européennes",
+          "quota",
+          "investissement dans la production",
+          "droit d'auteur",
+          "droits voisins",
+          "offre légale"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Arcom creation and production obligations"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

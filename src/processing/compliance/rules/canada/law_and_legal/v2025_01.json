@@ -1,0 +1,254 @@
+{
+  "pack_id": "law_and_legal",
+  "pack_name": "Law and Legal Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Canadian law firms, legal departments, legal-service providers, trust-accounting, client confidentiality, conflict, and client-property documentation.",
+  "metadata": {
+    "scope": "Canada sector overlay for Law and Legal. Intended to be applied with canada_core_control_library. Law-society obligations are primarily provincial/territorial and require jurisdiction-specific review.",
+    "source_note": "Source basis is mapped from official Canadian federal/provincial/territorial legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Model Code of Professional Conduct",
+        "issuer": "Federation of Law Societies of Canada",
+        "url": "https://flsc.ca/what-we-do/model-code-of-professional-conduct/",
+        "used_for": [
+          "legal ethics",
+          "professional conduct",
+          "confidentiality",
+          "conflicts"
+        ]
+      },
+      {
+        "name": "Law Society of Ontario Rules of Professional Conduct",
+        "issuer": "Law Society of Ontario",
+        "url": "https://lso.ca/about-lso/legislation-rules/rules-of-professional-conduct/complete-rules-of-professional-conduct",
+        "used_for": [
+          "confidentiality",
+          "conflicts",
+          "client property",
+          "trust accounting indicators"
+        ]
+      },
+      {
+        "name": "Personal Information Protection and Electronic Documents Act (PIPEDA)",
+        "issuer": "Parliament of Canada / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/",
+        "used_for": [
+          "privacy",
+          "personal information",
+          "private-sector data protection"
+        ]
+      },
+      {
+        "name": "Baseline Cyber Security Controls for Small and Medium Organizations",
+        "issuer": "Canadian Centre for Cyber Security",
+        "url": "https://www.cyber.gc.ca/en/guidance/baseline-cyber-security-controls-small-and-medium-organizations",
+        "used_for": [
+          "cybersecurity baseline",
+          "incident response",
+          "access control",
+          "patching",
+          "backups"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "LAW-ETH-001",
+      "rule_version": "2025.01",
+      "title": "Client confidentiality or solicitor-client privilege controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for client confidentiality, solicitor-client privilege, privileged communication, file confidentiality, or permitted-disclosure controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client confidentiality",
+          "solicitor-client privilege",
+          "privileged communication",
+          "confidential information",
+          "client file",
+          "confidentiality"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FLSC Model Code / law society rules"
+        ]
+      }
+    },
+    {
+      "rule_id": "LAW-CONF-001",
+      "rule_version": "2025.01",
+      "title": "Conflict-of-interest screening and consent evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for conflict checks, conflict of interest, informed consent, disclosure, former-client conflict, or screening measures.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "conflict of interest",
+          "conflict check",
+          "informed consent",
+          "disclosure",
+          "former client",
+          "screening"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "FLSC Model Code / law society rules"
+        ]
+      }
+    },
+    {
+      "rule_id": "LAW-TRUST-001",
+      "rule_version": "2025.01",
+      "title": "Client property, trust-account, or accounting evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for client property, trust account, trust conditions, accounting, safekeeping, or delivery-of-property evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "trust account",
+          "client property",
+          "trust condition",
+          "safekeeping",
+          "accounting to client",
+          "client funds"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "law society professional conduct rules"
+        ]
+      }
+    },
+    {
+      "rule_id": "LAW-ID-001",
+      "rule_version": "2025.01",
+      "title": "Client identification or verification evidence is present where applicable",
+      "regulatory_domain": "registration",
+      "summary": "Checks for client identification, verification, retainer, source of funds, or risk-screening evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client identification",
+          "client verification",
+          "retainer",
+          "source of funds",
+          "know your client",
+          "risk assessment"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "law society client identification/verification expectations"
+        ]
+      }
+    },
+    {
+      "rule_id": "LAW-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Legal-file cybersecurity and access-control evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for access control, encryption, document management, backups, incident response, or confidentiality safeguards for legal files.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "access control",
+          "encryption",
+          "document management",
+          "backup",
+          "incident response",
+          "confidentiality safeguards"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canadian Centre for Cyber Security baseline controls"
+        ]
+      }
+    }
+  ]
+}

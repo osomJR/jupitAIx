@@ -1091,3 +1091,580 @@ export const dataMaskPageTranslations = {
       "Aucun élément sensible groupé n’a été détecté pour les paramètres actuels.",
   },
 };
+export const structuredExtractionPageTranslations = {
+  en: {
+    badge: "Structured document extraction",
+    title: "Extract structured data from documents",
+    description:
+      "Upload a PDF, Word document, JPG, JPEG, or PNG and export extracted fields, tables, or records as JSON, CSV, or Excel.",
+    uploadTitle: "Upload document to extract",
+    allowedFileInputs: "Allowed inputs: .pdf, .docx, .jpg, .jpeg, .png",
+    extractionOutput: "Extraction result",
+    previewText:
+      "Your structured extraction file will appear here after processing.",
+    extractAction: "Extract data",
+    extracting: "Extracting...",
+    extractionLabel: "Extraction:",
+    extractionCompleted: "Structured extraction completed.",
+
+    unsupportedFileType:
+      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed.",
+    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
+    chooseFileToExtract: "Please choose a file to extract from.",
+    documentClassRequired: "Select at least one document type.",
+    extractionFailed: "Something went wrong while extracting structured data.",
+    missingDownloadUrl:
+      "Extraction finished, but the backend did not return a download URL.",
+
+    detectedType: "Detected type:",
+    outputFormatLabel: "Download format",
+    outputFormatHelp: "Choose the file format you want to download.",
+    outputFormatExamples:
+      "Examples: JSON for apps, CSV for spreadsheets, Excel for review workbooks.",
+    resultShapeLabel: "Output layout",
+    resultShapeHelp: "Choose how the extracted data should be organized.",
+    resultShapeExamples: "Not sure? Use Complete structured output.",
+    documentClassesLabel: "Document type(s)",
+    documentClassesHelp:
+      "Select the document type that best matches your file. Select more than one only if the file combines document types.",
+    documentClassesEmptyHelp: "At least one document type is required.",
+    documentClassesExamples:
+      "Examples: Invoice, Bank statement, Contract, KYC document.",
+    searchDocumentClassesPlaceholder: "Search document types...",
+    selectedFieldsLabel: "Fields to extract",
+    selectedFieldsHelp:
+      "Optional. Leave empty to extract all detected fields. Add fields only when you know exactly what you need.",
+    selectedFieldsExamples: "Examples: invoice_number, invoice_date, total",
+    selectedFieldsPlaceholder:
+      "Optional. Enter fields to extract, separated by commas or new lines. Leave empty to extract detected fields.",
+    suggestedFieldsLabel: "Suggested fields",
+    suggestedFieldsHelp:
+      "Click common fields for the selected document type. Suggestions are intentionally short to keep the page simple.",
+    suggestedFieldsExamples: "You can still type any custom field above.",
+    clearFields: "Clear fields",
+
+    inputFile: "Input file",
+    inputExtension: "Input extension",
+    documentClassesResult: "Document types",
+    resultShapeResult: "Output layout",
+    outputFormatResult: "Download format",
+    selectedFieldsResult: "Fields to extract",
+    extractedFile: "Extracted file",
+    allDetectedFields: "All detected fields",
+    outputReadyText: "Your structured extraction file is ready to download.",
+    humanReviewRequired:
+      "Human review is required before relying on or exporting the extracted data.",
+    downloadReady: "Download ready",
+
+    outputFormatsTitle: "Outputs",
+    reviewTitle: "Review",
+    reviewValue: "Required",
+    knowledgeTitle: "Knowledge",
+    knowledgeValue: "Source-only",
+
+    pdfDocument: "PDF document",
+    wordDocument: "Word document",
+    jpgImage: "JPG image",
+    jpegImage: "JPEG image",
+    pngImage: "PNG image",
+    unknownFile: "Unknown file",
+
+    outputFormatLabels: {
+      json: ".json",
+      csv: ".csv",
+      xlsx: ".xlsx",
+    },
+
+    resultShapeLabels: {
+      machine_readable: "Complete structured output (recommended)",
+      key_value_fields: "Simple field/value list",
+      tables: "Extract tables only",
+      row_based_records: "Spreadsheet/database rows",
+    },
+
+    resultShapeDescriptions: {
+      machine_readable:
+        "Best default. Includes fields, tables, records, warnings, and evidence in a complete structured file.",
+      key_value_fields:
+        "Best for forms, invoices, receipts, IDs, HR records, and other documents with named fields.",
+      tables:
+        "Best when the document contains visible tables and you mainly want table rows.",
+      row_based_records:
+        "Best for repeated items such as transactions, line items, clauses, tickets, or database-ready rows.",
+    },
+
+    documentClassLabels: {
+      form: "Form",
+      memo: "Memo",
+      invoice: "Invoice",
+      receipt: "Receipt",
+      bank_statement: "Bank statement",
+      kyc_document: "KYC document",
+      id_document: "ID document",
+      contract: "Contract",
+      legal_record: "Legal record",
+      medical_record: "Medical record",
+      procurement_document: "Procurement document",
+      technical_report: "Technical report",
+      incident_report: "Incident report",
+      insurance_document: "Insurance document",
+      hr_record: "HR record",
+      onboarding_document: "Onboarding document",
+      ticket: "Ticket",
+    },
+  },
+
+  fr: {
+    badge: "Extraction structurée de documents",
+    title: "Extraire des données structurées de documents",
+    description:
+      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et exportez les champs, tableaux ou enregistrements extraits en JSON, CSV ou Excel.",
+    uploadTitle: "Téléverser un document à extraire",
+    allowedFileInputs: "Entrées autorisées : .pdf, .docx, .jpg, .jpeg, .png",
+    extractionOutput: "Résultat de l’extraction",
+    previewText:
+      "Votre fichier d’extraction structurée apparaîtra ici après le traitement.",
+    extractAction: "Extraire les données",
+    extracting: "Extraction...",
+    extractionLabel: "Extraction :",
+    extractionCompleted: "Extraction structurée terminée.",
+
+    unsupportedFileType:
+      "Type de fichier non pris en charge : {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés.",
+    fileTooLarge:
+      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
+    chooseFileToExtract: "Veuillez choisir un fichier à extraire.",
+    documentClassRequired: "Sélectionnez au moins un type de document.",
+    extractionFailed:
+      "Une erreur s’est produite lors de l’extraction des données structurées.",
+    missingDownloadUrl:
+      "L’extraction est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement.",
+
+    detectedType: "Type détecté :",
+    outputFormatLabel: "Format du téléchargement",
+    outputFormatHelp: "Choisissez le format du fichier à télécharger.",
+    outputFormatExamples:
+      "Exemples : JSON pour les applications, CSV pour les feuilles de calcul, Excel pour les classeurs de révision.",
+    resultShapeLabel: "Organisation de la sortie",
+    resultShapeHelp:
+      "Choisissez comment les données extraites doivent être organisées.",
+    resultShapeExamples:
+      "Vous hésitez ? Utilisez la sortie structurée complète.",
+    documentClassesLabel: "Type(s) de document",
+    documentClassesHelp:
+      "Sélectionnez le type qui correspond le mieux au fichier. Sélectionnez plusieurs types seulement si le fichier combine réellement plusieurs documents.",
+    documentClassesEmptyHelp: "Au moins un type de document est requis.",
+    documentClassesExamples:
+      "Exemples : Facture, Relevé bancaire, Contrat, Document KYC.",
+    searchDocumentClassesPlaceholder: "Rechercher des types de document...",
+    selectedFieldsLabel: "Champs à extraire",
+    selectedFieldsHelp:
+      "Optionnel. Laissez vide pour extraire tous les champs détectés. Ajoutez des champs uniquement si vous savez exactement ce dont vous avez besoin.",
+    selectedFieldsExamples: "Exemples : invoice_number, invoice_date, total",
+    selectedFieldsPlaceholder:
+      "Optionnel. Saisissez les champs à extraire, séparés par des virgules ou des lignes. Laissez vide pour extraire les champs détectés.",
+    suggestedFieldsLabel: "Champs suggérés",
+    suggestedFieldsHelp:
+      "Cliquez sur les champs courants pour le type de document sélectionné. Les suggestions sont volontairement courtes pour garder la page simple.",
+    suggestedFieldsExamples:
+      "Vous pouvez toujours saisir un champ personnalisé ci-dessus.",
+    clearFields: "Effacer les champs",
+
+    inputFile: "Fichier d’entrée",
+    inputExtension: "Extension d’entrée",
+    documentClassesResult: "Types de document",
+    resultShapeResult: "Organisation de la sortie",
+    outputFormatResult: "Format du téléchargement",
+    selectedFieldsResult: "Champs à extraire",
+    extractedFile: "Fichier extrait",
+    allDetectedFields: "Tous les champs détectés",
+    outputReadyText:
+      "Votre fichier d’extraction structurée est prêt à être téléchargé.",
+    humanReviewRequired:
+      "Une révision humaine est requise avant de se fier aux données extraites ou de les exporter.",
+    downloadReady: "Téléchargement prêt",
+
+    outputFormatsTitle: "Sorties",
+    reviewTitle: "Révision",
+    reviewValue: "Requise",
+    knowledgeTitle: "Connaissance",
+    knowledgeValue: "Source uniquement",
+
+    pdfDocument: "Document PDF",
+    wordDocument: "Document Word",
+    jpgImage: "Image JPG",
+    jpegImage: "Image JPEG",
+    pngImage: "Image PNG",
+    unknownFile: "Fichier inconnu",
+
+    outputFormatLabels: {
+      json: ".json",
+      csv: ".csv",
+      xlsx: ".xlsx",
+    },
+
+    resultShapeLabels: {
+      machine_readable: "Sortie structurée complète (recommandé)",
+      key_value_fields: "Liste simple champ/valeur",
+      tables: "Extraire uniquement les tableaux",
+      row_based_records: "Lignes pour tableur/base de données",
+    },
+
+    resultShapeDescriptions: {
+      machine_readable:
+        "Meilleur choix par défaut. Inclut les champs, tableaux, enregistrements, avertissements et preuves dans un fichier structuré complet.",
+      key_value_fields:
+        "Idéal pour les formulaires, factures, reçus, pièces d’identité, dossiers RH et documents avec champs nommés.",
+      tables:
+        "Idéal lorsque le document contient des tableaux visibles et que vous voulez surtout les lignes du tableau.",
+      row_based_records:
+        "Idéal pour les éléments répétés comme transactions, lignes de facture, clauses, tickets ou lignes prêtes pour une base de données.",
+    },
+
+    documentClassLabels: {
+      form: "Formulaire",
+      memo: "Note",
+      invoice: "Facture",
+      receipt: "Reçu",
+      bank_statement: "Relevé bancaire",
+      kyc_document: "Document KYC",
+      id_document: "Pièce d’identité",
+      contract: "Contrat",
+      legal_record: "Dossier juridique",
+      medical_record: "Dossier médical",
+      procurement_document: "Document d’approvisionnement",
+      technical_report: "Rapport technique",
+      incident_report: "Rapport d’incident",
+      insurance_document: "Document d’assurance",
+      hr_record: "Dossier RH",
+      onboarding_document: "Document d’intégration",
+      ticket: "Ticket",
+    },
+  },
+};
+export const compliancePageTranslations = {
+  en: {
+    badge: "Multi-country compliance checks",
+    title: "Check documents against country-specific compliance rules",
+    description:
+      "Upload a PDF, Word document, JPG, JPEG, or PNG and generate a compliance report from configured jurisdiction and sector rule packs.",
+    uploadTitle: "Upload document to check",
+    allowedFileInputs: "Allowed inputs: .pdf, .docx, .jpg, .jpeg, .png",
+    complianceOutput: "Compliance result",
+    previewText:
+      "Your compliance report will appear here after the document is checked.",
+    checkAction: "Check compliance",
+    checking: "Checking...",
+    complianceLabel: "Compliance:",
+    complianceCompleted: "Compliance check completed.",
+
+    unsupportedFileType:
+      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed.",
+    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
+    chooseFileToCheck: "Please choose a file to check.",
+    complianceFailed: "Something went wrong while checking compliance.",
+    corePackRequired:
+      "The core control library for {country} must be included with every sector-specific compliance check.",
+    missingDownloadUrl:
+      "Compliance check finished, but the backend did not return a download URL.",
+
+    detectedType: "Detected type:",
+    jurisdictionLabel: "Country / jurisdiction",
+    jurisdictionHelp:
+      "Choose the country whose compliance rules should be used.",
+    jurisdictionExamples:
+      "Examples: Nigeria, South Africa, United States, United Kingdom.",
+    reportVariantLabel: "Report format",
+    reportVariantHelp: "Choose how the compliance result should be delivered.",
+    reportVariantExamples: "Not sure? Use PDF report for review.",
+    sectorPacksLabel: "Business sector / rule packs",
+    corePackHelp:
+      "The core control library for {country} is always included. Add sector-specific packs when needed.",
+    sectorPacksEmptyHelp:
+      "Choose the sector that best matches the document or business context.",
+    sectorPacksExamples:
+      "Examples: Banking and fintech, Health, Insurance, Telecom.",
+    searchSectorPacksPlaceholder: "Search sectors...",
+    clearSectorPacks: "Clear sectors",
+    requiredLabel: "required",
+    regulatoryDomainsLabel: "Focus areas",
+    regulatoryDomainsHelp:
+      "Optional. Select focus areas only when you want a narrower review.",
+    regulatoryDomainsEmptyHelp:
+      "Nothing selected = check all available domains in the selected rule packs.",
+    regulatoryDomainsExamples:
+      "Examples: Privacy for personal data, AML for KYC/fintech, Licensing for regulated businesses.",
+    searchRegulatoryDomainsPlaceholder: "Search focus areas...",
+    clearDomains: "Clear focus areas",
+
+    inputFile: "Input file",
+    inputExtension: "Input extension",
+    jurisdictionResult: "Country / jurisdiction",
+    sectorPacksResult: "Sector packs",
+    regulatoryDomainsResult: "Focus areas",
+    reportVariantResult: "Report format",
+    outputFormatResult: "Output format",
+    reportFile: "Report file",
+    allDomains: "All available focus areas",
+    outputReadyText: "Your compliance report is ready to download.",
+    humanReviewRequired:
+      "Human review is required before relying on or exporting the compliance result.",
+    downloadReady: "Download ready",
+
+    findingsSummary: "Findings summary",
+    passed: "Passed",
+    failed: "Failed",
+    warning: "Warning",
+    missing: "Missing",
+    reviewRequiredCount: "Review required",
+    reviewRequiredShort: "Review",
+
+    outputTitle: "Output",
+    reviewTitle: "Review",
+    reviewValue: "Required",
+    scopeTitle: "Scope",
+    scopeValue: "Expandable by jurisdiction",
+
+    pdfDocument: "PDF document",
+    wordDocument: "Word document",
+    jpgImage: "JPG image",
+    jpegImage: "JPEG image",
+    pngImage: "PNG image",
+    unknownFile: "Unknown file",
+
+    countryLabels: {
+      nigeria: "Nigeria",
+      unitedStates: "United States",
+      unitedKingdom: "United Kingdom",
+      southAfrica: "South Africa",
+      canada: "Canada",
+      france: "France",
+      togo: "Togo",
+      ghana: "Ghana",
+    },
+
+    outputFormatLabels: {
+      pdf: ".pdf",
+      json: ".json",
+    },
+
+    reportVariantLabels: {
+      human_readable_report: "PDF report for review (recommended)",
+      machine_readable_report: "JSON report for systems/API",
+      annotated_source_output: "Evidence-marked PDF",
+    },
+
+    reportVariantDescriptions: {
+      human_readable_report:
+        "Best for reading, sharing, and downloading a normal compliance report.",
+      machine_readable_report:
+        "Best for developers, dashboards, databases, APIs, or automated workflows.",
+      annotated_source_output:
+        "Best when a reviewer needs to verify findings against the original source document.",
+    },
+
+    sectorPackLabels: {
+      nigeria_core_control_library: "Core control library",
+      core_control_library: "Core control library",
+
+      accounting: "Accounting",
+      agriculture: "Agriculture",
+      aviation: "Aviation",
+      banking_and_fintech: "Banking and fintech",
+      payment_platforms_and_services: "Payment platforms and services",
+      energy_and_power: "Energy and power",
+      health: "Health",
+      insurance: "Insurance",
+      legal_and_law: "Legal and law",
+      law_and_legal: "Law and legal",
+      manufacturing: "Manufacturing",
+      maritime: "Maritime",
+      maritime_and_shipping: "Maritime and shipping",
+      media: "Media",
+      mining: "Mining",
+      ngo: "NGO",
+      oil_and_gas: "Oil and gas",
+      pharmaceuticals: "Pharmaceuticals",
+      sports: "Sports",
+      tech: "Technology",
+      telecom: "Telecom",
+    },
+
+    regulatoryDomainLabels: {
+      privacy: "Privacy / personal data",
+      cybersecurity: "Cybersecurity",
+      aml: "AML / financial crime",
+      consumer_protection: "Consumer protection",
+      public_sector_access_to_information:
+        "Public-sector access to information",
+      licensing: "Licensing / permits",
+      registration: "Registration",
+      sector_regulator_requirements: "Sector regulator rules",
+    },
+  },
+
+  fr: {
+    badge: "Contrôles de conformité multi-pays",
+    title:
+      "Vérifier les documents selon les règles de conformité propres à chaque pays",
+    description:
+      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et générez un rapport de conformité à partir des packs de règles configurés par juridiction et par secteur.",
+    uploadTitle: "Téléverser un document à vérifier",
+    allowedFileInputs: "Entrées autorisées : .pdf, .docx, .jpg, .jpeg, .png",
+    complianceOutput: "Résultat de conformité",
+    previewText:
+      "Votre rapport de conformité apparaîtra ici après la vérification du document.",
+    checkAction: "Vérifier la conformité",
+    checking: "Vérification...",
+    complianceLabel: "Conformité :",
+    complianceCompleted: "Vérification de conformité terminée.",
+
+    unsupportedFileType:
+      "Type de fichier non pris en charge : {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés.",
+    fileTooLarge:
+      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
+    chooseFileToCheck: "Veuillez choisir un fichier à vérifier.",
+    complianceFailed:
+      "Une erreur s’est produite lors de la vérification de conformité.",
+    corePackRequired:
+      "La bibliothèque de contrôles de base pour {country} doit être incluse avec chaque vérification sectorielle.",
+    missingDownloadUrl:
+      "La vérification de conformité est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement.",
+
+    detectedType: "Type détecté :",
+    jurisdictionLabel: "Pays / juridiction",
+    jurisdictionHelp:
+      "Choisissez le pays dont les règles de conformité doivent être utilisées.",
+    jurisdictionExamples:
+      "Exemples : Nigeria, Afrique du Sud, États-Unis, Royaume-Uni.",
+    reportVariantLabel: "Format du rapport",
+    reportVariantHelp:
+      "Choisissez comment le résultat de conformité doit être livré.",
+    reportVariantExamples:
+      "Vous hésitez ? Utilisez le rapport PDF pour révision.",
+    sectorPacksLabel: "Secteur d’activité / packs de règles",
+    corePackHelp:
+      "La bibliothèque de contrôles de base pour {country} est toujours incluse. Ajoutez des packs sectoriels si nécessaire.",
+    sectorPacksEmptyHelp:
+      "Choisissez le secteur qui correspond le mieux au document ou au contexte de l’entreprise.",
+    sectorPacksExamples:
+      "Exemples : Banque et fintech, Santé, Assurance, Télécoms.",
+    searchSectorPacksPlaceholder: "Rechercher des secteurs...",
+    clearSectorPacks: "Effacer les secteurs",
+    requiredLabel: "requis",
+    regulatoryDomainsLabel: "Domaines de vérification",
+    regulatoryDomainsHelp:
+      "Optionnel. Sélectionnez des domaines seulement si vous voulez une vérification plus ciblée.",
+    regulatoryDomainsEmptyHelp:
+      "Aucun domaine sélectionné = vérifier tous les domaines disponibles dans les packs sélectionnés.",
+    regulatoryDomainsExamples:
+      "Exemples : Confidentialité pour les données personnelles, LBC pour KYC/fintech, licences pour les activités réglementées.",
+    searchRegulatoryDomainsPlaceholder: "Rechercher des domaines...",
+    clearDomains: "Effacer les domaines",
+
+    inputFile: "Fichier d’entrée",
+    inputExtension: "Extension d’entrée",
+    jurisdictionResult: "Pays / juridiction",
+    sectorPacksResult: "Packs sectoriels",
+    regulatoryDomainsResult: "Domaines de vérification",
+    reportVariantResult: "Format du rapport",
+    outputFormatResult: "Format de sortie",
+    reportFile: "Fichier du rapport",
+    allDomains: "Tous les domaines disponibles",
+    outputReadyText: "Votre rapport de conformité est prêt à être téléchargé.",
+    humanReviewRequired:
+      "Une révision humaine est requise avant de se fier au résultat de conformité ou de l’exporter.",
+    downloadReady: "Téléchargement prêt",
+
+    findingsSummary: "Résumé des constats",
+    passed: "Réussi",
+    failed: "Échoué",
+    warning: "Avertissement",
+    missing: "Manquant",
+    reviewRequiredCount: "Révision requise",
+    reviewRequiredShort: "Révision",
+
+    outputTitle: "Sortie",
+    reviewTitle: "Révision",
+    reviewValue: "Requise",
+    scopeTitle: "Portée",
+    scopeValue: "Extensible par juridiction",
+
+    pdfDocument: "Document PDF",
+    wordDocument: "Document Word",
+    jpgImage: "Image JPG",
+    jpegImage: "Image JPEG",
+    pngImage: "Image PNG",
+    unknownFile: "Fichier inconnu",
+
+    countryLabels: {
+      nigeria: "Nigeria",
+      unitedStates: "États-Unis",
+      unitedKingdom: "Royaume-Uni",
+      southAfrica: "Afrique du Sud",
+      canada: "Canada",
+      france: "France",
+      togo: "Togo",
+      ghana: "Ghana",
+    },
+
+    outputFormatLabels: {
+      pdf: ".pdf",
+      json: ".json",
+    },
+
+    reportVariantLabels: {
+      human_readable_report: "Rapport PDF pour révision (recommandé)",
+      machine_readable_report: "Rapport JSON pour systèmes/API",
+      annotated_source_output: "PDF avec preuves marquées",
+    },
+
+    reportVariantDescriptions: {
+      human_readable_report:
+        "Idéal pour lire, partager et télécharger un rapport de conformité normal.",
+      machine_readable_report:
+        "Idéal pour les développeurs, tableaux de bord, bases de données, API ou workflows automatisés.",
+      annotated_source_output:
+        "Idéal lorsqu’un réviseur doit vérifier les constats par rapport au document source original.",
+    },
+
+    sectorPackLabels: {
+      nigeria_core_control_library: "Bibliothèque de contrôles de base",
+      core_control_library: "Bibliothèque de contrôles de base",
+
+      accounting: "Comptabilité",
+      agriculture: "Agriculture",
+      aviation: "Aviation",
+      banking_and_fintech: "Banque et fintech",
+      payment_platforms_and_services: "Plateformes et services de paiement",
+      energy_and_power: "Énergie et électricité",
+      health: "Santé",
+      insurance: "Assurance",
+      legal_and_law: "Juridique et droit",
+      law_and_legal: "Droit et juridique",
+      manufacturing: "Fabrication",
+      maritime: "Maritime",
+      maritime_and_shipping: "Maritime et transport maritime",
+      media: "Médias",
+      mining: "Mines",
+      ngo: "ONG",
+      oil_and_gas: "Pétrole et gaz",
+      pharmaceuticals: "Produits pharmaceutiques",
+      sports: "Sports",
+      tech: "Technologie",
+      telecom: "Télécoms",
+    },
+
+    regulatoryDomainLabels: {
+      privacy: "Confidentialité / données personnelles",
+      cybersecurity: "Cybersécurité",
+      aml: "LBC / criminalité financière",
+      consumer_protection: "Protection des consommateurs",
+      public_sector_access_to_information:
+        "Accès à l’information du secteur public",
+      licensing: "Licences / permis",
+      registration: "Enregistrement",
+      sector_regulator_requirements: "Règles des régulateurs sectoriels",
+    },
+  },
+};

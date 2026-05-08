@@ -29,8 +29,8 @@ from typing import Any, Iterable, Mapping, Optional, Protocol, Sequence, Union
 from openpyxl import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
 
-from .extraction import extract_text_by_format
-from .schema import (
+from src.extraction import extract_text_by_format
+from src.schema import (
     AnalyzerRequest,
     AnalyzerResponse,
     DocumentPayload,
@@ -43,7 +43,7 @@ from .schema import (
     StructuredExtractionRequest,
     StructuredExtractionResultShape,
 )
-from .validation import (
+from src.validation import (
     build_structured_extraction_file_result,
     validate_analyzer_request,
     validate_analyzer_response,
@@ -318,11 +318,17 @@ class DeterministicStructuredExtractionBackend:
             documents=document_outputs,
         )
 
+def _rx(pattern: str) -> re.Pattern[str]:
+    return re.compile(pattern, re.IGNORECASE)
+
+
+def _money_rx(label_pattern: str) -> re.Pattern[str]:
+    money = r"(?:NGN|₦|USD|\$|EUR|€|GBP|£)?\s?[0-9][0-9,]*(?:\.\d{2})?"
+    return _rx(rf"\b(?:{label_pattern})\s*[:\-]?\s*(?P<value>{money})\b")
 
 # =========================
 # Document-class strategies
 # =========================
-
 
 class BaseRegexStrategy:
     document_class: StructuredExtractionDocumentClass
@@ -1055,16 +1061,6 @@ def _first_regex_match(lines: Sequence[str], patterns: Sequence[re.Pattern[str]]
 # =========================
 # Generic utilities
 # =========================
-
-
-def _rx(pattern: str) -> re.Pattern[str]:
-    return re.compile(pattern, re.IGNORECASE)
-
-
-def _money_rx(label_pattern: str) -> re.Pattern[str]:
-    money = r"(?:NGN|₦|USD|\$|EUR|€|GBP|£)?\s?[0-9][0-9,]*(?:\.\d{2})?"
-    return _rx(rf"\b(?:{label_pattern})\s*[:\-]?\s*(?P<value>{money})\b")
-
 
 def _iter_lines(text: str) -> Iterable[str]:
     for line in text.splitlines():

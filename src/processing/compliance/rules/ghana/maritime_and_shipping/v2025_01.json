@@ -1,0 +1,221 @@
+{
+  "pack_id": "maritime_and_shipping",
+  "pack_name": "Maritime and Shipping",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for vessels, shipping operators, seafarers, ports, maritime safety/security, certification, and maritime documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Maritime and Shipping. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Ghana Maritime Authority regulations portal",
+        "issuer": "Ghana Maritime Authority",
+        "used_for": [
+          "merchant shipping",
+          "seafarer certification",
+          "vessel operations",
+          "maritime safety"
+        ]
+      },
+      {
+        "name": "Merchant Shipping Regulations and related GMA instruments",
+        "issuer": "Ghana Maritime Authority",
+        "used_for": [
+          "training",
+          "certification",
+          "manning",
+          "watchkeeping"
+        ]
+      },
+      {
+        "name": "National Communications Authority licensing and authorisation",
+        "issuer": "National Communications Authority",
+        "used_for": [
+          "maritime radio services",
+          "communications authorisation"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "crew/passenger/customer data handling"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MAR-GMA-001",
+      "rule_version": "2025.01",
+      "title": "Ghana Maritime Authority licence, certificate, or approval evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for GMA registration, vessel certificate, approval, permit, or maritime authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Ghana Maritime Authority",
+          "GMA",
+          "vessel registration",
+          "certificate",
+          "seafarer",
+          "certificate of competency",
+          "permit",
+          "approval"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ghana Maritime Authority regulations portal"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MAR-SAFE-001",
+      "rule_version": "2025.01",
+      "title": "Maritime safety, manning, training, or watchkeeping evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for safety management, crew training, manning, watchkeeping, competency, emergency, or vessel operation controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "safety management",
+          "manning",
+          "watchkeeping",
+          "training",
+          "competency",
+          "emergency",
+          "seafarer"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Merchant Shipping Regulations / GMA instruments"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MAR-RADIO-001",
+      "rule_version": "2025.01",
+      "title": "Maritime communications or radio authorisation evidence is present where applicable",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NCA maritime radio services, ship radio, frequency, or communications authorisation evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "National Communications Authority",
+          "NCA",
+          "maritime radio",
+          "radio licence",
+          "radio license",
+          "frequency authorisation",
+          "ship radio"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "National Communications Authority licensing and authorisation"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "MAR-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Crew, passenger, or customer data protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy, data protection, consent, passenger data, crew records, retention, or secure handling evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy",
+          "data protection",
+          "personal data",
+          "passenger data",
+          "crew record",
+          "retention",
+          "confidentiality"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "pack_id": "sports",
+  "pack_name": "Sports",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for sports organizations, clubs, federations, academies, events, athlete welfare, insurance, safeguarding, and sports-governance documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Sports. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "National Sports Authority objectives and functions",
+        "issuer": "National Sports Authority",
+        "used_for": [
+          "sports organization and development",
+          "coordination",
+          "insurance for national sports participants"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": [
+          "athlete/minor/medical/fitness data privacy"
+        ]
+      },
+      {
+        "name": "Cybersecurity Act, 2020 (Act 1038)",
+        "issuer": "Cyber Security Authority",
+        "used_for": [
+          "digital sports platforms and cybersecurity controls"
+        ]
+      },
+      {
+        "name": "Companies Act, 2019 (Act 992)",
+        "issuer": "Republic of Ghana / Registrar of Companies",
+        "used_for": [
+          "club/company/entity governance where applicable"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "SPORT-NSA-001",
+      "rule_version": "2025.01",
+      "title": "Sports organization, event, federation, or academy governance evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for National Sports Authority, federation, registered club, academy, event approval, governance, or sports development evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "National Sports Authority",
+          "sports federation",
+          "registered club",
+          "sports academy",
+          "event approval",
+          "governance",
+          "sports development"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "National Sports Authority objectives and functions"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "SPORT-WEL-001",
+      "rule_version": "2025.01",
+      "title": "Athlete welfare, insurance, safeguarding, or medical controls are documented",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for athlete welfare, insurance, medical clearance, safeguarding, minors, concussion, injury, or risk controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "athlete welfare",
+          "insurance",
+          "medical clearance",
+          "safeguarding",
+          "minor",
+          "injury",
+          "risk assessment"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "National Sports Authority objectives and functions"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "SPORT-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Athlete, minor, medical, or fan data-protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for data protection, privacy notice, consent, minors, medical records, athlete data, retention, or confidentiality evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "data protection",
+          "privacy notice",
+          "consent",
+          "minor",
+          "medical record",
+          "athlete data",
+          "confidentiality"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "SPORT-DIGI-001",
+      "rule_version": "2025.01",
+      "title": "Digital platform or cybersecurity controls are documented where applicable",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for cybersecurity, access control, incident response, online registration, payment security, or system monitoring evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "cybersecurity",
+          "access control",
+          "incident response",
+          "online registration",
+          "payment security",
+          "system monitoring"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Cybersecurity Act, 2020 (Act 1038)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "pack_id": "telecom",
+  "pack_name": "Telecom",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French electronic-communications operators, internet access providers, mobile/fixed telecom services, network operators, consumer protection, cybersecurity, and service-quality documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Telecoms. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Arcep consumer-protection role and operator regulation",
+        "issuer": "Arcep",
+        "url": "https://www.arcep.fr/nos-sujets/le-role-et-les-missions-de-larcep-en-matiere-de-protection-des-consommateurs.html",
+        "used_for": [
+          "telecom consumer protection",
+          "portability",
+          "net neutrality",
+          "coverage commitments"
+        ]
+      },
+      {
+        "name": "Arcep electronic communications regulation",
+        "issuer": "Arcep",
+        "url": "https://www.arcep.fr/",
+        "used_for": [
+          "operator regulation",
+          "numbering",
+          "network obligations",
+          "universal service"
+        ]
+      },
+      {
+        "name": "ANSSI cybersecurity guidance",
+        "issuer": "ANSSI",
+        "url": "https://www.ssi.gouv.fr/",
+        "used_for": ["cybersecurity", "incident response", "security controls"]
+      },
+      {
+        "name": "CNIL/GDPR guidance",
+        "issuer": "CNIL",
+        "url": "https://www.cnil.fr/fr/comprendre-le-rgpd",
+        "used_for": ["privacy", "data protection", "data-subject rights"]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "TEL-FR-ARCEP-001",
+      "rule_version": "2025.01",
+      "title": "Arcep operator, numbering, coverage, or service-obligation evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for Arcep, electronic-communications operator, numbering, coverage commitments, universal service, or network authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Arcep",
+          "opérateur de communications électroniques",
+          "numérotation",
+          "couverture mobile",
+          "service universel",
+          "réseau",
+          "autorisation"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["Arcep electronic communications regulation"],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-FR-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Telecom consumer protection or complaint evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for portability, net neutrality, complaints, accessibility, service quality, cancellation, or consumer information evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "portabilité",
+          "neutralité du net",
+          "réclamation",
+          "accessibilité",
+          "qualité de service",
+          "résiliation",
+          "information consommateur"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Arcep consumer-protection role and operator regulation"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-FR-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Network security or incident-response evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for network security, incident response, resilience, access control, vulnerability management, or cybersecurity governance evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "sécurité des réseaux",
+          "incident",
+          "résilience",
+          "contrôle d'accès",
+          "vulnérabilité",
+          "cybersécurité",
+          "continuité de service"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "ANSSI cybersecurity guidance",
+          "Arcep operator regulation"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-FR-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Subscriber, traffic, or customer-data privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for subscriber data, traffic data, location data, GDPR/RGPD, retention, privacy notice, or data-subject rights evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "données personnelles",
+          "abonné",
+          "données de trafic",
+          "données de localisation",
+          "RGPD",
+          "conservation",
+          "confidentialité"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this sector control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["CNIL/GDPR guidance"],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

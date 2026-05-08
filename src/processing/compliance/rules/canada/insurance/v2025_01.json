@@ -1,0 +1,260 @@
+{
+  "pack_id": "insurance",
+  "pack_name": "Insurance Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Canadian insurers, insurance intermediaries, policyholder documents, underwriting, claims, market conduct, AML/ATF, capital, and policyholder protection.",
+  "metadata": {
+    "scope": "Canada sector overlay for Insurance. Intended to be applied with canada_core_control_library. Provincial/territorial insurance licensing and market-conduct rules may also apply.",
+    "source_note": "Source basis is mapped from official Canadian federal/provincial/territorial legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "OSFI guide for incorporating federally regulated insurance companies",
+        "issuer": "Office of the Superintendent of Financial Institutions",
+        "url": "https://www.osfi-bsif.gc.ca/en/data-forms/applications-approvals/transaction-instructions/guide-incorporating-federally-regulated-insurance-companies",
+        "used_for": [
+          "insurance company incorporation",
+          "OSFI approvals"
+        ]
+      },
+      {
+        "name": "Regulatory Capital and Internal Capital Targets guideline",
+        "issuer": "Office of the Superintendent of Financial Institutions",
+        "url": "https://www.osfi-bsif.gc.ca/en/guidance/guidance-library/regulatory-capital-internal-capital-targets-2025",
+        "used_for": [
+          "insurance capital adequacy",
+          "risk and capital management"
+        ]
+      },
+      {
+        "name": "FINTRAC life insurance sector requirements",
+        "issuer": "FINTRAC",
+        "url": "https://fintrac-canafe.canada.ca/re-ed/li-eng",
+        "used_for": [
+          "life insurance AML/ATF compliance",
+          "KYC",
+          "record keeping"
+        ]
+      },
+      {
+        "name": "Personal Information Protection and Electronic Documents Act (PIPEDA)",
+        "issuer": "Parliament of Canada / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/",
+        "used_for": [
+          "privacy",
+          "personal information",
+          "private-sector data protection"
+        ]
+      },
+      {
+        "name": "Competition Act deceptive marketing guidance",
+        "issuer": "Competition Bureau Canada",
+        "url": "https://competition-bureau.canada.ca/en/deceptive-marketing-practices/types-deceptive-marketing-practices/misleading-representations-and-deceptive-marketing-practices",
+        "used_for": [
+          "consumer protection",
+          "false or misleading representations"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "INS-OSFI-001",
+      "rule_version": "2025.01",
+      "title": "OSFI incorporation, authorization, or federally regulated insurer evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for OSFI, federally regulated insurer, Insurance Companies Act, order to commence, incorporation, or authorization evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "OSFI",
+          "Insurance Companies Act",
+          "federally regulated insurer",
+          "order to commence",
+          "incorporation",
+          "authorization"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "OSFI insurance incorporation guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "INS-CAP-001",
+      "rule_version": "2025.01",
+      "title": "Capital adequacy, solvency, or risk management evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for LICAT, MCT, MICAT, capital management, solvency, ORSA, or risk management evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "LICAT",
+          "MCT",
+          "MICAT",
+          "capital adequacy",
+          "solvency",
+          "risk management",
+          "ORSA"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "OSFI regulatory capital/internal capital targets guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "INS-AML-001",
+      "rule_version": "2025.01",
+      "title": "Life-insurance AML/ATF client identification and record-keeping evidence is present where applicable",
+      "regulatory_domain": "aml",
+      "summary": "Checks for FINTRAC compliance program, life insurance KYC, record keeping, PEP/HIO screening, or suspicious transaction controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "FINTRAC",
+          "life insurance",
+          "client identification",
+          "record keeping",
+          "PEP",
+          "suspicious transaction",
+          "compliance program"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PCMLTFA / FINTRAC life insurance guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "INS-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Policyholder privacy and claims-data protection evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for policyholder personal information, privacy notice, consent, claim data safeguards, or data-subject rights evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "privacy notice",
+          "personal information",
+          "policyholder",
+          "claims data",
+          "consent",
+          "safeguards"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PIPEDA / insurance privacy controls"
+        ]
+      }
+    },
+    {
+      "rule_id": "INS-CONS-001",
+      "rule_version": "2025.01",
+      "title": "Fair claims, disclosure, or marketing-control evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for claims handling, policy disclosure, complaint handling, marketing substantiation, or misleading-representation controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "claims handling",
+          "policy disclosure",
+          "complaint handling",
+          "misleading representation",
+          "premium",
+          "coverage"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Competition Act / provincial insurance market-conduct review required"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "pack_id": "telecom",
+  "pack_name": "Telecom",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for telecommunications service providers, internet services, wireless services, numbering resources, consumer codes, CRTC obligations, CASL, telemarketing, and telecom privacy/security documentation in Canada.",
+  "metadata": {
+    "scope": "Canada-only sector overlay controls for Telecommunications. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/regulatory sources available at rule-pack publication time. Provincial/territorial obligations may apply and are not exhaustively encoded. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "CRTC Acts and regulations",
+        "issuer": "CRTC",
+        "url": "https://crtc.gc.ca/eng/statutes-lois.htm",
+        "used_for": [
+          "Telecommunications Act",
+          "CASL",
+          "Unsolicited Telecommunications Rules"
+        ]
+      },
+      {
+        "name": "CRTC home / mandate",
+        "issuer": "CRTC",
+        "url": "https://crtc.gc.ca/eng/home-accueil.htm",
+        "used_for": ["telecommunications regulation", "broadcasting regulation"]
+      },
+      {
+        "name": "Wireless Code and Internet Code policy materials",
+        "issuer": "CRTC",
+        "url": "https://crtc.gc.ca/eng/archive/2026/2026-78.htm",
+        "used_for": ["consumer contracts", "bill shock", "switching providers"]
+      },
+      {
+        "name": "Telecom numbering resources consultation materials",
+        "issuer": "CRTC",
+        "url": "https://crtc.gc.ca/eng/archive/2026/2026-61.htm",
+        "used_for": [
+          "numbering resources",
+          "Telecommunications Act section 46.1"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "TEL-CRTC-001",
+      "rule_version": "2025.01",
+      "title": "CRTC telecommunications regulatory evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for CRTC, Telecommunications Act, tariff, forbearance, registration, or telecom service provider evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CRTC",
+          "Telecommunications Act",
+          "telecom service provider",
+          "tariff",
+          "forbearance",
+          "registration"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["CRTC Acts and regulations"]
+      }
+    },
+    {
+      "rule_id": "TEL-CODE-002",
+      "rule_version": "2025.01",
+      "title": "Wireless Code or Internet Code consumer-contract controls are documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for Wireless Code, Internet Code, contract, bill shock, switching, cancellation, or complaint resolution evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Wireless Code",
+          "Internet Code",
+          "contract",
+          "bill shock",
+          "switching",
+          "cancellation",
+          "complaint"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CRTC Wireless Code and Internet Code policy materials"
+        ]
+      }
+    },
+    {
+      "rule_id": "TEL-NUM-003",
+      "rule_version": "2025.01",
+      "title": "Numbering resources or network-assignment controls are documented where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for numbering resources, telephone numbers, assignment, NANP, CRTC numbering, or telecommunications routing evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "numbering resources",
+          "telephone numbers",
+          "NANP",
+          "number assignment",
+          "section 46.1",
+          "routing"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CRTC telecommunications numbering resources materials"
+        ]
+      }
+    },
+    {
+      "rule_id": "TEL-CASL-004",
+      "rule_version": "2025.01",
+      "title": "CASL, telemarketing, or anti-spam compliance evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for CASL, unsolicited telecommunications, telemarketing rules, do-not-call, consent, unsubscribe, or spam controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CASL",
+          "unsolicited telecommunications",
+          "telemarketing",
+          "do not call",
+          "DNCL",
+          "unsubscribe",
+          "consent"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CRTC CASL and Unsolicited Telecommunications Rules responsibilities"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,263 @@
+{
+  "pack_id": "health",
+  "pack_name": "Health Sector Compliance Overlay",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector-specific screening controls for Canadian healthcare providers, health facilities, health products, medical devices, health data, and clinical-service documentation.",
+  "metadata": {
+    "scope": "Canada sector overlay for Health. Intended to be applied with canada_core_control_library. Provincial/territorial personal-health-information obligations may also apply.",
+    "source_note": "Source basis is mapped from official Canadian federal/provincial/territorial legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Canada Health Act",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/health-care-system/canada-health-care-system-medicare/canada-health-act.html",
+        "used_for": [
+          "public health insurance criteria",
+          "extra-billing/user-charge review"
+        ]
+      },
+      {
+        "name": "Food and Drugs Act classification guidance",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/classification-products-food-drugs-act.html",
+        "used_for": [
+          "drugs",
+          "devices",
+          "food",
+          "cosmetics",
+          "classification"
+        ]
+      },
+      {
+        "name": "Medical device compliance and inspection guidance",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/drugs-health-products/compliance-enforcement/information-health-product/medical-devices/inspects-medical-device-establishments-0064.html",
+        "used_for": [
+          "medical device establishment licensing",
+          "MDR compliance",
+          "inspection evidence"
+        ]
+      },
+      {
+        "name": "Personal Information Protection and Electronic Documents Act (PIPEDA)",
+        "issuer": "Parliament of Canada / Justice Laws",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/",
+        "used_for": [
+          "privacy",
+          "personal information",
+          "private-sector data protection"
+        ]
+      },
+      {
+        "name": "Baseline Cyber Security Controls for Small and Medium Organizations",
+        "issuer": "Canadian Centre for Cyber Security",
+        "url": "https://www.cyber.gc.ca/en/guidance/baseline-cyber-security-controls-small-and-medium-organizations",
+        "used_for": [
+          "cybersecurity baseline",
+          "incident response",
+          "access control",
+          "patching",
+          "backups"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "HEALTH-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Patient confidentiality or health-information privacy evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for patient confidentiality, personal health information, privacy notice, consent, access, or safeguards evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "patient confidentiality",
+          "personal health information",
+          "health information",
+          "privacy notice",
+          "patient privacy",
+          "consent"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PIPEDA and provincial/territorial health privacy regimes"
+        ]
+      }
+    },
+    {
+      "rule_id": "HEALTH-FDA-001",
+      "rule_version": "2025.01",
+      "title": "Food and Drugs Act product classification or authorization evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for classification, drug/device/food/cosmetic authorization, market authorization, or Health Canada review evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Food and Drugs Act",
+          "Health Canada",
+          "market authorization",
+          "medical device licence",
+          "drug identification number",
+          "DIN",
+          "classification"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Food and Drugs Act / Health Canada classification guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "HEALTH-MDR-001",
+      "rule_version": "2025.01",
+      "title": "Medical device licence, establishment licence, or inspection evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for MDEL, medical device licence, Medical Devices Regulations, complaint handling, recall, or inspection evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "MDEL",
+          "medical device licence",
+          "Medical Devices Regulations",
+          "inspection",
+          "complaint handling",
+          "recall"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Health Canada medical device inspection guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "HEALTH-CHA-001",
+      "rule_version": "2025.01",
+      "title": "Canada Health Act insured-service or patient-charge evidence is present where applicable",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for insured health services, extra-billing, user charges, reasonable access, or public health insurance criteria evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Canada Health Act",
+          "insured health services",
+          "extra-billing",
+          "user charges",
+          "reasonable access",
+          "public health insurance"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canada Health Act"
+        ]
+      }
+    },
+    {
+      "rule_id": "HEALTH-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Health data cybersecurity and continuity evidence is present",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for access control, encryption, backup, incident response, breach response, or recovery evidence for health data systems.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "access control",
+          "encryption",
+          "backup",
+          "incident response",
+          "breach",
+          "recovery"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, legal sufficiency, provincial/territorial overlays, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canadian Centre for Cyber Security baseline controls"
+        ]
+      }
+    }
+  ]
+}

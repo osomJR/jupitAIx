@@ -1,0 +1,217 @@
+{
+  "pack_id": "accounting",
+  "pack_name": "Accounting",
+  "pack_version": "v2025_01",
+  "jurisdiction": "france",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for French accounting firms, audit practices, assurance providers, financial reporting professionals, and related professional-services documentation.",
+  "metadata": {
+    "scope": "France-only sector overlay controls for Accounting. Intended to be used with france_core_control_library.",
+    "source_note": "Source basis is mapped from official French/EU legal, regulatory, supervisory, and guidance sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Ordre des experts-comptables professional framework",
+        "issuer": "Ordre des experts-comptables",
+        "url": "https://www.experts-comptables.fr/l-institution/l-institution",
+        "used_for": [
+          "registration",
+          "professional standards",
+          "ethics"
+        ]
+      },
+      {
+        "name": "Ordre des experts-comptables professional obligations",
+        "issuer": "Ordre des experts-comptables",
+        "url": "https://www.experts-comptables.fr/devenir-expert-comptable/qu-est-ce-qu-un-expert-comptable",
+        "used_for": [
+          "registration",
+          "professional insurance",
+          "professional standards"
+        ]
+      },
+      {
+        "name": "Haute autorité de l'audit / statutory-audit oversight materials",
+        "issuer": "H2A",
+        "url": "https://www.h2a-france.org/",
+        "used_for": [
+          "statutory audit",
+          "audit oversight"
+        ]
+      },
+      {
+        "name": "TRACFIN AML/CFT framework for regulated professions",
+        "issuer": "TRACFIN",
+        "url": "https://www.economie.gouv.fr/tracfin",
+        "used_for": [
+          "AML/CFT",
+          "suspicious reporting"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "ACC-OEC-001",
+      "rule_version": "2025.01",
+      "title": "Ordre registration or professional standing evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for registration with the Ordre des experts-comptables, professional title, oath, or registration-table evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Ordre des experts-comptables",
+          "inscrit au tableau",
+          "expert-comptable",
+          "profession réglementée",
+          "serment",
+          "assurance civile professionnelle"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ordre des experts-comptables professional framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "ACC-ETH-001",
+      "rule_version": "2025.01",
+      "title": "Professional standards, ethics, or independence evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for professional standards, code of ethics, independence, quality control, or engagement-letter evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "code de déontologie",
+          "normes professionnelles",
+          "indépendance",
+          "lettre de mission",
+          "contrôle qualité",
+          "secret professionnel"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Ordre des experts-comptables professional obligations"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "ACC-AUD-001",
+      "rule_version": "2025.01",
+      "title": "Statutory audit or commissaire aux comptes oversight evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for statutory-audit, commissaire aux comptes, H2A, CNCC, or audit-report evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "commissaire aux comptes",
+          "audit légal",
+          "H2A",
+          "CNCC",
+          "rapport d'audit",
+          "certification des comptes"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "H2A statutory audit oversight materials"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "ACC-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/CFT client due-diligence route is evidenced where applicable",
+      "regulatory_domain": "aml",
+      "summary": "Checks for accounting-profession AML/CFT evidence, client identification, beneficial ownership, risk-based vigilance, or TRACFIN escalation.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "LCB-FT",
+          "vigilance client",
+          "bénéficiaire effectif",
+          "TRACFIN",
+          "déclaration de soupçon",
+          "identification du client"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified France compliance/legal reviewer must confirm applicability, current legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "TRACFIN AML/CFT framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "pack_id": "tech",
+  "pack_name": "Technology",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for software, SaaS, cloud, digital platforms, IT services, cybersecurity, privacy, anti-spam, consumer-facing digital products, and technology-service documentation in Canada.",
+  "metadata": {
+    "scope": "Canada-only sector overlay controls for Technology. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/regulatory sources available at rule-pack publication time. Provincial/territorial obligations may apply and are not exhaustively encoded. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Personal Information Protection and Electronic Documents Act (PIPEDA)",
+        "issuer": "Justice Canada / OPC",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/P-8.6/",
+        "used_for": [
+          "privacy",
+          "personal information handling",
+          "commercial activities"
+        ]
+      },
+      {
+        "name": "Canada's Anti-Spam Legislation resources",
+        "issuer": "CRTC",
+        "url": "https://crtc.gc.ca/eng/statutes-lois.htm",
+        "used_for": [
+          "CASL",
+          "commercial electronic messages",
+          "compliance enforcement"
+        ]
+      },
+      {
+        "name": "Baseline cyber security controls for small and medium organizations",
+        "issuer": "Canadian Centre for Cyber Security",
+        "url": "https://www.cyber.gc.ca/en/guidance/baseline-cyber-security-controls-small-and-medium-organizations",
+        "used_for": [
+          "cybersecurity baseline controls"
+        ]
+      },
+      {
+        "name": "Top measures to enhance cyber security for small and medium organizations",
+        "issuer": "Canadian Centre for Cyber Security",
+        "url": "https://www.cyber.gc.ca/en/guidance/top-measures-enhance-cyber-security-small-and-medium-organizations-itsap10035",
+        "used_for": [
+          "security controls",
+          "incident response",
+          "phishing/ransomware risk"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "TECH-PRIV-001",
+      "rule_version": "2025.01",
+      "title": "Privacy and personal-information controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for PIPEDA, privacy policy, consent, personal information, access/correction, retention, or processor controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "PIPEDA",
+          "privacy policy",
+          "personal information",
+          "consent",
+          "access request",
+          "retention",
+          "processor"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PIPEDA / Canadian privacy baseline"
+        ]
+      }
+    },
+    {
+      "rule_id": "TECH-CASL-002",
+      "rule_version": "2025.01",
+      "title": "CASL electronic-message controls are documented",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for CASL, commercial electronic message, express consent, unsubscribe, sender identification, or installation consent evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "CASL",
+          "commercial electronic message",
+          "unsubscribe",
+          "express consent",
+          "implied consent",
+          "sender identification",
+          "installation consent"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "CRTC CASL responsibilities"
+        ]
+      }
+    },
+    {
+      "rule_id": "TECH-CYBER-003",
+      "rule_version": "2025.01",
+      "title": "Baseline cybersecurity controls are documented",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for MFA, backups, patching, endpoint protection, incident response, training, or access control evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "multi-factor authentication",
+          "MFA",
+          "backup",
+          "patch management",
+          "endpoint protection",
+          "incident response",
+          "security awareness",
+          "access control"
+        ],
+        "min_count": 3
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canadian Centre for Cyber Security baseline controls"
+        ]
+      }
+    },
+    {
+      "rule_id": "TECH-CLOUD-004",
+      "rule_version": "2025.01",
+      "title": "Cloud/data hosting and third-party processing controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for cloud provider, hosting, subcontractor, cross-border transfer, service provider, or security addendum evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "cloud",
+          "hosting",
+          "service provider",
+          "subcontractor",
+          "cross-border",
+          "data residency",
+          "security addendum"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "PIPEDA and Cyber Centre technology-service controls"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "pack_id": "telecom",
+  "pack_name": "Telecom",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for telecommunications operators, internet/data service providers, infrastructure providers, spectrum/frequency authorisations, SIM/numbering services, and telecom cybersecurity documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Telecoms. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "NCA licensing and authorisation portal",
+        "issuer": "National Communications Authority",
+        "used_for": [
+          "telecom licences",
+          "internet/data services",
+          "spectrum",
+          "numbering",
+          "infrastructure licences"
+        ]
+      },
+      {
+        "name": "NCA legal instruments",
+        "issuer": "National Communications Authority",
+        "used_for": [
+          "NCA Act 2008",
+          "Electronic Communications Act 2008",
+          "broadcasting/electronic communications regulation"
+        ]
+      },
+      {
+        "name": "NCA-CERT",
+        "issuer": "National Communications Authority",
+        "used_for": ["telecommunications-sector cybersecurity incidents"]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Data Protection Commission",
+        "used_for": ["subscriber/SIM/customer data privacy"]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "TEL-NCA-001",
+      "rule_version": "2025.01",
+      "title": "NCA telecommunications licence or authorisation evidence is present",
+      "regulatory_domain": "licensing",
+      "summary": "Checks for NCA mobile, fixed, broadband, data service, satellite, infrastructure, submarine cable, numbering, spectrum, or telecom licence evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "National Communications Authority",
+          "NCA",
+          "telecommunications licence",
+          "telecommunications license",
+          "spectrum",
+          "numbering",
+          "internet service",
+          "data service",
+          "infrastructure licence"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NCA licensing and authorisation portal",
+          "NCA Act 2008",
+          "Electronic Communications Act 2008"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-SIM-001",
+      "rule_version": "2025.01",
+      "title": "Subscriber, SIM, numbering, or customer registration controls are documented",
+      "regulatory_domain": "registration",
+      "summary": "Checks for SIM registration, subscriber identity, numbering, M2M, KYC, customer registration, or verification controls.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "SIM registration",
+          "subscriber",
+          "numbering",
+          "M2M",
+          "KYC",
+          "customer registration",
+          "verification"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "NCA licensing and authorisation portal",
+          "NCA legal instruments"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-CYBER-001",
+      "rule_version": "2025.01",
+      "title": "Telecom cybersecurity, NCA-CERT, incident, or network-security controls are documented",
+      "regulatory_domain": "cybersecurity",
+      "summary": "Checks for cybersecurity, network security, NCA-CERT, incident reporting, malware, vulnerability, monitoring, or resilience evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "cybersecurity",
+          "network security",
+          "NCA-CERT",
+          "incident reporting",
+          "malware",
+          "vulnerability",
+          "monitoring",
+          "resilience"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": ["NCA-CERT", "Cybersecurity Act, 2020 (Act 1038)"],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "TEL-DATA-001",
+      "rule_version": "2025.01",
+      "title": "Subscriber, traffic, or customer data-protection controls are documented",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for privacy notice, data protection, subscriber data, call data records, traffic data, retention, consent, or lawful disclosure evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "required_signals": [
+          "privacy notice",
+          "data protection",
+          "subscriber data",
+          "call data",
+          "traffic data",
+          "retention",
+          "lawful disclosure"
+        ],
+        "min_count": 2,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "on_prohibited_match": "failed"
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, source currency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Data Protection Act, 2012 (Act 843)",
+          "NCA communications framework"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

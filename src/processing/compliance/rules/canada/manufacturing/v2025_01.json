@@ -1,0 +1,212 @@
+{
+  "pack_id": "manufacturing",
+  "pack_name": "Manufacturing",
+  "pack_version": "v2025_01",
+  "jurisdiction": "canada",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-06",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for manufacturers, processors, product makers, packaging/labelling workflows, regulated consumer products, origin claims, quality controls, and environmental documentation in Canada.",
+  "metadata": {
+    "scope": "Canada-only sector overlay controls for Manufacturing. Intended to be used with canada_core_control_library.",
+    "source_note": "Source basis is mapped from official Canadian federal/regulatory sources available at rule-pack publication time. Provincial/territorial obligations may apply and are not exhaustively encoded. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Consumer product safety acts and regulations",
+        "issuer": "Health Canada",
+        "url": "https://www.canada.ca/en/health-canada/services/consumer-product-safety/legislation-guidelines/acts-regulations.html",
+        "used_for": [
+          "consumer product safety",
+          "hazardous products",
+          "regulated products"
+        ]
+      },
+      {
+        "name": "Consumer Packaging and Labelling Act guidance",
+        "issuer": "Competition Bureau Canada",
+        "url": "https://competition-bureau.canada.ca/en/guide-consumer-packaging-and-labelling-act-and-regulations",
+        "used_for": [
+          "packaging",
+          "labelling",
+          "prepackaged non-food consumer products"
+        ]
+      },
+      {
+        "name": "Product of Canada and Made in Canada claims guidance",
+        "issuer": "Competition Bureau Canada",
+        "url": "https://competition-bureau.canada.ca/en/how-we-foster-competition/education-and-outreach/publications/product-canada-and-made-canada-claims",
+        "used_for": [
+          "origin claims",
+          "misleading representations"
+        ]
+      },
+      {
+        "name": "Canadian Environmental Protection Act framework",
+        "issuer": "Government of Canada",
+        "url": "https://laws-lois.justice.gc.ca/eng/acts/c-15.31/",
+        "used_for": [
+          "environmental controls",
+          "substances",
+          "pollution prevention"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "MFG-HC-001",
+      "rule_version": "2025.01",
+      "title": "Consumer-product safety or regulated-product control evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for safety, hazard, recall, incident, or Health Canada regulated-product controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "consumer product safety",
+          "Health Canada",
+          "hazard",
+          "recall",
+          "incident report",
+          "regulated product"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Health Canada consumer product safety acts and regulations"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-LABEL-001",
+      "rule_version": "2025.01",
+      "title": "Packaging and labelling compliance evidence is present",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for packaging, labelling, declaration, net quantity, dealer identity, or required consumer-product label evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "packaging",
+          "labelling",
+          "labeling",
+          "net quantity",
+          "dealer identity",
+          "prepackaged product",
+          "Consumer Packaging and Labelling"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Competition Bureau Consumer Packaging and Labelling Act guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-CLAIMS-001",
+      "rule_version": "2025.01",
+      "title": "Origin and product-claim controls are documented",
+      "regulatory_domain": "consumer_protection",
+      "summary": "Checks for Product of Canada, Made in Canada, country-of-origin, or misleading representation controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Product of Canada",
+          "Made in Canada",
+          "country of origin",
+          "misleading representation",
+          "Competition Act"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Competition Bureau Product of Canada and Made in Canada claims guidance"
+        ]
+      }
+    },
+    {
+      "rule_id": "MFG-ENV-001",
+      "rule_version": "2025.01",
+      "title": "Environmental or hazardous-substance controls are documented",
+      "regulatory_domain": "environmental",
+      "summary": "Checks for environmental, hazardous substance, waste, emissions, or CEPA-linked controls.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "environmental",
+          "hazardous substance",
+          "waste",
+          "emissions",
+          "pollution prevention",
+          "CEPA"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Canadian legal/compliance reviewer must confirm applicability, jurisdictional scope, provincial/territorial variations, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Canadian Environmental Protection Act framework"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "pack_id": "accounting",
+  "pack_name": "Accounting",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for accounting firms, audit practices, assurance providers, financial reporting professionals, and related professional-services documentation in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Accounting. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Institute of Chartered Accountants, Ghana Act, 2020 (Act 1058)",
+        "issuer": "Parliament of Ghana / ICAG",
+        "used_for": [
+          "accountancy profession",
+          "professional practice",
+          "standards and discipline"
+        ]
+      },
+      {
+        "name": "Companies Act, 2019 (Act 992)",
+        "issuer": "Parliament of Ghana / Office of the Registrar of Companies",
+        "used_for": [
+          "corporate registration",
+          "accounting records",
+          "directors and governance"
+        ]
+      },
+      {
+        "name": "Securities Industry Act, 2016 (Act 929)",
+        "issuer": "Parliament of Ghana / Securities and Exchange Commission Ghana",
+        "used_for": [
+          "issuer accounts",
+          "audit standards",
+          "capital-market licensee reporting"
+        ]
+      },
+      {
+        "name": "Anti-Money Laundering Act, 2020 (Act 1044)",
+        "issuer": "Parliament of Ghana / Financial Intelligence Centre",
+        "used_for": [
+          "AML/CFT",
+          "customer due diligence",
+          "suspicious transaction reporting"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "ACC-ICAG-001",
+      "rule_version": "2025.01",
+      "title": "ICAG membership, practice, or professional registration evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for ICAG membership, accountancy professional registration, practising certificate, or firm professional status evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Institute of Chartered Accountants",
+          "ICAG",
+          "practising certificate",
+          "professional accountant",
+          "chartered accountant",
+          "firm registration"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Institute of Chartered Accountants, Ghana Act, 2020 (Act 1058)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "ACC-CO-001",
+      "rule_version": "2025.01",
+      "title": "Accounting records and financial statement evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for accounting records, financial statements, audit report, directors report, or company-accounting evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "accounting records",
+          "financial statements",
+          "audit report",
+          "directors report",
+          "balance sheet",
+          "income statement"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Companies Act, 2019 (Act 992)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "ACC-SEC-001",
+      "rule_version": "2025.01",
+      "title": "SEC issuer/licensee audit or accounting standard evidence is present where applicable",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for SEC, issuer, licensee, audited accounts, or adopted accounting/auditing standard evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "Securities and Exchange Commission",
+          "SEC",
+          "issuer",
+          "licensed under the Securities Industry Act",
+          "audited accounts",
+          "accounting standards"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Securities Industry Act, 2016 (Act 929)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "ACC-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/CFT due diligence controls are documented where professional services are in scope",
+      "regulatory_domain": "aml",
+      "summary": "Checks for client due diligence, beneficial ownership, KYC, risk-based approach, or suspicious transaction evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client due diligence",
+          "beneficial owner",
+          "KYC",
+          "risk-based approach",
+          "suspicious transaction",
+          "AML"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Anti-Money Laundering Act, 2020 (Act 1044)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}

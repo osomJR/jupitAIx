@@ -1,0 +1,262 @@
+{
+  "pack_id": "law_and_legal",
+  "pack_name": "Law and Legal",
+  "pack_version": "v2025_01",
+  "jurisdiction": "ghana",
+  "effective_date": "2025-01-01",
+  "last_reviewed": "2026-05-07",
+  "status": "draft_starter_pack_requires_legal_review",
+  "description": "Sector overlay for law firms, legal practitioners, legal-services documents, client files, professional conduct, client money, conflicts, privilege, and confidentiality in Ghana.",
+  "metadata": {
+    "scope": "Ghana-only sector overlay controls for Law and Legal. Intended to be used with ghana_core_control_library.",
+    "source_note": "Source basis is mapped from official Ghana legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
+    "human_review_required": true,
+    "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
+    "engine_compatibility": {
+      "expected_registry_fields": [
+        "rule_id",
+        "rule_version",
+        "title",
+        "regulatory_domain",
+        "summary",
+        "evaluation",
+        "metadata"
+      ],
+      "supported_strategies": [
+        "any_signal_presence",
+        "all_signal_presence",
+        "absent_signals",
+        "min_signal_count"
+      ]
+    },
+    "primary_sources": [
+      {
+        "name": "Legal Profession Act, 1960 (Act 32)",
+        "issuer": "Parliament of Ghana / General Legal Council",
+        "used_for": [
+          "legal profession regulation",
+          "enrolment",
+          "professional discipline"
+        ]
+      },
+      {
+        "name": "Legal Profession (Professional Conduct and Etiquette) Rules, 1969 (LI 613)",
+        "issuer": "General Legal Council",
+        "used_for": [
+          "professional conduct",
+          "conflicts",
+          "client accounts",
+          "ethics"
+        ]
+      },
+      {
+        "name": "Anti-Money Laundering Act, 2020 (Act 1044)",
+        "issuer": "Parliament of Ghana / Financial Intelligence Centre",
+        "used_for": [
+          "AML/CFT",
+          "customer due diligence",
+          "suspicious transaction reporting"
+        ]
+      },
+      {
+        "name": "Data Protection Act, 2012 (Act 843)",
+        "issuer": "Parliament of Ghana / Data Protection Commission",
+        "used_for": [
+          "privacy",
+          "personal data processing",
+          "data controller registration"
+        ]
+      },
+      {
+        "name": "Right to Information Act, 2019 (Act 989)",
+        "issuer": "Parliament of Ghana / Right to Information Commission",
+        "used_for": [
+          "access to information",
+          "public-sector transparency",
+          "exempt information handling"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "LEGAL-GLC-001",
+      "rule_version": "2025.01",
+      "title": "General Legal Council enrolment, practice, or professional status evidence is present",
+      "regulatory_domain": "registration",
+      "summary": "Checks for General Legal Council, lawyer roll, practising certificate, professional status, or legal practitioner evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "General Legal Council",
+          "Legal Profession Act",
+          "practising certificate",
+          "lawyer",
+          "legal practitioner",
+          "roll of lawyers"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Legal Profession Act, 1960 (Act 32)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-ETH-001",
+      "rule_version": "2025.01",
+      "title": "Client confidentiality, privilege, or file-protection evidence is present",
+      "regulatory_domain": "privacy",
+      "summary": "Checks for client confidentiality, legal privilege, privileged communication, client file, confidential information, or data protection evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "missing",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client confidentiality",
+          "legal professional privilege",
+          "privileged communication",
+          "client file",
+          "confidential information",
+          "data protection"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Legal Profession Rules, 1969 (LI 613)",
+          "Data Protection Act, 2012 (Act 843)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-CONFLICT-001",
+      "rule_version": "2025.01",
+      "title": "Conflict-of-interest disclosure or avoidance evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for conflict checks, opposing-party checks, disclosure, client consent, or conflict avoidance evidence.",
+      "evaluation": {
+        "strategy": "any_signal_presence",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 5,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "conflict of interest",
+          "conflict check",
+          "opposing party",
+          "client consent",
+          "disclosure",
+          "avoid representing conflicting interests"
+        ]
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Legal Profession Rules, 1969 (LI 613)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-CLIENTMONEY-001",
+      "rule_version": "2025.01",
+      "title": "Client account, receipt, or client-money record evidence is present",
+      "regulatory_domain": "sector_regulator_requirements",
+      "summary": "Checks for client account records, receipts, trust/client money, accounting, or client ledger evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client account",
+          "client money",
+          "receipt",
+          "ledger",
+          "trust account",
+          "accounting records"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Legal Profession Rules, 1969 (LI 613)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    },
+    {
+      "rule_id": "LEGAL-AML-001",
+      "rule_version": "2025.01",
+      "title": "AML/CFT due diligence evidence is present for in-scope legal services",
+      "regulatory_domain": "aml",
+      "summary": "Checks for client due diligence, beneficial ownership, KYC, source of funds, or suspicious transaction evidence.",
+      "evaluation": {
+        "strategy": "min_signal_count",
+        "search_mode": "substring",
+        "case_sensitive": false,
+        "excerpt_window": 180,
+        "max_matches_per_signal": 6,
+        "on_missing": "review_required",
+        "on_partial": "review_required",
+        "required_signals": [
+          "client due diligence",
+          "beneficial owner",
+          "KYC",
+          "source of funds",
+          "suspicious transaction",
+          "AML"
+        ],
+        "min_count": 2
+      },
+      "metadata": {
+        "control_type": "sector_overlay",
+        "applicability": "sector_specific_overlay",
+        "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
+        "legal_review_required": true,
+        "review_guidance": "A qualified Ghana legal/compliance reviewer must confirm applicability, legal sufficiency, current-law status, and whether absence of textual evidence should be treated as non-compliance.",
+        "source_basis": [
+          "Anti-Money Laundering Act, 2020 (Act 1044)"
+        ],
+        "legal_review_status": "draft_starter_pack_requires_legal_review"
+      }
+    }
+  ]
+}
