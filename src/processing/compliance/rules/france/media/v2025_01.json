@@ -90,12 +90,12 @@
         "on_partial": "review_required",
         "required_signals": [
           "Arcom",
-          "service de médias audiovisuels",
-          "éditeur de service",
+          "service de mÃ©dias audiovisuels",
+          "Ã©diteur de service",
           "distributeur de service",
           "autorisation",
           "convention",
-          "fréquence"
+          "frÃ©quence"
         ]
       },
       "metadata": {
@@ -127,10 +127,10 @@
         "required_signals": [
           "pluralisme",
           "protection des mineurs",
-          "modération",
+          "modÃ©ration",
           "contenu illicite",
           "signalement",
-          "responsabilité éditoriale",
+          "responsabilitÃ© Ã©ditoriale",
           "haine en ligne"
         ],
         "min_count": 2
@@ -162,10 +162,10 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "accessibilité",
+          "accessibilitÃ©",
           "sous-titrage",
           "audiodescription",
-          "services de médias audiovisuels",
+          "services de mÃ©dias audiovisuels",
           "application accessible",
           "handicap"
         ]
@@ -197,13 +197,13 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "œuvres françaises",
-          "œuvres européennes",
+          "Å“uvres franÃ§aises",
+          "Å“uvres europÃ©ennes",
           "quota",
           "investissement dans la production",
           "droit d'auteur",
           "droits voisins",
-          "offre légale"
+          "offre lÃ©gale"
         ]
       },
       "metadata": {

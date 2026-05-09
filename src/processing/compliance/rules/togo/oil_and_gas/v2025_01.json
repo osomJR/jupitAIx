@@ -31,7 +31,7 @@
     },
     "primary_sources": [
       {
-        "name": "Law No. 99-003 portant Code des hydrocarbures de la République Togolaise",
+        "name": "Law No. 99-003 portant Code des hydrocarbures de la RÃƒÂ©publique Togolaise",
         "issuer": "Togolese Republic",
         "url": "https://legitogo.gouv.tg/be/wp-content/uploads/2017/03/Pages-from-jo_1999-007Bis-8.pdf",
         "used_for": [
@@ -100,10 +100,10 @@
           "exploration",
           "exploitation",
           "petroleum",
-          "pétrole",
+          "pÃƒÂ©trole",
           "permit",
           "autorisation",
-          "contrat pétrolier"
+          "contrat pÃƒÂ©trolier"
         ],
         "on_prohibited_match": "failed"
       },
@@ -114,7 +114,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 99-003 portant Code des hydrocarbures de la République Togolaise",
+          "Law No. 99-003 portant Code des hydrocarbures de la RÃƒÂ©publique Togolaise",
           "FAOLEX copy of Togo hydrocarbons code"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
@@ -124,7 +124,7 @@
       "rule_id": "TGO-OILGAS-HSE-002",
       "rule_version": "2025.01",
       "title": "HSE, emergency, or safety-management evidence is documented",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for HSE plan, safety management, emergency response, fire, occupational health, or process-safety evidence.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -137,9 +137,9 @@
         "required_signals": [
           "HSE",
           "health safety environment",
-          "santé sécurité environnement",
+          "santÃƒÂ© sÃƒÂ©curitÃƒÂ© environnement",
           "emergency response",
-          "plan d’urgence",
+          "plan dÃ¢â‚¬â„¢urgence",
           "fire safety",
           "process safety",
           "occupational health"
@@ -154,7 +154,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 99-003 portant Code des hydrocarbures de la République Togolaise"
+          "Law No. 99-003 portant Code des hydrocarbures de la RÃƒÂ©publique Togolaise"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
@@ -163,7 +163,7 @@
       "rule_id": "TGO-OILGAS-ENV-003",
       "rule_version": "2025.01",
       "title": "Environmental protection, spill, or pollution-control evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for spill response, pollution, environmental plan, waste, remediation, or environmental impact evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -175,13 +175,13 @@
         "on_partial": "review_required",
         "required_signals": [
           "spill",
-          "déversement",
+          "dÃƒÂ©versement",
           "pollution",
           "environmental impact",
-          "étude d’impact",
+          "ÃƒÂ©tude dÃ¢â‚¬â„¢impact",
           "waste",
           "remediation",
-          "remédiation",
+          "remÃƒÂ©diation",
           "environmental management"
         ],
         "on_prohibited_match": "failed"
@@ -193,7 +193,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 99-003 portant Code des hydrocarbures de la République Togolaise",
+          "Law No. 99-003 portant Code des hydrocarbures de la RÃƒÂ©publique Togolaise",
           "FAOLEX copy of Togo hydrocarbons code"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
@@ -258,10 +258,10 @@
           "royalty",
           "redevance",
           "tax",
-          "impôt",
+          "impÃƒÂ´t",
           "audit",
           "state participation",
-          "participation de l’Etat"
+          "participation de lÃ¢â‚¬â„¢Etat"
         ],
         "on_prohibited_match": "failed"
       },
@@ -272,10 +272,11 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 99-003 portant Code des hydrocarbures de la République Togolaise"
+          "Law No. 99-003 portant Code des hydrocarbures de la RÃƒÂ©publique Togolaise"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
     }
   ]
 }
+

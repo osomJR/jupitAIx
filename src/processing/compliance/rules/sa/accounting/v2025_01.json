@@ -2,7 +2,7 @@
   "pack_id": "accounting",
   "pack_name": "Accounting",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -62,11 +62,7 @@
       {
         "name": "Financial Intelligence Centre Act, 2001 and FIC compliance guidance",
         "issuer": "Financial Intelligence Centre",
-        "used_for": [
-          "AML/CFT/CPF",
-          "customer due diligence",
-          "reporting"
-        ],
+        "used_for": ["AML/CFT/CPF", "customer due diligence", "reporting"],
         "url": "https://www.fic.gov.za/compliance/"
       },
       {
@@ -110,9 +106,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "IRBA regulatory framework"
-        ]
+        "source_basis": ["IRBA regulatory framework"]
       }
     },
     {
@@ -181,10 +175,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Auditing Profession Act",
-          "IRBA Code/Rules"
-        ]
+        "source_basis": ["Auditing Profession Act", "IRBA Code/Rules"]
       }
     },
     {
@@ -217,9 +208,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "FIC Act obligations"
-        ]
+        "source_basis": ["FIC Act obligations"]
       }
     },
     {
@@ -251,9 +240,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA"
-        ]
+        "source_basis": ["POPIA"]
       }
     }
   ]

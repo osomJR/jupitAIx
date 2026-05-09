@@ -120,10 +120,14 @@ def save_uploaded_file(
     destination_path = destination_dir / stored_filename
 
     try:
-        with destination_path.open("wb") as out_file:
-            upload.file.seek(0)
-            shutil.copyfileobj(upload.file, out_file)
-    except Exception as exc:
+        upload.file.seek(0)
+        with destination_path.open("wb") as destination:
+            shutil.copyfileobj(upload.file, destination)
+    except ValueError as exc:
+        raise UploadError(
+            "Uploaded file stream is closed. Submit a fresh upload request instead of reusing a consumed file stream."
+        ) from exc
+    except OSError as exc:
         raise UploadError(f"Failed to persist uploaded file: {exc}") from exc
     finally:
         try:
@@ -139,7 +143,6 @@ def save_uploaded_file(
         suffix=suffix.lstrip("."),
         mime_type=upload.content_type,
     )
-
 
 def build_uploaded_document_payload(
     *,

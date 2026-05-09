@@ -1,6 +1,6 @@
 {
-  "pack_id": "togo_core_control_library",
-  "pack_name": "Togo Core Control Library",
+  "pack_id": "core_control_library",
+  "pack_name": "Core Control Library",
   "pack_version": "v2025_01",
   "jurisdiction": "togo",
   "effective_date": "2025-01-01",
@@ -45,20 +45,13 @@
         "name": "Law No. 2018-026 on cybersecurity and the fight against cybercrime",
         "issuer": "Togolese Republic / National Cybersecurity Agency (ANCy)",
         "url": "https://www.cda.tg/fr/resourse/loi-n-2018-026-du-071218-sur-la-cybersecurite-et-la-lutte-contre-la-cybercriminalite/",
-        "used_for": [
-          "cybersecurity",
-          "cybercrime",
-          "incident controls"
-        ]
+        "used_for": ["cybersecurity", "cybercrime", "incident controls"]
       },
       {
         "name": "National Cybersecurity Agency and CERT.tg official materials",
-        "issuer": "Agence Nationale de la Cybersécurité (ANCy)",
+        "issuer": "Agence Nationale de la CybersÃ©curitÃ© (ANCy)",
         "url": "https://ancy.gouv.tg/",
-        "used_for": [
-          "cybersecurity governance",
-          "incident response routing"
-        ]
+        "used_for": ["cybersecurity governance", "incident response routing"]
       },
       {
         "name": "BCEAO / WAEMU payment services and AML/CFT supervisory framework",
@@ -74,11 +67,7 @@
         "name": "Public Health Code of the Togolese Republic, Law No. 2009-007",
         "issuer": "Togolese Republic / Ministry of Health",
         "url": "https://ampeid.org/documents/togo/public-health-code-of-the-togolese-republic/",
-        "used_for": [
-          "public health",
-          "sanitation",
-          "infectious risk controls"
-        ]
+        "used_for": ["public health", "sanitation", "infectious risk controls"]
       }
     ],
     "limitations": [
@@ -104,10 +93,10 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "protection des données",
-          "données personnelles",
-          "politique de confidentialité",
-          "avis de confidentialité",
+          "protection des donnÃ©es",
+          "donnÃ©es personnelles",
+          "politique de confidentialitÃ©",
+          "avis de confidentialitÃ©",
           "privacy policy",
           "privacy notice",
           "IPDCP"
@@ -140,12 +129,12 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "finalité",
+          "finalitÃ©",
           "consentement",
           "autorisation",
-          "obligation légale",
-          "base légale",
-          "traitement des données",
+          "obligation lÃ©gale",
+          "base lÃ©gale",
+          "traitement des donnÃ©es",
           "personal data",
           "consent"
         ],
@@ -178,14 +167,14 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "cybersécurité",
-          "cybercriminalité",
-          "incident de sécurité",
-          "contrôle d’accès",
-          "contrôle d'accès",
+          "cybersÃ©curitÃ©",
+          "cybercriminalitÃ©",
+          "incident de sÃ©curitÃ©",
+          "contrÃ´le dâ€™accÃ¨s",
+          "contrÃ´le d'accÃ¨s",
           "CERT.tg",
           "ANCy",
-          "sécurité des systèmes d’information"
+          "sÃ©curitÃ© des systÃ¨mes dâ€™information"
         ],
         "min_count": 2
       },
@@ -224,7 +213,7 @@
           "KYC",
           "connaissance du client",
           "due diligence",
-          "opération suspecte"
+          "opÃ©ration suspecte"
         ],
         "min_count": 2
       },
@@ -256,7 +245,7 @@
         "on_partial": "review_required",
         "required_signals": [
           "plainte",
-          "réclamation",
+          "rÃ©clamation",
           "recours",
           "service client",
           "protection du consommateur",
@@ -294,9 +283,9 @@
           "revue",
           "validation",
           "approbation",
-          "contrôle",
+          "contrÃ´le",
           "signature",
-          "responsable conformité",
+          "responsable conformitÃ©",
           "legal review",
           "human review"
         ]
@@ -307,9 +296,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
-        "source_basis": [
-          "Rule-pack governance standard"
-        ],
+        "source_basis": ["Rule-pack governance standard"],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
     }

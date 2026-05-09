@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector overlay for agricultural producers, exporters, processors, aggregators, and related agribusiness documentation in Nigeria.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay controls for Agriculture. Intended to be used with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay controls for Agriculture. Intended to be used with core_control_library.",
     "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -42,25 +42,17 @@
       {
         "name": "Nigeria Agricultural Quarantine Service official mandate",
         "issuer": "NAQS",
-        "used_for": [
-          "agency mandate",
-          "pest and disease prevention"
-        ]
+        "used_for": ["agency mandate", "pest and disease prevention"]
       },
       {
         "name": "National Environmental Regulations relevant to agriculture/food operations",
         "issuer": "NESREA",
-        "used_for": [
-          "environmental controls",
-          "pollution prevention"
-        ]
+        "used_for": ["environmental controls", "pollution prevention"]
       },
       {
         "name": "NAFDAC food/drug regulated product controls where agricultural output enters food/feed chains",
         "issuer": "NAFDAC",
-        "used_for": [
-          "food product quality and safety routing"
-        ]
+        "used_for": ["food product quality and safety routing"]
       }
     ]
   },

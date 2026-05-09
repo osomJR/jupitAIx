@@ -87,9 +87,9 @@
           "OHADA",
           "SYSCOHADA",
           "AUDCIF",
-          "états financiers",
+          "Ã©tats financiers",
           "bilan",
-          "compte de résultat",
+          "compte de rÃ©sultat",
           "tableau des flux",
           "financial statements"
         ]
@@ -122,12 +122,12 @@
         "on_partial": "review_required",
         "required_signals": [
           "commissaire aux comptes",
-          "audit légal",
+          "audit lÃ©gal",
           "audit externe",
-          "rapport d’audit",
+          "rapport dâ€™audit",
           "rapport d'audit",
           "ISA",
-          "réviseur"
+          "rÃ©viseur"
         ],
         "min_count": 1
       },
@@ -158,11 +158,11 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "indépendance",
-          "déontologie",
-          "conflit d’intérêts",
-          "conflit d'intérêts",
-          "éthique professionnelle",
+          "indÃ©pendance",
+          "dÃ©ontologie",
+          "conflit dâ€™intÃ©rÃªts",
+          "conflit d'intÃ©rÃªts",
+          "Ã©thique professionnelle",
           "secret professionnel",
           "quality assurance"
         ]
@@ -199,7 +199,7 @@
           "KYC",
           "connaissance du client",
           "lutte contre le blanchiment",
-          "opération suspecte",
+          "opÃ©ration suspecte",
           "financement du terrorisme"
         ],
         "min_count": 2
@@ -231,10 +231,10 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "confidentialité",
+          "confidentialitÃ©",
           "secret professionnel",
-          "données personnelles",
-          "protection des données",
+          "donnÃ©es personnelles",
+          "protection des donnÃ©es",
           "client files",
           "confidential information"
         ]

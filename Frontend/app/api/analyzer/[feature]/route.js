@@ -37,7 +37,27 @@ export async function POST(req, context) {
     );
   }
 
-  const formData = await req.formData();
+  const incomingFormData = await req.formData();
+  const outboundFormData = new FormData();
+
+  for (const [key, value] of incomingFormData.entries()) {
+    if (
+      typeof value === "object" &&
+      value !== null &&
+      typeof value.arrayBuffer === "function" &&
+      typeof value.name === "string"
+    ) {
+      const buffer = await value.arrayBuffer();
+
+      const fileBlob = new Blob([buffer], {
+        type: value.type || "application/octet-stream",
+      });
+
+      outboundFormData.append(key, fileBlob, value.name);
+    } else {
+      outboundFormData.append(key, value);
+    }
+  }
 
   let accessToken = "";
   try {
@@ -62,7 +82,7 @@ export async function POST(req, context) {
     {
       method: "POST",
       headers,
-      body: formData,
+      body: outboundFormData,
     },
   );
 

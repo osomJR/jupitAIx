@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector-specific screening controls for Nigerian electricity generation, transmission, distribution, supply, embedded generation, eligible customer, safety, technical code, metering, customer protection, and regulatory compliance documents.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay for Energy and Power Sector Compliance Overlay; intended to be applied with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay for Energy and Power Sector Compliance Overlay; intended to be applied with core_control_library.",
     "source_note": "Source basis is mapped from Nigerian statutes, regulations, regulator guidance, codes, directives, and sector rules available at rule-pack publication time.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -51,9 +51,7 @@
       {
         "name": "NERC Health and Safety Code",
         "issuer": "Nigerian Electricity Regulatory Commission",
-        "used_for": [
-          "power-sector occupational health and safety"
-        ]
+        "used_for": ["power-sector occupational health and safety"]
       },
       {
         "name": "NERC Eligible Customer Regulations 2024",

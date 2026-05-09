@@ -31,7 +31,7 @@
     },
     "primary_sources": [
       {
-        "name": "Règlement Intérieur National de la profession d'avocat",
+        "name": "RÃ¨glement IntÃ©rieur National de la profession d'avocat",
         "issuer": "Conseil national des barreaux",
         "url": "https://www.cnb.avocat.fr/fr/reglement-interieur-national-de-la-profession-davocat-rin",
         "used_for": [
@@ -85,7 +85,7 @@
         "on_partial": "review_required",
         "required_signals": [
           "secret professionnel",
-          "confidentialité",
+          "confidentialitÃ©",
           "correspondance confidentielle",
           "avocat",
           "dossier client",
@@ -119,11 +119,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "conflit d'intérêts",
-          "indépendance",
+          "conflit d'intÃ©rÃªts",
+          "indÃ©pendance",
           "acceptation du client",
-          "intérêts opposés",
-          "vérification des conflits"
+          "intÃ©rÃªts opposÃ©s",
+          "vÃ©rification des conflits"
         ]
       },
       "metadata": {
@@ -155,9 +155,9 @@
         "required_signals": [
           "LCB-FT",
           "vigilance client",
-          "bénéficiaire effectif",
+          "bÃ©nÃ©ficiaire effectif",
           "TRACFIN",
-          "déclaration de soupçon",
+          "dÃ©claration de soupÃ§on",
           "identification du client"
         ],
         "min_count": 2
@@ -193,8 +193,8 @@
           "lettre de mission",
           "honoraires",
           "facturation",
-          "réclamation",
-          "médiateur"
+          "rÃ©clamation",
+          "mÃ©diateur"
         ],
         "min_count": 2
       },

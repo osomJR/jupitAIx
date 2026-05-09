@@ -89,12 +89,12 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "fédération sportive agréée",
-          "agrément",
-          "fédération délégataire",
+          "fÃ©dÃ©ration sportive agrÃ©Ã©e",
+          "agrÃ©ment",
+          "fÃ©dÃ©ration dÃ©lÃ©gataire",
           "club sportif",
           "autorisation",
-          "ministère des Sports"
+          "ministÃ¨re des Sports"
         ]
       },
       "metadata": {
@@ -124,8 +124,8 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "éthique",
-          "intégrité",
+          "Ã©thique",
+          "intÃ©gritÃ©",
           "violences",
           "discrimination",
           "Signal-Sports",
@@ -165,7 +165,7 @@
           "antidopage",
           "dopage",
           "substances interdites",
-          "contrôle antidopage",
+          "contrÃ´le antidopage",
           "AFLD",
           "AMA",
           "sanctions"
@@ -198,13 +198,13 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "données personnelles",
+          "donnÃ©es personnelles",
           "mineur",
           "sportif",
-          "données de santé",
-          "licencié",
+          "donnÃ©es de santÃ©",
+          "licenciÃ©",
           "RGPD",
-          "politique de confidentialité"
+          "politique de confidentialitÃ©"
         ],
         "min_count": 2
       },

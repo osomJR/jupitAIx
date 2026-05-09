@@ -1,6 +1,6 @@
 {
-  "pack_id": "uk_core_control_library",
-  "pack_name": "UK Core Control Library",
+  "pack_id": "core_control_library",
+  "pack_name": "Core Control Library",
   "pack_version": "v2025_01",
   "jurisdiction": "uk",
   "effective_date": "2025-01-01",
@@ -44,28 +44,19 @@
       {
         "name": "Data Protection Act 2018",
         "issuer": "UK Parliament / legislation.gov.uk",
-        "used_for": [
-          "data protection framework",
-          "regulatory oversight"
-        ],
+        "used_for": ["data protection framework", "regulatory oversight"],
         "url": "https://www.legislation.gov.uk/ukpga/2018/12/contents"
       },
       {
         "name": "Network and Information Systems Regulations and UK cybersecurity guidance",
         "issuer": "UK Government / NCSC / ICO",
-        "used_for": [
-          "cybersecurity",
-          "incident and security controls"
-        ],
+        "used_for": ["cybersecurity", "incident and security controls"],
         "url": "https://www.ncsc.gov.uk/"
       },
       {
         "name": "Money Laundering, Terrorist Financing and Transfer of Funds Regulations 2017",
         "issuer": "UK Parliament / legislation.gov.uk",
-        "used_for": [
-          "AML risk assessment",
-          "customer due diligence"
-        ],
+        "used_for": ["AML risk assessment", "customer due diligence"],
         "url": "https://www.legislation.gov.uk/uksi/2017/692/contents"
       },
       {
@@ -120,10 +111,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified UK compliance/legal reviewer must confirm applicability, legal sufficiency, territorial scope, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "UK GDPR",
-          "Data Protection Act 2018"
-        ]
+        "source_basis": ["UK GDPR", "Data Protection Act 2018"]
       }
     },
     {
@@ -195,10 +183,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified UK compliance/legal reviewer must confirm applicability, legal sufficiency, territorial scope, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "UK GDPR rights framework",
-          "ICO guidance"
-        ]
+        "source_basis": ["UK GDPR rights framework", "ICO guidance"]
       }
     },
     {
@@ -345,10 +330,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified UK compliance/legal reviewer must confirm applicability, legal sufficiency, territorial scope, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "FCA Consumer Duty",
-          "Consumer Rights Act 2015"
-        ]
+        "source_basis": ["FCA Consumer Duty", "Consumer Rights Act 2015"]
       }
     },
     {

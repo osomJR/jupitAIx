@@ -60,7 +60,7 @@
       },
       {
         "name": "ANCy cybersecurity materials",
-        "issuer": "Agence Nationale de la Cybersécurité / Togolese Republic",
+        "issuer": "Agence Nationale de la CybersÃ©curitÃ© / Togolese Republic",
         "url": "https://ancy.gouv.tg/apropos/",
         "used_for": [
           "network security",
@@ -98,11 +98,11 @@
           "authorization",
           "autorisation",
           "operator",
-          "opérateur",
+          "opÃ©rateur",
           "ISP",
           "internet provider",
           "mobile network",
-          "réseau mobile"
+          "rÃ©seau mobile"
         ],
         "on_prohibited_match": "failed"
       },
@@ -135,7 +135,7 @@
         "required_signals": [
           "quality of service",
           "QoS",
-          "qualité de service",
+          "qualitÃ© de service",
           "coverage",
           "couverture",
           "network availability",
@@ -182,7 +182,7 @@
           "offer conditions",
           "customer notice",
           "complaint",
-          "réclamation"
+          "rÃ©clamation"
         ],
         "on_prohibited_match": "failed"
       },
@@ -217,9 +217,9 @@
           "spectrum",
           "spectre",
           "frequency",
-          "fréquence",
+          "frÃ©quence",
           "numbering",
-          "numérotation",
+          "numÃ©rotation",
           "SIM registration",
           "radio permit",
           "resource authorization"
@@ -255,7 +255,7 @@
         "required_signals": [
           "network security",
           "cybersecurity",
-          "cybersécurité",
+          "cybersÃ©curitÃ©",
           "incident response",
           "data retention",
           "lawful access",

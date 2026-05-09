@@ -93,13 +93,13 @@
         "on_partial": "review_required",
         "required_signals": [
           "HAAC",
-          "déclaration",
+          "dÃ©claration",
           "autorisation",
           "publication",
           "organe de presse",
           "media registration",
           "presse en ligne",
-          "récépissé"
+          "rÃ©cÃ©pissÃ©"
         ],
         "on_prohibited_match": "failed"
       },
@@ -132,10 +132,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "right of reply",
-          "droit de réponse",
+          "droit de rÃ©ponse",
           "rectification",
           "ethics",
-          "déontologie",
+          "dÃ©ontologie",
           "verification",
           "accuracy",
           "impartiality",
@@ -173,9 +173,9 @@
         "on_partial": "review_required",
         "required_signals": [
           "advertising",
-          "publicité",
+          "publicitÃ©",
           "sponsored",
-          "sponsorisé",
+          "sponsorisÃ©",
           "commercial communication",
           "advertorial",
           "endorsement",
@@ -212,10 +212,10 @@
         "required_signals": [
           "privacy",
           "personal data",
-          "données personnelles",
+          "donnÃ©es personnelles",
           "subscriber data",
           "source confidentiality",
-          "confidentialité des sources",
+          "confidentialitÃ© des sources",
           "consent",
           "privacy notice"
         ],
@@ -257,7 +257,7 @@
           "minor",
           "mineur",
           "content moderation",
-          "modération"
+          "modÃ©ration"
         ],
         "on_prohibited_match": "failed"
       },

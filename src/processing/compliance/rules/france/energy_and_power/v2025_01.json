@@ -31,7 +31,7 @@
     },
     "primary_sources": [
       {
-        "name": "Commission de régulation de l'énergie missions and regulatory framework",
+        "name": "Commission de rÃ©gulation de l'Ã©nergie missions and regulatory framework",
         "issuer": "CRE",
         "url": "https://www.cre.fr/",
         "used_for": [
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "name": "Autorité de sûreté nucléaire et de radioprotection materials",
+        "name": "AutoritÃ© de sÃ»retÃ© nuclÃ©aire et de radioprotection materials",
         "issuer": "ASNR",
         "url": "https://www.asnr.fr/",
         "used_for": [
@@ -86,9 +86,9 @@
         "on_partial": "review_required",
         "required_signals": [
           "CRE",
-          "fournisseur d'électricité",
+          "fournisseur d'Ã©lectricitÃ©",
           "fournisseur de gaz",
-          "accès au réseau",
+          "accÃ¨s au rÃ©seau",
           "tarif",
           "comptage",
           "autorisation"
@@ -124,8 +124,8 @@
           "information client",
           "facture",
           "tarif",
-          "réclamation",
-          "médiateur national de l'énergie",
+          "rÃ©clamation",
+          "mÃ©diateur national de l'Ã©nergie",
           "conditions contractuelles"
         ],
         "min_count": 2
@@ -158,11 +158,11 @@
         "on_partial": "review_required",
         "required_signals": [
           "autorisation environnementale",
-          "émissions",
-          "énergies renouvelables",
-          "sécurité",
-          "déchets",
-          "transition énergétique"
+          "Ã©missions",
+          "Ã©nergies renouvelables",
+          "sÃ©curitÃ©",
+          "dÃ©chets",
+          "transition Ã©nergÃ©tique"
         ],
         "min_count": 2
       },
@@ -194,11 +194,11 @@
         "on_partial": "review_required",
         "required_signals": [
           "ASNR",
-          "sûreté nucléaire",
+          "sÃ»retÃ© nuclÃ©aire",
           "radioprotection",
           "rayonnements ionisants",
-          "zone contrôlée",
-          "dosimétrie"
+          "zone contrÃ´lÃ©e",
+          "dosimÃ©trie"
         ]
       },
       "metadata": {

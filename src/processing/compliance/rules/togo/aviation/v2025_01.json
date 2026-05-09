@@ -32,7 +32,7 @@
     "primary_sources": [
       {
         "name": "ANAC Togo official portal",
-        "issuer": "Agence Nationale de l’Aviation Civile du Togo",
+        "issuer": "Agence Nationale de lâ€™Aviation Civile du Togo",
         "url": "https://www.anac-togo.tg/",
         "used_for": [
           "civil aviation authority",
@@ -80,7 +80,7 @@
           "certificat",
           "autorisation",
           "permis",
-          "agrément",
+          "agrÃ©ment",
           "air operator",
           "AOC"
         ]
@@ -102,7 +102,7 @@
       "rule_version": "2025.01",
       "title": "Aviation safety and security controls are documented",
       "regulatory_domain": "sector_regulator_requirements",
-      "summary": "Checks for safety management, security, sûreté, incident, accident, or operational-safety controls.",
+      "summary": "Checks for safety management, security, sÃ»retÃ©, incident, accident, or operational-safety controls.",
       "evaluation": {
         "strategy": "min_signal_count",
         "search_mode": "substring",
@@ -112,13 +112,13 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "sécurité",
-          "sûreté",
+          "sÃ©curitÃ©",
+          "sÃ»retÃ©",
           "safety management",
           "SMS",
           "incident",
           "accident",
-          "risque opérationnel"
+          "risque opÃ©rationnel"
         ],
         "min_count": 2
       },
@@ -149,13 +149,13 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "navigabilité",
+          "navigabilitÃ©",
           "airworthiness",
           "maintenance",
           "inspection",
-          "certificat de navigabilité",
+          "certificat de navigabilitÃ©",
           "MRO",
-          "aéronef"
+          "aÃ©ronef"
         ]
       },
       "metadata": {
@@ -185,13 +185,13 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "manuel d’exploitation",
+          "manuel dâ€™exploitation",
           "manuel d'exploitation",
-          "procédures opérationnelles",
+          "procÃ©dures opÃ©rationnelles",
           "formation",
           "qualification",
           "crew",
-          "équipage",
+          "Ã©quipage",
           "licence du personnel"
         ]
       },
@@ -224,7 +224,7 @@
         "required_signals": [
           "passager",
           "plainte",
-          "réclamation",
+          "rÃ©clamation",
           "annulation",
           "bagages",
           "conditions de transport",

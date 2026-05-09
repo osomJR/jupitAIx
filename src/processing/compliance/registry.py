@@ -124,7 +124,7 @@ class ComplianceRuleRegistry:
             )
 
         rule_file = self._resolve_version_file(pack_dir, version)
-        payload = json.loads(rule_file.read_text(encoding="utf-8"))
+        payload = json.loads(rule_file.read_text(encoding="utf-8-sig"))
 
         self._validate_pack_identity(
             payload=payload,

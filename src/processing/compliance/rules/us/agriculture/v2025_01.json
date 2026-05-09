@@ -185,7 +185,7 @@
       "rule_id": "AGRI-EPA-004",
       "rule_version": "2025.01",
       "title": "Pesticide, chemical-use, or environmental control evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for pesticide, chemical application, environmental, runoff, waste, or EPA-related controls.",
       "evaluation": {
         "strategy": "any_signal_presence",

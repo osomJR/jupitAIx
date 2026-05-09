@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector overlay for airlines, aviation operators, airports, ground handlers, maintenance organizations, aviation training, and aviation service providers in Nigeria.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay controls for Aviation. Intended to be used with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay controls for Aviation. Intended to be used with core_control_library.",
     "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -53,16 +53,12 @@
       {
         "name": "NCAA official regulations portal",
         "issuer": "NCAA",
-        "used_for": [
-          "current aviation regulation set"
-        ]
+        "used_for": ["current aviation regulation set"]
       },
       {
         "name": "FCCPC consumer-protection framework",
         "issuer": "FCCPC",
-        "used_for": [
-          "passenger/consumer disclosure and complaint controls"
-        ]
+        "used_for": ["passenger/consumer disclosure and complaint controls"]
       }
     ]
   },

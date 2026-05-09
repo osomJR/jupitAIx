@@ -89,13 +89,13 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "établissement de paiement",
-          "établissement de monnaie électronique",
+          "Ã©tablissement de paiement",
+          "Ã©tablissement de monnaie Ã©lectronique",
           "ACPR",
-          "agrément",
+          "agrÃ©ment",
           "agent de paiement",
           "services de paiement",
-          "distributeur de monnaie électronique"
+          "distributeur de monnaie Ã©lectronique"
         ]
       },
       "metadata": {
@@ -128,10 +128,10 @@
           "PSAN",
           "PSCA",
           "AMF",
-          "actifs numériques",
+          "actifs numÃ©riques",
           "crypto-actifs",
-          "conservation d'actifs numériques",
-          "plateforme de négociation"
+          "conservation d'actifs numÃ©riques",
+          "plateforme de nÃ©gociation"
         ]
       },
       "metadata": {
@@ -163,10 +163,10 @@
         "required_signals": [
           "KYC",
           "vigilance client",
-          "bénéficiaire effectif",
+          "bÃ©nÃ©ficiaire effectif",
           "LCB-FT",
           "TRACFIN",
-          "déclaration de soupçon",
+          "dÃ©claration de soupÃ§on",
           "gel des avoirs"
         ],
         "min_count": 2
@@ -199,10 +199,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "authentification forte",
-          "sécurité des paiements",
+          "sÃ©curitÃ© des paiements",
           "fraude",
           "incident",
-          "contrôle d'accès",
+          "contrÃ´le d'accÃ¨s",
           "chiffrement",
           "surveillance"
         ],

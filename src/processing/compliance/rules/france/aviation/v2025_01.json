@@ -31,7 +31,7 @@
     },
     "primary_sources": [
       {
-        "name": "Direction générale de l'aviation civile regulatory materials",
+        "name": "Direction gÃ©nÃ©rale de l'aviation civile regulatory materials",
         "issuer": "DGAC",
         "url": "https://www.ecologie.gouv.fr/direction-generale-laviation-civile-dgac",
         "used_for": [
@@ -89,9 +89,9 @@
         "required_signals": [
           "DGAC",
           "EASA",
-          "certificat de transporteur aérien",
+          "certificat de transporteur aÃ©rien",
           "AOC",
-          "agrément",
+          "agrÃ©ment",
           "licence",
           "certificat"
         ]
@@ -124,11 +124,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "système de gestion de la sécurité",
+          "systÃ¨me de gestion de la sÃ©curitÃ©",
           "SMS",
-          "sécurité aérienne",
-          "compte rendu d'événement",
-          "navigabilité",
+          "sÃ©curitÃ© aÃ©rienne",
+          "compte rendu d'Ã©vÃ©nement",
+          "navigabilitÃ©",
           "maintenance"
         ],
         "min_count": 2
@@ -161,7 +161,7 @@
         "on_partial": "review_required",
         "required_signals": [
           "droits des passagers",
-          "réclamation",
+          "rÃ©clamation",
           "indemnisation",
           "retard",
           "annulation",
@@ -196,12 +196,12 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "données passagers",
-          "données personnelles",
+          "donnÃ©es passagers",
+          "donnÃ©es personnelles",
           "RGPD",
           "PNR",
-          "équipage",
-          "pièce d'identité"
+          "Ã©quipage",
+          "piÃ¨ce d'identitÃ©"
         ],
         "min_count": 2
       },

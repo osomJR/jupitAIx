@@ -87,7 +87,7 @@
           "Barreau du Togo",
           "Ordre des Avocats",
           "avocat",
-          "bâtonnier",
+          "bÃ¢tonnier",
           "inscription au barreau",
           "carte professionnelle",
           "lawyer"
@@ -121,10 +121,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "secret professionnel",
-          "confidentialité",
-          "confidentialité client",
+          "confidentialitÃ©",
+          "confidentialitÃ© client",
           "dossier client",
-          "communication privilégiée",
+          "communication privilÃ©giÃ©e",
           "privilege",
           "confidential information"
         ]
@@ -157,13 +157,13 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "conflit d’intérêts",
-          "conflit d'intérêts",
-          "indépendance",
-          "loyauté",
-          "déontologie",
-          "impartialité",
-          "éthique professionnelle"
+          "conflit dâ€™intÃ©rÃªts",
+          "conflit d'intÃ©rÃªts",
+          "indÃ©pendance",
+          "loyautÃ©",
+          "dÃ©ontologie",
+          "impartialitÃ©",
+          "Ã©thique professionnelle"
         ]
       },
       "metadata": {
@@ -194,7 +194,7 @@
         "on_partial": "review_required",
         "required_signals": [
           "honoraires",
-          "convention d’honoraires",
+          "convention dâ€™honoraires",
           "convention d'honoraires",
           "lettre de mission",
           "mandat",
@@ -232,9 +232,9 @@
         "required_signals": [
           "OHADA",
           "RCCM",
-          "société commerciale",
+          "sociÃ©tÃ© commerciale",
           "acte uniforme",
-          "sûreté",
+          "sÃ»retÃ©",
           "registre du commerce"
         ]
       },
@@ -266,10 +266,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "KYC",
-          "bénéficiaire effectif",
+          "bÃ©nÃ©ficiaire effectif",
           "origine des fonds",
           "lutte contre le blanchiment",
-          "opération suspecte",
+          "opÃ©ration suspecte",
           "due diligence"
         ],
         "min_count": 2

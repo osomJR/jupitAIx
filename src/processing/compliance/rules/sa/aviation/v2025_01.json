@@ -2,7 +2,7 @@
   "pack_id": "aviation",
   "pack_name": "Aviation",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -43,37 +43,25 @@
       {
         "name": "South African Civil Aviation Authority mandate",
         "issuer": "SACAA",
-        "used_for": [
-          "aviation safety",
-          "security oversight",
-          "ICAO SARPs"
-        ],
+        "used_for": ["aviation safety", "security oversight", "ICAO SARPs"],
         "url": "https://www.caa.co.za/about-us-old/"
       },
       {
         "name": "Air Services Licensing Act 115 of 1990",
         "issuer": "Republic of South Africa / Department of Transport",
-        "used_for": [
-          "air service licensing"
-        ],
+        "used_for": ["air service licensing"],
         "url": "https://www.gov.za/documents/air-services-licensing-act"
       },
       {
         "name": "Consumer Protection Act, 2008",
         "issuer": "Republic of South Africa / National Consumer Commission",
-        "used_for": [
-          "consumer protection",
-          "disclosures",
-          "fair marketing"
-        ],
+        "used_for": ["consumer protection", "disclosures", "fair marketing"],
         "url": "https://www.gov.za/documents/consumer-protection-act"
       },
       {
         "name": "Occupational Health and Safety Act, 1993",
         "issuer": "Republic of South Africa / Department of Employment and Labour",
-        "used_for": [
-          "workplace health and safety"
-        ],
+        "used_for": ["workplace health and safety"],
         "url": "https://www.gov.za/documents/occupational-health-and-safety-act"
       }
     ]
@@ -110,10 +98,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Civil Aviation Act",
-          "SACAA mandate"
-        ]
+        "source_basis": ["Civil Aviation Act", "SACAA mandate"]
       }
     },
     {
@@ -146,9 +131,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Civil Aviation Act"
-        ]
+        "source_basis": ["Civil Aviation Act"]
       }
     },
     {
@@ -218,16 +201,14 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Consumer Protection Act"
-        ]
+        "source_basis": ["Consumer Protection Act"]
       }
     },
     {
       "rule_id": "AVN-SA-OHS-001",
       "rule_version": "2025.01",
       "title": "Ground-handling, maintenance, or airport-service health-and-safety evidence is present",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for worker safety, ground handling, hazardous materials, PPE, training, or OHS risk controls.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -253,9 +234,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Occupational Health and Safety Act"
-        ]
+        "source_basis": ["Occupational Health and Safety Act"]
       }
     }
   ]

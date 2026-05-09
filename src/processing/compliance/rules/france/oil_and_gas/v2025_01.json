@@ -42,7 +42,7 @@
         ]
       },
       {
-        "name": "Installations Classées pour la Protection de l’Environnement (ICPE)",
+        "name": "Installations ClassÃ©es pour la Protection de lâ€™Environnement (ICPE)",
         "issuer": "Ministry for Ecological Transition",
         "url": "https://www.ecologie.gouv.fr/politiques-publiques/installations-classees-protection-lenvironnement",
         "used_for": [
@@ -128,9 +128,9 @@
           "autorisation environnementale",
           "ICPE",
           "IED",
-          "émissions",
+          "Ã©missions",
           "pollution",
-          "réhabilitation",
+          "rÃ©habilitation",
           "rejets"
         ],
         "min_count": 2
@@ -164,12 +164,12 @@
         "on_partial": "review_required",
         "required_signals": [
           "HSE",
-          "sécurité",
+          "sÃ©curitÃ©",
           "plan d'urgence",
           "Seveso",
           "canalisation",
           "substances dangereuses",
-          "prévention des accidents"
+          "prÃ©vention des accidents"
         ],
         "min_count": 2
       },
@@ -201,11 +201,11 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "démantèlement",
+          "dÃ©mantÃ¨lement",
           "fermeture du gisement",
-          "mise en sécurité des puits",
-          "réhabilitation du site",
-          "cessation d'activité",
+          "mise en sÃ©curitÃ© des puits",
+          "rÃ©habilitation du site",
+          "cessation d'activitÃ©",
           "nettoyage"
         ]
       },

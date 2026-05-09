@@ -2,7 +2,7 @@
   "pack_id": "law_and_legal",
   "pack_name": "Law and Legal Sector Compliance Overlay",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -53,11 +53,7 @@
       {
         "name": "Financial Intelligence Centre Act, 2001 and FIC compliance guidance",
         "issuer": "Financial Intelligence Centre",
-        "used_for": [
-          "AML/CFT/CPF",
-          "customer due diligence",
-          "reporting"
-        ],
+        "used_for": ["AML/CFT/CPF", "customer due diligence", "reporting"],
         "url": "https://www.fic.gov.za/compliance/"
       },
       {
@@ -73,10 +69,7 @@
       {
         "name": "Promotion of Access to Information Act, 2000 (PAIA)",
         "issuer": "Republic of South Africa / Information Regulator",
-        "used_for": [
-          "access to information",
-          "public-sector transparency"
-        ],
+        "used_for": ["access to information", "public-sector transparency"],
         "url": "https://www.gov.za/documents/promotion-access-information-act"
       }
     ]
@@ -112,10 +105,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Legal Practice Act",
-          "LPC Code of Conduct"
-        ]
+        "source_basis": ["Legal Practice Act", "LPC Code of Conduct"]
       }
     },
     {
@@ -148,9 +138,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Legal Practice Act"
-        ]
+        "source_basis": ["Legal Practice Act"]
       }
     },
     {
@@ -183,9 +171,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "LPC Code of Conduct"
-        ]
+        "source_basis": ["LPC Code of Conduct"]
       }
     },
     {
@@ -219,9 +205,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "FIC Act obligations for legal practitioners"
-        ]
+        "source_basis": ["FIC Act obligations for legal practitioners"]
       }
     },
     {
@@ -254,10 +238,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA",
-          "PAIA"
-        ]
+        "source_basis": ["POPIA", "PAIA"]
       }
     }
   ]

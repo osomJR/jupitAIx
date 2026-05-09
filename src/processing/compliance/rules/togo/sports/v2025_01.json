@@ -95,11 +95,11 @@
         "on_partial": "review_required",
         "required_signals": [
           "sports federation",
-          "fédération sportive",
+          "fÃƒÂ©dÃƒÂ©ration sportive",
           "sports club",
           "club sportif",
           "academy",
-          "académie",
+          "acadÃƒÂ©mie",
           "event permit",
           "autorisation",
           "affiliation",
@@ -163,7 +163,7 @@
       "rule_id": "TGO-SPORT-ANTI-003",
       "rule_version": "2025.01",
       "title": "Anti-doping controls or athlete education evidence is present",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for anti-doping policy, prohibited substances, testing, TUE, athlete education, or WADA evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -179,7 +179,7 @@
           "prohibited substance",
           "substance interdite",
           "testing",
-          "contrôle antidopage",
+          "contrÃƒÂ´le antidopage",
           "TUE",
           "athlete education",
           "WADA"
@@ -202,7 +202,7 @@
       "rule_id": "TGO-SPORT-SAFE-004",
       "rule_version": "2025.01",
       "title": "Safeguarding, minor protection, or athlete-welfare evidence is documented",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for safeguarding, child protection, athlete welfare, harassment, abuse reporting, medical care, or emergency evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -253,7 +253,7 @@
         "on_partial": "review_required",
         "required_signals": [
           "privacy notice",
-          "données personnelles",
+          "donnÃƒÂ©es personnelles",
           "athlete data",
           "medical record",
           "fitness record",

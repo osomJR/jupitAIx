@@ -184,7 +184,7 @@
       "rule_id": "MAR-ENV-001",
       "rule_version": "2025.01",
       "title": "Marine pollution, discharge, or port environmental controls are documented",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for ballast, bilge, vessel discharge, oil pollution, spill response, or marine environmental controls.",
       "evaluation": {
         "strategy": "min_signal_count",

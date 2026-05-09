@@ -186,7 +186,7 @@
       "rule_id": "POWER-ENV-004",
       "rule_version": "2025.01",
       "title": "Environmental permitting or emissions evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for EPA, emissions, permits, environmental assessment, waste, or water-discharge language.",
       "evaluation": {
         "strategy": "any_signal_presence",

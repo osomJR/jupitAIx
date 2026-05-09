@@ -126,7 +126,7 @@ export const homePageTranslations = {
         key: "transcribe",
         name: "Transcribe audio and video",
         route: "/transcribe",
-        description: "Convert speech to accurate text.",
+        description: "Convert speech to accurate text",
       },
       {
         key: "questions",
@@ -150,13 +150,13 @@ export const homePageTranslations = {
         key: "compliance",
         name: "Compliance",
         route: "/compliance",
-        description: "XYZ",
+        description: "Check documents against compliance rules",
       },
       {
         key: "extraction",
         name: "Structured Extraction",
         route: "/extraction",
-        description: "XYZ",
+        description: "Extract key data from documents",
       },
     ],
   },
@@ -234,7 +234,7 @@ export const homePageTranslations = {
         key: "transcribe",
         name: "Transcrire des fichiers audio et vidéo",
         route: "/transcribe",
-        description: "Convertir la parole en texte avec précision.",
+        description: "Convertir la parole en texte avec précision",
       },
       {
         key: "questions",
@@ -259,13 +259,13 @@ export const homePageTranslations = {
         key: "compliance",
         name: "Conformité",
         route: "/compliance",
-        description: "XYZ",
+        description: "Vérifiez les documents selon les règles de conformité",
       },
       {
         key: "extraction",
         name: "Extraction structurée",
         route: "/extraction",
-        description: "XYZ",
+        description: "Extrayez les données clés des documents",
       },
     ],
   },
@@ -274,27 +274,27 @@ export const convertPageTranslations = {
   en: {
     badge: "Convert documents, files and images",
     title: "Convert files across several formats",
-    description: "Upload PDF, Word document, JPG, JPEG, or PNG.",
+    description: "Upload PDF, Word document, JPG, JPEG, or PNG",
     uploadTitle: "Upload file or document",
     conversionOutput: "Conversion result",
-    previewText: "Download appears here after file conversion.",
+    previewText: "Download appears here after file conversion",
 
     unsupportedFileType:
-      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed.",
-    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
-    chooseFileToConvert: "Please choose a file to convert.",
-    invalidConversion: "This conversion combination is not allowed.",
-    conversionFailed: "Something went wrong while converting the file.",
+      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed",
+    fileTooLarge: "File is too large, maximum allowed size is {maxSize} MB",
+    chooseFileToConvert: "Please choose a file to convert",
+    invalidConversion: "This conversion combination is not allowed",
+    conversionFailed: "Something went wrong while converting the file",
     missingDownloadUrl:
-      "Conversion finished, but the backend did not return a download URL.",
+      "Conversion finished, but the backend did not return a download URL",
 
-    conversionCompleted: "Conversion completed.",
+    conversionCompleted: "Conversion completed",
     inputFile: "Input file",
     inputExtension: "Input extension",
     outputExtension: "Output extension",
     downloadReady: "Download ready",
     convertedFile: "Converted file",
-    outputReadyText: "Your converted file is ready for download.",
+    outputReadyText: "Your converted file is ready for download",
     detectedType: "Detected type:",
     from: "From",
     convertTo: "Convert to",
@@ -312,36 +312,36 @@ export const convertPageTranslations = {
     badge: "Convertir des documents, fichiers et images",
     title: "Convertir des fichiers dans plusieurs formats",
     description:
-      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG.",
+      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG",
     uploadTitle: "Téléverser un fichier ou un document",
     conversionOutput: "Résultat de la conversion",
     previewText:
-      "Le téléchargement apparaîtra ici après la conversion du fichier.",
+      "Le téléchargement apparaîtra ici après la conversion du fichier",
 
     unsupportedFileType:
-      "Type de fichier non pris en charge : {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés.",
+      "Type de fichier non pris en charge: {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés",
     fileTooLarge:
-      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
-    chooseFileToConvert: "Veuillez choisir un fichier à convertir.",
-    invalidConversion: "Cette combinaison de conversion n’est pas autorisée.",
+      "Le fichier est trop volumineux, la taille maximale autorisée est de {maxSize} Mo",
+    chooseFileToConvert: "Veuillez choisir un fichier à convertir",
+    invalidConversion: "Cette combinaison de conversion n’est pas autorisée",
     conversionFailed:
-      "Une erreur s’est produite lors de la conversion du fichier.",
+      "Une erreur s’est produite lors de la conversion du fichier",
     missingDownloadUrl:
-      "La conversion est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement.",
+      "La conversion est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement",
 
-    conversionCompleted: "Conversion terminée.",
+    conversionCompleted: "Conversion terminée",
     inputFile: "Fichier d’entrée",
     inputExtension: "Extension d’entrée",
     outputExtension: "Extension de sortie",
     downloadReady: "Téléchargement prêt",
     convertedFile: "Fichier converti",
-    outputReadyText: "Votre fichier converti est prêt à être téléchargé.",
-    detectedType: "Type détecté :",
+    outputReadyText: "Votre fichier converti est prêt à être téléchargé",
+    detectedType: "Type détecté:",
     from: "De",
     convertTo: "Convertir vers",
     allowedOutputsFor: "Sorties autorisées pour",
     none: "aucune",
-    conversionLabel: "Conversion :",
+    conversionLabel: "Conversion:",
 
     pdfDocument: "Document PDF",
     wordDocument: "Document Word",
@@ -734,36 +734,36 @@ export const transcribePageTranslations = {
   en: {
     badge: "Transcription",
     title: "Transcribe audio and video",
-    description: "Upload audio (.mp3) or video (.mp4, .mkv, .mov).",
+    description: "Upload audio (.mp3) or video (.mp4, .mkv, .mov)",
     uploadTitle: "Upload audio or video",
     allowedFileInputs: "Allowed inputs: .mp3, .mp4, .mkv, .mov",
     unsupportedFileType: "Unsupported file type: {ext}",
     fileTooLarge:
-      "File is too large. Maximum size for this media type is {maxSize} MB.",
+      "File is too large, maximum size for this media type is {maxSize} MB",
     mediaTooLong:
-      "Media is too long. Maximum duration for this media type is {maxDuration}.",
+      "Media is too long, maximum duration for this media type is {maxDuration}",
     couldNotReadDuration:
-      "Could not read media duration. Please try another file.",
-    chooseFileToTranscribe: "Please choose an audio or video file.",
-    transcriptionFailed: "Transcription request failed.",
-    validatingMedia: "Checking media...",
+      "Could not read media duration, Please try another file",
+    chooseFileToTranscribe: "Please choose an audio or video file",
+    transcriptionFailed: "Transcription request failed",
+    validatingMedia: "Checking media",
     transcriptOutput: "Transcript output",
-    previewText: "Your transcript will appear here after processing.",
+    previewText: "Your transcript will appear here after processing",
 
     transcriptOptionsTitle: "Transcription options",
-    transcriptOptionsSubtitle: "Choose how the transcript should be processed.",
+    transcriptOptionsSubtitle: "Choose how the transcript should be processed",
     preserveFillerWordsLabel: "Preserve filler words",
-    preserveFillerWordsHelp: "Keep words like “um”, “uh”, and similar fillers.",
+    preserveFillerWordsHelp: "Keep words like “um”, “uh”, and similar fillers",
     removeBackgroundNoiseLabel: "Remove background noise",
     removeBackgroundNoiseHelp:
-      "Apply optional minimal background-noise cleanup.",
+      "Apply optional minimal background-noise cleanup",
     diarizeSpeakersLabel: "Separate speakers",
     diarizeSpeakersHelp:
-      "Separate speakers only when they are acoustically detectable.",
+      "Separate speakers only when they are acoustically detectable",
 
     transcriptReady: "Transcript ready",
     transcriptReadyText:
-      "The spoken content has been converted into written text.",
+      "The spoken content has been converted into written text",
     transcriptMetaLabel: "Transcript format",
     transcriptMetaValue: ".txt inline text only",
     detectedTypeLabel: "Detected media type",
@@ -776,37 +776,37 @@ export const transcribePageTranslations = {
     badge: "Transcription",
     title: "Transcrire l’audio et la vidéo",
     description:
-      "Téléversez un fichier audio (.mp3) ou vidéo (.mp4, .mkv, .mov).",
+      "Téléversez un fichier audio (.mp3) ou vidéo (.mp4, .mkv, .mov)",
     uploadTitle: "Téléverser un fichier audio ou vidéo",
-    allowedFileInputs: "Entrées autorisées : .mp3, .mp4, .mkv, .mov",
-    unsupportedFileType: "Type de fichier non pris en charge : {ext}",
+    allowedFileInputs: "Entrées autorisées: .mp3, .mp4, .mkv, .mov",
+    unsupportedFileType: "Type de fichier non pris en charge: {ext}",
     fileTooLarge:
-      "Le fichier est trop volumineux. La taille maximale pour ce type de média est de {maxSize} Mo.",
+      "Le fichier est trop volumineux, la taille maximale pour ce type de média est de {maxSize} Mo",
     mediaTooLong:
-      "Le média est trop long. La durée maximale pour ce type de média est de {maxDuration}.",
+      "Le média est trop long, la durée maximale pour ce type de média est de {maxDuration}",
     couldNotReadDuration:
-      "Impossible de lire la durée du média. Veuillez essayer un autre fichier.",
-    chooseFileToTranscribe: "Veuillez choisir un fichier audio ou vidéo.",
-    transcriptionFailed: "La requête de transcription a échoué.",
-    validatingMedia: "Vérification du média...",
+      "Impossible de lire la durée du média, veuillez essayer un autre fichier",
+    chooseFileToTranscribe: "Veuillez choisir un fichier audio ou vidéo",
+    transcriptionFailed: "La requête de transcription a échoué",
+    validatingMedia: "Vérification du média",
     transcriptOutput: "Résultat de la transcription",
-    previewText: "Votre transcription apparaîtra ici après le traitement.",
+    previewText: "Votre transcription apparaîtra ici après le traitement",
 
     transcriptOptionsTitle: "Options de transcription",
     transcriptOptionsSubtitle:
-      "Choisissez comment la transcription doit être traitée.",
+      "Choisissez comment la transcription doit être traitée",
     preserveFillerWordsLabel: "Préserver les mots de remplissage",
     preserveFillerWordsHelp:
-      "Conserver les mots comme « euh », « hum » et équivalents.",
+      "Conserver les mots comme « euh », « hum » et équivalents",
     removeBackgroundNoiseLabel: "Réduire le bruit de fond",
     removeBackgroundNoiseHelp:
-      "Appliquer un nettoyage minimal et optionnel du bruit de fond.",
+      "Appliquer un nettoyage minimal et optionnel du bruit de fond",
     diarizeSpeakersLabel: "Séparer les intervenants",
     diarizeSpeakersHelp:
-      "Séparer les intervenants uniquement lorsqu’ils sont détectables acoustiquement.",
+      "Séparer les intervenants uniquement lorsqu’ils sont détectables acoustiquement",
 
     transcriptReady: "Transcription prête",
-    transcriptReadyText: "Le contenu parlé a été converti en texte écrit.",
+    transcriptReadyText: "Le contenu parlé a été converti en texte écrit",
     transcriptMetaLabel: "Format de transcription",
     transcriptMetaValue: ".txt texte inline uniquement",
     detectedTypeLabel: "Type de média détecté",
@@ -1096,51 +1096,51 @@ export const structuredExtractionPageTranslations = {
     badge: "Structured document extraction",
     title: "Extract structured data from documents",
     description:
-      "Upload a PDF, Word document, JPG, JPEG, or PNG and export extracted fields, tables, or records as JSON, CSV, or Excel.",
+      "Upload a PDF, Word document, JPG, JPEG, or PNG and export extracted fields, tables, or records as JSON, CSV, or Excel",
     uploadTitle: "Upload document to extract",
     allowedFileInputs: "Allowed inputs: .pdf, .docx, .jpg, .jpeg, .png",
     extractionOutput: "Extraction result",
     previewText:
-      "Your structured extraction file will appear here after processing.",
+      "Your structured extraction file will appear here after processing",
     extractAction: "Extract data",
-    extracting: "Extracting...",
+    extracting: "Extracting",
     extractionLabel: "Extraction:",
-    extractionCompleted: "Structured extraction completed.",
+    extractionCompleted: "Structured extraction completed",
 
     unsupportedFileType:
-      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed.",
-    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
-    chooseFileToExtract: "Please choose a file to extract from.",
-    documentClassRequired: "Select at least one document type.",
-    extractionFailed: "Something went wrong while extracting structured data.",
+      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed",
+    fileTooLarge: "File is too large, maximum allowed size is {maxSize} MB",
+    chooseFileToExtract: "Please choose a file to extract from",
+    documentClassRequired: "Select at least one document type",
+    extractionFailed: "Something went wrong while extracting structured data",
     missingDownloadUrl:
-      "Extraction finished, but the backend did not return a download URL.",
+      "Extraction finished, but the backend did not return a download URL",
 
     detectedType: "Detected type:",
     outputFormatLabel: "Download format",
-    outputFormatHelp: "Choose the file format you want to download.",
+    outputFormatHelp: "Choose the file format you want to download",
     outputFormatExamples:
-      "Examples: JSON for apps, CSV for spreadsheets, Excel for review workbooks.",
+      "Examples: JSON for apps, CSV for spreadsheets, Excel for review workbooks",
     resultShapeLabel: "Output layout",
-    resultShapeHelp: "Choose how the extracted data should be organized.",
-    resultShapeExamples: "Not sure? Use Complete structured output.",
+    resultShapeHelp: "Choose how the extracted data should be organized",
+    resultShapeExamples: "Not sure? Use Complete structured output",
     documentClassesLabel: "Document type(s)",
     documentClassesHelp:
-      "Select the document type that best matches your file. Select more than one only if the file combines document types.",
-    documentClassesEmptyHelp: "At least one document type is required.",
+      "Select the document type that best matches your file, select more than one only if the file combines document types",
+    documentClassesEmptyHelp: "At least one document type is required",
     documentClassesExamples:
-      "Examples: Invoice, Bank statement, Contract, KYC document.",
-    searchDocumentClassesPlaceholder: "Search document types...",
+      "Examples: Invoice, Bank statement, Contract, KYC document",
+    searchDocumentClassesPlaceholder: "Search document types",
     selectedFieldsLabel: "Fields to extract",
     selectedFieldsHelp:
-      "Optional. Leave empty to extract all detected fields. Add fields only when you know exactly what you need.",
+      "Optional, leave empty to extract all detected fields and add fields only when you know exactly what you need",
     selectedFieldsExamples: "Examples: invoice_number, invoice_date, total",
     selectedFieldsPlaceholder:
-      "Optional. Enter fields to extract, separated by commas or new lines. Leave empty to extract detected fields.",
+      "Optional, enter fields to extract and leave empty to extract detected fields",
     suggestedFieldsLabel: "Suggested fields",
     suggestedFieldsHelp:
-      "Click common fields for the selected document type. Suggestions are intentionally short to keep the page simple.",
-    suggestedFieldsExamples: "You can still type any custom field above.",
+      "Click common fields for the selected document type, suggestions are intentionally short to keep the page simple",
+    suggestedFieldsExamples: "You can still type any custom field above",
     clearFields: "Clear fields",
 
     inputFile: "Input file",
@@ -1151,9 +1151,9 @@ export const structuredExtractionPageTranslations = {
     selectedFieldsResult: "Fields to extract",
     extractedFile: "Extracted file",
     allDetectedFields: "All detected fields",
-    outputReadyText: "Your structured extraction file is ready to download.",
+    outputReadyText: "Your structured extraction file is ready to download",
     humanReviewRequired:
-      "Human review is required before relying on or exporting the extracted data.",
+      "Human review is required before relying on or exporting the extracted data",
     downloadReady: "Download ready",
 
     outputFormatsTitle: "Outputs",
@@ -1177,20 +1177,20 @@ export const structuredExtractionPageTranslations = {
 
     resultShapeLabels: {
       machine_readable: "Complete structured output (recommended)",
-      key_value_fields: "Simple field/value list",
+      key_value_fields: "Simple field/Value list",
       tables: "Extract tables only",
-      row_based_records: "Spreadsheet/database rows",
+      row_based_records: "Spreadsheet/Database rows",
     },
 
     resultShapeDescriptions: {
       machine_readable:
-        "Best default. Includes fields, tables, records, warnings, and evidence in a complete structured file.",
+        "Default includes fields, tables, records, warnings, and evidence in a complete structured file",
       key_value_fields:
-        "Best for forms, invoices, receipts, IDs, HR records, and other documents with named fields.",
+        "Best for forms, invoices, receipts, IDs, HR records, and other documents with named fields",
       tables:
-        "Best when the document contains visible tables and you mainly want table rows.",
+        "Best when the document contains visible tables and you mainly want table rows",
       row_based_records:
-        "Best for repeated items such as transactions, line items, clauses, tickets, or database-ready rows.",
+        "Best for repeated items such as transactions, line items, clauses, tickets, or database-ready rows",
     },
 
     documentClassLabels: {
@@ -1218,56 +1218,56 @@ export const structuredExtractionPageTranslations = {
     badge: "Extraction structurée de documents",
     title: "Extraire des données structurées de documents",
     description:
-      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et exportez les champs, tableaux ou enregistrements extraits en JSON, CSV ou Excel.",
+      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et exportez les champs, tableaux ou enregistrements extraits en JSON, CSV ou Excel",
     uploadTitle: "Téléverser un document à extraire",
-    allowedFileInputs: "Entrées autorisées : .pdf, .docx, .jpg, .jpeg, .png",
+    allowedFileInputs: "Entrées autorisées: .pdf, .docx, .jpg, .jpeg, .png",
     extractionOutput: "Résultat de l’extraction",
     previewText:
-      "Votre fichier d’extraction structurée apparaîtra ici après le traitement.",
+      "Votre fichier d’extraction structurée apparaîtra ici après le traitement",
     extractAction: "Extraire les données",
-    extracting: "Extraction...",
-    extractionLabel: "Extraction :",
-    extractionCompleted: "Extraction structurée terminée.",
+    extracting: "Extraction",
+    extractionLabel: "Extraction:",
+    extractionCompleted: "Extraction structurée terminée",
 
     unsupportedFileType:
-      "Type de fichier non pris en charge : {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés.",
+      "Type de fichier non pris en charge: {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés",
     fileTooLarge:
-      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
-    chooseFileToExtract: "Veuillez choisir un fichier à extraire.",
-    documentClassRequired: "Sélectionnez au moins un type de document.",
+      "Le fichier est trop volumineux, la taille maximale autorisée est de {maxSize} Mo",
+    chooseFileToExtract: "Veuillez choisir un fichier à extraire",
+    documentClassRequired: "Sélectionnez au moins un type de document",
     extractionFailed:
-      "Une erreur s’est produite lors de l’extraction des données structurées.",
+      "Une erreur s’est produite lors de l’extraction des données structurées",
     missingDownloadUrl:
-      "L’extraction est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement.",
+      "L’extraction est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement",
 
-    detectedType: "Type détecté :",
+    detectedType: "Type détecté:",
     outputFormatLabel: "Format du téléchargement",
-    outputFormatHelp: "Choisissez le format du fichier à télécharger.",
+    outputFormatHelp: "Choisissez le format du fichier à télécharger",
     outputFormatExamples:
-      "Exemples : JSON pour les applications, CSV pour les feuilles de calcul, Excel pour les classeurs de révision.",
+      "Exemples : JSON pour les applications, CSV pour les feuilles de calcul, Excel pour les classeurs de révision",
     resultShapeLabel: "Organisation de la sortie",
     resultShapeHelp:
-      "Choisissez comment les données extraites doivent être organisées.",
+      "Choisissez comment les données extraites doivent être organisées",
     resultShapeExamples:
-      "Vous hésitez ? Utilisez la sortie structurée complète.",
+      "Vous hésitez ? Utilisez la sortie structurée complète",
     documentClassesLabel: "Type(s) de document",
     documentClassesHelp:
-      "Sélectionnez le type qui correspond le mieux au fichier. Sélectionnez plusieurs types seulement si le fichier combine réellement plusieurs documents.",
-    documentClassesEmptyHelp: "Au moins un type de document est requis.",
+      "Sélectionnez le type qui correspond le mieux au fichier, sélectionnez plusieurs types seulement si le fichier combine réellement plusieurs documents",
+    documentClassesEmptyHelp: "Au moins un type de document est requis",
     documentClassesExamples:
-      "Exemples : Facture, Relevé bancaire, Contrat, Document KYC.",
-    searchDocumentClassesPlaceholder: "Rechercher des types de document...",
+      "Exemples: Facture, Relevé bancaire, Contrat, Document KYC",
+    searchDocumentClassesPlaceholder: "Rechercher des types de document",
     selectedFieldsLabel: "Champs à extraire",
     selectedFieldsHelp:
-      "Optionnel. Laissez vide pour extraire tous les champs détectés. Ajoutez des champs uniquement si vous savez exactement ce dont vous avez besoin.",
-    selectedFieldsExamples: "Exemples : invoice_number, invoice_date, total",
+      "Facultatif, laisser vide pour extraire tous les champs détectés et n'ajouter des champs que lorsque vous savez exactement ce dont vous avez besoin",
+    selectedFieldsExamples: "Exemples: invoice_number, invoice_date, total",
     selectedFieldsPlaceholder:
-      "Optionnel. Saisissez les champs à extraire, séparés par des virgules ou des lignes. Laissez vide pour extraire les champs détectés.",
+      "Facultatif, saisissez les champs à extraire ou laissez vide pour extraire les champs détectés",
     suggestedFieldsLabel: "Champs suggérés",
     suggestedFieldsHelp:
-      "Cliquez sur les champs courants pour le type de document sélectionné. Les suggestions sont volontairement courtes pour garder la page simple.",
+      "Cliquez sur les champs courants pour le type de document sélectionné, les suggestions sont volontairement courtes pour garder la page simple",
     suggestedFieldsExamples:
-      "Vous pouvez toujours saisir un champ personnalisé ci-dessus.",
+      "Vous pouvez toujours saisir un champ personnalisé ci-dessus",
     clearFields: "Effacer les champs",
 
     inputFile: "Fichier d’entrée",
@@ -1279,9 +1279,9 @@ export const structuredExtractionPageTranslations = {
     extractedFile: "Fichier extrait",
     allDetectedFields: "Tous les champs détectés",
     outputReadyText:
-      "Votre fichier d’extraction structurée est prêt à être téléchargé.",
+      "Votre fichier d’extraction structurée est prêt à être téléchargé",
     humanReviewRequired:
-      "Une révision humaine est requise avant de se fier aux données extraites ou de les exporter.",
+      "Une révision humaine est requise avant de se fier aux données extraites ou de les exporter",
     downloadReady: "Téléchargement prêt",
 
     outputFormatsTitle: "Sorties",
@@ -1305,20 +1305,20 @@ export const structuredExtractionPageTranslations = {
 
     resultShapeLabels: {
       machine_readable: "Sortie structurée complète (recommandé)",
-      key_value_fields: "Liste simple champ/valeur",
+      key_value_fields: "Liste simple champ/Valeur",
       tables: "Extraire uniquement les tableaux",
-      row_based_records: "Lignes pour tableur/base de données",
+      row_based_records: "Lignes pour tableur/Base de données",
     },
 
     resultShapeDescriptions: {
       machine_readable:
-        "Meilleur choix par défaut. Inclut les champs, tableaux, enregistrements, avertissements et preuves dans un fichier structuré complet.",
+        "Par défaut, les fichiers structurés complets comprennent les champs, les tableaux, les enregistrements, les avertissements et les preuves",
       key_value_fields:
-        "Idéal pour les formulaires, factures, reçus, pièces d’identité, dossiers RH et documents avec champs nommés.",
+        "Idéal pour les formulaires, factures, reçus, pièces d’identité, dossiers RH et documents avec champs nommés",
       tables:
-        "Idéal lorsque le document contient des tableaux visibles et que vous voulez surtout les lignes du tableau.",
+        "Idéal lorsque le document contient des tableaux visibles et que vous voulez surtout les lignes du tableau",
       row_based_records:
-        "Idéal pour les éléments répétés comme transactions, lignes de facture, clauses, tickets ou lignes prêtes pour une base de données.",
+        "Idéal pour les éléments répétés comme transactions, lignes de facture, clauses, tickets ou lignes prêtes pour une base de données",
     },
 
     documentClassLabels: {
@@ -1347,68 +1347,68 @@ export const compliancePageTranslations = {
     badge: "Multi-country compliance checks",
     title: "Check documents against country-specific compliance rules",
     description:
-      "Upload a PDF, Word document, JPG, JPEG, or PNG and generate a compliance report from configured jurisdiction and sector rule packs.",
+      "Upload a PDF, Word document, JPG, JPEG, or PNG and generate a compliance report from configured jurisdiction and sector rule packs",
     uploadTitle: "Upload document to check",
     allowedFileInputs: "Allowed inputs: .pdf, .docx, .jpg, .jpeg, .png",
     complianceOutput: "Compliance result",
     previewText:
-      "Your compliance report will appear here after the document is checked.",
+      "Your compliance report will appear here after the document is checked",
     checkAction: "Check compliance",
-    checking: "Checking...",
+    checking: "Checking",
     complianceLabel: "Compliance:",
-    complianceCompleted: "Compliance check completed.",
+    complianceCompleted: "Compliance check completed",
 
     unsupportedFileType:
-      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed.",
-    fileTooLarge: "File is too large. Maximum allowed size is {maxSize} MB.",
-    chooseFileToCheck: "Please choose a file to check.",
-    complianceFailed: "Something went wrong while checking compliance.",
+      "Unsupported file type: {ext}. Only .pdf, .docx, .jpg, .jpeg, and .png are allowed",
+    fileTooLarge: "File is too large, maximum allowed size is {maxSize} MB",
+    chooseFileToCheck: "Please choose a file to check",
+    complianceFailed: "Something went wrong while checking compliance",
     corePackRequired:
-      "The core control library for {country} must be included with every sector-specific compliance check.",
+      "The core control library for {country} must be included with every sector-specific compliance check",
     missingDownloadUrl:
-      "Compliance check finished, but the backend did not return a download URL.",
+      "Compliance check finished but the backend did not return a download URL",
 
     detectedType: "Detected type:",
-    jurisdictionLabel: "Country / jurisdiction",
+    jurisdictionLabel: "Country/Jurisdiction",
     jurisdictionHelp:
-      "Choose the country whose compliance rules should be used.",
+      "Choose the country whose compliance rules should be used",
     jurisdictionExamples:
-      "Examples: Nigeria, South Africa, United States, United Kingdom.",
+      "Examples: Nigeria, South Africa, United States, United Kingdom",
     reportVariantLabel: "Report format",
-    reportVariantHelp: "Choose how the compliance result should be delivered.",
-    reportVariantExamples: "Not sure? Use PDF report for review.",
-    sectorPacksLabel: "Business sector / rule packs",
+    reportVariantHelp: "Choose how the compliance result should be delivered",
+    reportVariantExamples: "Not sure? Use PDF report for review",
+    sectorPacksLabel: "Business sector/Rule packs",
     corePackHelp:
-      "The core control library for {country} is always included. Add sector-specific packs when needed.",
+      "The core control library for {country} is always included, add sector-specific packs when needed",
     sectorPacksEmptyHelp:
-      "Choose the sector that best matches the document or business context.",
+      "Choose the sector that best matches the document or business context",
     sectorPacksExamples:
-      "Examples: Banking and fintech, Health, Insurance, Telecom.",
-    searchSectorPacksPlaceholder: "Search sectors...",
+      "Examples: Banking and fintech, Health, Insurance, Telecom",
+    searchSectorPacksPlaceholder: "Search sectors",
     clearSectorPacks: "Clear sectors",
     requiredLabel: "required",
     regulatoryDomainsLabel: "Focus areas",
     regulatoryDomainsHelp:
-      "Optional. Select focus areas only when you want a narrower review.",
+      "Optional, select focus areas only when you want a narrower review",
     regulatoryDomainsEmptyHelp:
-      "Nothing selected = check all available domains in the selected rule packs.",
+      "Nothing selected means check all available domains in the selected rule packs",
     regulatoryDomainsExamples:
-      "Examples: Privacy for personal data, AML for KYC/fintech, Licensing for regulated businesses.",
-    searchRegulatoryDomainsPlaceholder: "Search focus areas...",
+      "Examples: Privacy for personal data, AML for KYC/Fintech, Licensing for regulated businesses",
+    searchRegulatoryDomainsPlaceholder: "Search focus areas",
     clearDomains: "Clear focus areas",
 
     inputFile: "Input file",
     inputExtension: "Input extension",
-    jurisdictionResult: "Country / jurisdiction",
+    jurisdictionResult: "Country/jurisdiction",
     sectorPacksResult: "Sector packs",
     regulatoryDomainsResult: "Focus areas",
     reportVariantResult: "Report format",
     outputFormatResult: "Output format",
     reportFile: "Report file",
     allDomains: "All available focus areas",
-    outputReadyText: "Your compliance report is ready to download.",
+    outputReadyText: "Your compliance report is ready to download",
     humanReviewRequired:
-      "Human review is required before relying on or exporting the compliance result.",
+      "Human review is required before relying on or exporting the compliance result",
     downloadReady: "Download ready",
 
     findingsSummary: "Findings summary",
@@ -1456,11 +1456,11 @@ export const compliancePageTranslations = {
 
     reportVariantDescriptions: {
       human_readable_report:
-        "Best for reading, sharing, and downloading a normal compliance report.",
+        "Best for reading, sharing, and downloading a normal compliance report",
       machine_readable_report:
-        "Best for developers, dashboards, databases, APIs, or automated workflows.",
+        "Best for developers, dashboards, databases, APIs, or automated workflows",
       annotated_source_output:
-        "Best when a reviewer needs to verify findings against the original source document.",
+        "Best when a reviewer needs to verify findings against the original source document",
     },
 
     sectorPackLabels: {
@@ -1491,13 +1491,13 @@ export const compliancePageTranslations = {
     },
 
     regulatoryDomainLabels: {
-      privacy: "Privacy / personal data",
+      privacy: "Privacy/Personal data",
       cybersecurity: "Cybersecurity",
-      aml: "AML / financial crime",
+      aml: "AML/Financial crime",
       consumer_protection: "Consumer protection",
       public_sector_access_to_information:
         "Public-sector access to information",
-      licensing: "Licensing / permits",
+      licensing: "Licensing/Permits",
       registration: "Registration",
       sector_regulator_requirements: "Sector regulator rules",
     },
@@ -1508,72 +1508,72 @@ export const compliancePageTranslations = {
     title:
       "Vérifier les documents selon les règles de conformité propres à chaque pays",
     description:
-      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et générez un rapport de conformité à partir des packs de règles configurés par juridiction et par secteur.",
+      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et générez un rapport de conformité à partir des packs de règles configurés par juridiction et par secteur",
     uploadTitle: "Téléverser un document à vérifier",
-    allowedFileInputs: "Entrées autorisées : .pdf, .docx, .jpg, .jpeg, .png",
+    allowedFileInputs: "Entrées autorisées: .pdf, .docx, .jpg, .jpeg, .png",
     complianceOutput: "Résultat de conformité",
     previewText:
-      "Votre rapport de conformité apparaîtra ici après la vérification du document.",
+      "Votre rapport de conformité apparaîtra ici après la vérification du document",
     checkAction: "Vérifier la conformité",
-    checking: "Vérification...",
-    complianceLabel: "Conformité :",
-    complianceCompleted: "Vérification de conformité terminée.",
+    checking: "Vérification",
+    complianceLabel: "Conformité:",
+    complianceCompleted: "Vérification de conformité terminée",
 
     unsupportedFileType:
-      "Type de fichier non pris en charge : {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés.",
+      "Type de fichier non pris en charge: {ext}. Seuls les formats .pdf, .docx, .jpg, .jpeg et .png sont autorisés",
     fileTooLarge:
-      "Le fichier est trop volumineux. La taille maximale autorisée est de {maxSize} Mo.",
-    chooseFileToCheck: "Veuillez choisir un fichier à vérifier.",
+      "Le fichier est trop volumineux, la taille maximale autorisée est de {maxSize} Mo",
+    chooseFileToCheck: "Veuillez choisir un fichier à vérifier",
     complianceFailed:
-      "Une erreur s’est produite lors de la vérification de conformité.",
+      "Une erreur s’est produite lors de la vérification de conformité",
     corePackRequired:
-      "La bibliothèque de contrôles de base pour {country} doit être incluse avec chaque vérification sectorielle.",
+      "La bibliothèque de contrôles de base pour {country} doit être incluse avec chaque vérification sectorielle",
     missingDownloadUrl:
-      "La vérification de conformité est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement.",
+      "La vérification de conformité est terminée, mais le backend n’a pas renvoyé d’URL de téléchargement",
 
-    detectedType: "Type détecté :",
-    jurisdictionLabel: "Pays / juridiction",
+    detectedType: "Type détecté:",
+    jurisdictionLabel: "Pays/Juridiction",
     jurisdictionHelp:
-      "Choisissez le pays dont les règles de conformité doivent être utilisées.",
+      "Choisissez le pays dont les règles de conformité doivent être utilisées",
     jurisdictionExamples:
-      "Exemples : Nigeria, Afrique du Sud, États-Unis, Royaume-Uni.",
+      "Exemples: Nigeria, Afrique du Sud, États-Unis, Royaume-Uni",
     reportVariantLabel: "Format du rapport",
     reportVariantHelp:
-      "Choisissez comment le résultat de conformité doit être livré.",
+      "Choisissez comment le résultat de conformité doit être livré",
     reportVariantExamples:
-      "Vous hésitez ? Utilisez le rapport PDF pour révision.",
-    sectorPacksLabel: "Secteur d’activité / packs de règles",
+      "Vous hésitez? Utilisez le rapport PDF pour révision",
+    sectorPacksLabel: "Secteur d’activité/Packs de règles",
     corePackHelp:
-      "La bibliothèque de contrôles de base pour {country} est toujours incluse. Ajoutez des packs sectoriels si nécessaire.",
+      "La bibliothèque de contrôles de base pour {country} est toujours incluse, ajoutez des packs sectoriels si nécessaire",
     sectorPacksEmptyHelp:
-      "Choisissez le secteur qui correspond le mieux au document ou au contexte de l’entreprise.",
+      "Choisissez le secteur qui correspond le mieux au document ou au contexte de l’entreprise",
     sectorPacksExamples:
-      "Exemples : Banque et fintech, Santé, Assurance, Télécoms.",
-    searchSectorPacksPlaceholder: "Rechercher des secteurs...",
+      "Exemples : Banque et fintech, Santé, Assurance, Télécoms",
+    searchSectorPacksPlaceholder: "Rechercher des secteurs",
     clearSectorPacks: "Effacer les secteurs",
     requiredLabel: "requis",
     regulatoryDomainsLabel: "Domaines de vérification",
     regulatoryDomainsHelp:
-      "Optionnel. Sélectionnez des domaines seulement si vous voulez une vérification plus ciblée.",
+      "Optionnel, sélectionnez des domaines seulement si vous voulez une vérification plus ciblée",
     regulatoryDomainsEmptyHelp:
-      "Aucun domaine sélectionné = vérifier tous les domaines disponibles dans les packs sélectionnés.",
+      "Rien n'est sélectionné signifie cocher tous les domaines disponibles dans les ensembles de règles sélectionnés",
     regulatoryDomainsExamples:
-      "Exemples : Confidentialité pour les données personnelles, LBC pour KYC/fintech, licences pour les activités réglementées.",
-    searchRegulatoryDomainsPlaceholder: "Rechercher des domaines...",
+      "Exemples: Confidentialité pour les données personnelles, LBC pour KYC/Fintech, Licences pour les activités réglementées",
+    searchRegulatoryDomainsPlaceholder: "Rechercher des domaines",
     clearDomains: "Effacer les domaines",
 
     inputFile: "Fichier d’entrée",
     inputExtension: "Extension d’entrée",
-    jurisdictionResult: "Pays / juridiction",
+    jurisdictionResult: "Pays/Juridiction",
     sectorPacksResult: "Packs sectoriels",
     regulatoryDomainsResult: "Domaines de vérification",
     reportVariantResult: "Format du rapport",
     outputFormatResult: "Format de sortie",
     reportFile: "Fichier du rapport",
     allDomains: "Tous les domaines disponibles",
-    outputReadyText: "Votre rapport de conformité est prêt à être téléchargé.",
+    outputReadyText: "Votre rapport de conformité est prêt à être téléchargé",
     humanReviewRequired:
-      "Une révision humaine est requise avant de se fier au résultat de conformité ou de l’exporter.",
+      "Une révision humaine est requise avant de se fier au résultat de conformité ou de l’exporter",
     downloadReady: "Téléchargement prêt",
 
     findingsSummary: "Résumé des constats",
@@ -1621,11 +1621,11 @@ export const compliancePageTranslations = {
 
     reportVariantDescriptions: {
       human_readable_report:
-        "Idéal pour lire, partager et télécharger un rapport de conformité normal.",
+        "Idéal pour lire, partager et télécharger un rapport de conformité normal",
       machine_readable_report:
-        "Idéal pour les développeurs, tableaux de bord, bases de données, API ou workflows automatisés.",
+        "Idéal pour les développeurs, tableaux de bord, bases de données, API ou workflows automatisés",
       annotated_source_output:
-        "Idéal lorsqu’un réviseur doit vérifier les constats par rapport au document source original.",
+        "Idéal lorsqu’un réviseur doit vérifier les constats par rapport au document source original",
     },
 
     sectorPackLabels: {
@@ -1656,13 +1656,13 @@ export const compliancePageTranslations = {
     },
 
     regulatoryDomainLabels: {
-      privacy: "Confidentialité / données personnelles",
+      privacy: "Confidentialité/Données personnelles",
       cybersecurity: "Cybersécurité",
-      aml: "LBC / criminalité financière",
+      aml: "LBC/Criminalité financière",
       consumer_protection: "Protection des consommateurs",
       public_sector_access_to_information:
         "Accès à l’information du secteur public",
-      licensing: "Licences / permis",
+      licensing: "Licences/Permis",
       registration: "Enregistrement",
       sector_regulator_requirements: "Règles des régulateurs sectoriels",
     },

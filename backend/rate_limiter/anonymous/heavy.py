@@ -12,6 +12,7 @@ Blocked for anonymous users:
 - transcribe
 - redact
 - data_mask
+- compliance
 
 Tier policy:
 - total requests per day: 5

@@ -85,8 +85,8 @@
           "certificat phytosanitaire",
           "phytosanitaire",
           "inspection phytosanitaire",
-          "protection des végétaux",
-          "Direction de la Protection des Végétaux",
+          "protection des vÃ©gÃ©taux",
+          "Direction de la Protection des VÃ©gÃ©taux",
           "NPPO"
         ]
       },
@@ -120,9 +120,9 @@
         "required_signals": [
           "importation",
           "exportation",
-          "permis d’importation",
+          "permis dâ€™importation",
           "permis d'importation",
-          "certificat d’exportation",
+          "certificat dâ€™exportation",
           "certificat d'exportation",
           "organismes nuisibles",
           "quarantaine",
@@ -157,7 +157,7 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "traçabilité",
+          "traÃ§abilitÃ©",
           "lot",
           "origine",
           "producteur",
@@ -193,12 +193,12 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "sécurité alimentaire",
-          "qualité",
-          "hygiène",
+          "sÃ©curitÃ© alimentaire",
+          "qualitÃ©",
+          "hygiÃ¨ne",
           "stockage",
           "emballage",
-          "denrée alimentaire",
+          "denrÃ©e alimentaire",
           "food safety"
         ]
       },
@@ -232,7 +232,7 @@
           "pesticide",
           "environnement",
           "pollution",
-          "déchets",
+          "dÃ©chets",
           "eau",
           "risque environnemental",
           "environmental"

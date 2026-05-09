@@ -2,7 +2,7 @@
   "pack_id": "sports",
   "pack_name": "Sports",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -64,11 +64,7 @@
       {
         "name": "Safety at Sports and Recreational Events Act framework",
         "issuer": "Republic of South Africa / SAPS / event authorities",
-        "used_for": [
-          "event safety",
-          "security planning",
-          "venue risk"
-        ],
+        "used_for": ["event safety", "security planning", "venue risk"],
         "url": "https://www.gov.za/"
       }
     ]
@@ -103,9 +99,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "National Sport and Recreation Act"
-        ]
+        "source_basis": ["National Sport and Recreation Act"]
       }
     },
     {
@@ -137,9 +131,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "SAIDS / anti-doping framework"
-        ]
+        "source_basis": ["SAIDS / anti-doping framework"]
       }
     },
     {
@@ -172,9 +164,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "sport governance and safeguarding routing"
-        ]
+        "source_basis": ["sport governance and safeguarding routing"]
       }
     },
     {
@@ -206,9 +196,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Safety at Sports and Recreational Events framework"
-        ]
+        "source_basis": ["Safety at Sports and Recreational Events framework"]
       }
     },
     {
@@ -240,9 +228,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA"
-        ]
+        "source_basis": ["POPIA"]
       }
     }
   ]

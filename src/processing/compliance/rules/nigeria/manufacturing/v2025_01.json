@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector overlay for manufacturing, processing, assembly, quality assurance, product safety, and regulated-product documentation in Nigeria.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay controls for Manufacturing. Intended to be used with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay controls for Manufacturing. Intended to be used with core_control_library.",
     "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -33,11 +33,7 @@
       {
         "name": "Standards Organisation of Nigeria Act, 2015",
         "issuer": "Federal Republic of Nigeria / SON",
-        "used_for": [
-          "standards",
-          "quality assurance",
-          "product conformity"
-        ]
+        "used_for": ["standards", "quality assurance", "product conformity"]
       },
       {
         "name": "NESREA Laws and Regulations / sector environmental regulations",
@@ -51,19 +47,12 @@
       {
         "name": "FCCPC product safety and consumer protection materials",
         "issuer": "FCCPC",
-        "used_for": [
-          "consumer safety",
-          "product safety compliance"
-        ]
+        "used_for": ["consumer safety", "product safety compliance"]
       },
       {
         "name": "NAFDAC gazetted regulations for regulated products where applicable",
         "issuer": "NAFDAC",
-        "used_for": [
-          "regulated products",
-          "GMP",
-          "product registration"
-        ]
+        "used_for": ["regulated products", "GMP", "product registration"]
       }
     ]
   },

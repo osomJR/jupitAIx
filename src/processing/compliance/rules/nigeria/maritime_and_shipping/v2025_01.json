@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector overlay for shipping, ports, cabotage, maritime labour, vessel operations, marine safety/security, and maritime environmental documentation in Nigeria.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay controls for Maritime and Shipping. Intended to be used with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay controls for Maritime and Shipping. Intended to be used with core_control_library.",
     "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -43,26 +43,17 @@
       {
         "name": "Merchant Shipping Act, 2007",
         "issuer": "Federal Republic of Nigeria",
-        "used_for": [
-          "ship registration",
-          "merchant shipping obligations"
-        ]
+        "used_for": ["ship registration", "merchant shipping obligations"]
       },
       {
         "name": "Coastal and Inland Shipping (Cabotage) Act, 2003",
         "issuer": "Federal Republic of Nigeria / NIMASA",
-        "used_for": [
-          "cabotage",
-          "coastal trade",
-          "vessel restrictions"
-        ]
+        "used_for": ["cabotage", "coastal trade", "vessel restrictions"]
       },
       {
         "name": "NIMASA legislation portal",
         "issuer": "NIMASA",
-        "used_for": [
-          "legal instruments for maritime sector"
-        ]
+        "used_for": ["legal instruments for maritime sector"]
       }
     ]
   },

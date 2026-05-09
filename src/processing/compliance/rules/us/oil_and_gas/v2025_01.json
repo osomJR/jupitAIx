@@ -198,7 +198,7 @@
       "rule_id": "OILGAS-EPA-001",
       "rule_version": "2025.01",
       "title": "Air, methane, spill, or environmental controls are documented",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for methane, air emissions, SPCC, spill response, wastewater, produced water, or environmental monitoring evidence.",
       "evaluation": {
         "strategy": "min_signal_count",

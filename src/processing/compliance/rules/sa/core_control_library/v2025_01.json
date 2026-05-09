@@ -1,8 +1,8 @@
 {
-  "pack_id": "south_africa_core_control_library",
-  "pack_name": "South Africa Core Control Library",
+  "pack_id": "core_control_library",
+  "pack_name": "Core Control Library",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -43,39 +43,25 @@
       {
         "name": "Promotion of Access to Information Act, 2000 (PAIA)",
         "issuer": "Republic of South Africa / Information Regulator",
-        "used_for": [
-          "access to information",
-          "public-sector transparency"
-        ],
+        "used_for": ["access to information", "public-sector transparency"],
         "url": "https://www.gov.za/documents/promotion-access-information-act"
       },
       {
         "name": "Cybercrimes Act, 2020",
         "issuer": "Republic of South Africa",
-        "used_for": [
-          "cybersecurity",
-          "cyber incident controls"
-        ],
+        "used_for": ["cybersecurity", "cyber incident controls"],
         "url": "https://www.gov.za/documents/cybercrimes-act-19-2020-english-isixhosa-2-jun-2021-0000"
       },
       {
         "name": "Consumer Protection Act, 2008",
         "issuer": "Republic of South Africa / National Consumer Commission",
-        "used_for": [
-          "consumer protection",
-          "disclosures",
-          "fair marketing"
-        ],
+        "used_for": ["consumer protection", "disclosures", "fair marketing"],
         "url": "https://www.gov.za/documents/consumer-protection-act"
       },
       {
         "name": "Financial Intelligence Centre Act, 2001 and FIC compliance guidance",
         "issuer": "Financial Intelligence Centre",
-        "used_for": [
-          "AML/CFT/CPF",
-          "customer due diligence",
-          "reporting"
-        ],
+        "used_for": ["AML/CFT/CPF", "customer due diligence", "reporting"],
         "url": "https://www.fic.gov.za/compliance/"
       },
       {
@@ -91,9 +77,7 @@
       {
         "name": "Occupational Health and Safety Act, 1993",
         "issuer": "Republic of South Africa / Department of Employment and Labour",
-        "used_for": [
-          "workplace health and safety"
-        ],
+        "used_for": ["workplace health and safety"],
         "url": "https://www.gov.za/documents/occupational-health-and-safety-act"
       }
     ]
@@ -127,10 +111,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA",
-          "Constitutional right to privacy"
-        ]
+        "source_basis": ["POPIA", "Constitutional right to privacy"]
       }
     },
     {
@@ -164,9 +145,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA"
-        ]
+        "source_basis": ["POPIA"]
       }
     },
     {
@@ -198,9 +177,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "PAIA"
-        ]
+        "source_basis": ["PAIA"]
       }
     },
     {
@@ -233,10 +210,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA",
-          "Cybercrimes Act"
-        ]
+        "source_basis": ["POPIA", "Cybercrimes Act"]
       }
     },
     {
@@ -270,9 +244,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Consumer Protection Act"
-        ]
+        "source_basis": ["Consumer Protection Act"]
       }
     },
     {
@@ -306,9 +278,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Financial Intelligence Centre Act"
-        ]
+        "source_basis": ["Financial Intelligence Centre Act"]
       }
     }
   ]

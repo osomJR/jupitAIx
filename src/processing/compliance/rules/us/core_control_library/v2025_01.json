@@ -1,6 +1,6 @@
 {
   "pack_id": "core_control_library",
-  "pack_name": "United States Core Control Library",
+  "pack_name": "Core Control Library",
   "pack_version": "v2025_01",
   "jurisdiction": "us",
   "effective_date": "2025-01-01",
@@ -35,11 +35,7 @@
         "name": "Federal Trade Commission Act / FTC business guidance on privacy and data security",
         "issuer": "Federal Trade Commission",
         "url": "https://www.ftc.gov/business-guidance/privacy-security",
-        "used_for": [
-          "privacy",
-          "consumer protection",
-          "data security"
-        ]
+        "used_for": ["privacy", "consumer protection", "data security"]
       },
       {
         "name": "FTC Safeguards Rule / Gramm-Leach-Bliley Act materials",
@@ -54,11 +50,7 @@
         "name": "Bank Secrecy Act resources",
         "issuer": "Financial Crimes Enforcement Network",
         "url": "https://www.fincen.gov/resources/statutes-and-regulations/bank-secrecy-act",
-        "used_for": [
-          "AML",
-          "recordkeeping",
-          "suspicious activity reporting"
-        ]
+        "used_for": ["AML", "recordkeeping", "suspicious activity reporting"]
       },
       {
         "name": "HIPAA Privacy, Security, and Breach Notification materials",
@@ -74,10 +66,7 @@
         "name": "CISA cybersecurity resources",
         "issuer": "Cybersecurity and Infrastructure Security Agency",
         "url": "https://www.cisa.gov/resources-tools",
-        "used_for": [
-          "cybersecurity governance",
-          "incident response"
-        ]
+        "used_for": ["cybersecurity governance", "incident response"]
       }
     ]
   },
@@ -150,10 +139,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified U.S. legal/compliance reviewer must confirm applicability, jurisdictional scope, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "FTC Safeguards Rule",
-          "CISA cybersecurity resources"
-        ],
+        "source_basis": ["FTC Safeguards Rule", "CISA cybersecurity resources"],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
     },
@@ -226,9 +212,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified U.S. legal/compliance reviewer must confirm applicability, jurisdictional scope, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "FinCEN Bank Secrecy Act resources"
-        ],
+        "source_basis": ["FinCEN Bank Secrecy Act resources"],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
     },

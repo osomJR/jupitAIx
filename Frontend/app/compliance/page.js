@@ -23,7 +23,9 @@ import {
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx", ".jpg", ".jpeg", ".png"];
 const MAX_FILE_SIZE_MB = 10;
+const COMPLIANCE_PREVIEW_ENDPOINT = "/api/analyzer/compliance/preview";
 const COMPLIANCE_ENDPOINT = "/api/analyzer/compliance";
+
 
 const REPORT_VARIANTS = [
   "human_readable_report",
@@ -43,25 +45,25 @@ const REGULATORY_DOMAINS = [
 ];
 
 const NIGERIA_SECTOR_PACKS = [
-  "banking_and_fintech",
-  "payment_platforms_and_services",
   "accounting",
-  "legal_and_law",
-  "health",
-  "media",
-  "tech",
-  "telecom",
-  "oil_and_gas",
+  "agriculture",
+  "aviation",
+  "banking_and_fintech",
   "energy_and_power",
+  "health",
+  "insurance",
+  "law_and_legal",
   "manufacturing",
+  "maritime_and_shipping",
+  "media",
+  "mining",
+  "ngo",
+  "oil_and_gas",
+  "payment_platforms_and_services",
   "pharmaceuticals",
   "sports",
-  "mining",
-  "agriculture",
-  "maritime",
-  "insurance",
-  "ngo",
-  "aviation",
+  "tech",
+  "telecom",
 ];
 
 const EXPANDABLE_SECTOR_PACKS = [
@@ -89,7 +91,7 @@ const EXPANDABLE_SECTOR_PACKS = [
 const COUNTRY_CONFIG = {
   nigeria: {
     labelKey: "nigeria",
-    corePack: "nigeria_core_control_library",
+    corePack: "core_control_library",
     sectorPacks: NIGERIA_SECTOR_PACKS,
   },
   us: {
@@ -427,6 +429,9 @@ export default function CompliancePage() {
   const [reportVariant, setReportVariant] = useState("human_readable_report");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPreviewing, setIsPreviewing] = useState(false);
+  const [previewMarkdown, setPreviewMarkdown] = useState("");
+  const [previewReport, setPreviewReport] = useState(null);
   const [resultSummary, setResultSummary] = useState("");
   const [downloadInfo, setDownloadInfo] = useState(null);
   const [counts, setCounts] = useState(null);
@@ -475,18 +480,23 @@ export default function CompliancePage() {
     return isAccepted && isWithinLimit;
   }, [selectedFile]);
 
-  const canSubmit =
+  const canPreview =
+    !isPreviewing &&
     !isSubmitting &&
     !!selectedFile &&
     isValidFile &&
     sectorPacks.includes(selectedCountryConfig.corePack) &&
     REPORT_VARIANTS.includes(reportVariant);
 
-  function resetResultState() {
-    setResultSummary("");
-    setDownloadInfo(null);
-    setCounts(null);
-  }
+  const canGenerate = canPreview && !!previewMarkdown;
+  
+    function resetResultState() {
+      setResultSummary("");
+      setDownloadInfo(null);
+      setCounts(null);
+      setPreviewMarkdown("");
+      setPreviewReport(null);
+    }
 
   function rejectFile(message) {
     setSelectedFile(null);
@@ -588,22 +598,136 @@ export default function CompliancePage() {
     setError("");
     resetResultState();
   }
+  function getArtifactDownloadUrl(info) {
+    if (!info) return "";
 
+    if (info.downloadUrl) {
+      return info.downloadUrl.replace(
+        /^\/api\/v1\/analyzer\/artifacts\//,
+        "/api/analyzer/artifacts/",
+      );
+    }
+
+    if (info.storageKey) {
+      return `/api/analyzer/artifacts/${info.storageKey}`;
+    }
+
+    return "";
+  }
   function handleDownload() {
-    if (!downloadInfo?.downloadUrl) return;
+    const url = getArtifactDownloadUrl(downloadInfo);
+
+    if (!url) {
+      setError("Download URL is missing.");
+      return;
+    }
 
     const link = document.createElement("a");
-    link.href = downloadInfo.downloadUrl;
+    link.href = url;
     link.download = downloadInfo.filename || "compliance-report";
-    link.target = "_blank";
     link.rel = "noopener noreferrer";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }
 
+  async function buildComplianceFormData() {
+    const formData = new FormData();
+
+    const buffer = await selectedFile.arrayBuffer();
+
+    const fileBlob = new Blob([buffer], {
+      type: selectedFile.type || "application/octet-stream",
+    });
+
+    formData.append("file", fileBlob, selectedFile.name);
+    formData.append("jurisdiction", jurisdiction);
+    formData.append("report_variant", reportVariant);
+    formData.append("require_human_review", "true");
+    formData.append(
+      "system_language",
+      language === "fr" ? "french" : "english",
+    );
+
+    for (const sectorPack of sectorPacks) {
+      formData.append("sector_packs", sectorPack);
+    }
+
+    for (const regulatoryDomain of regulatoryDomains) {
+      formData.append("regulatory_domains", regulatoryDomain);
+    }
+
+    return formData;
+  }
+
+  async function handlePreview(event) {
+    event?.preventDefault();
+
+    if (!selectedFile) {
+      setError(t.chooseFileToCheck);
+      return;
+    }
+
+    if (!sectorPacks.includes(selectedCountryConfig.corePack)) {
+      setError(
+        replaceVars(t.corePackRequired, {
+          country: selectedCountryLabel,
+        }),
+      );
+      return;
+    }
+
+    setIsPreviewing(true);
+    setError("");
+    setResultSummary("");
+    setDownloadInfo(null);
+    setCounts(null);
+    setPreviewMarkdown("");
+    setPreviewReport(null);
+
+    try {
+      const response = await fetch(COMPLIANCE_PREVIEW_ENDPOINT, {
+        method: "POST",
+        body: await buildComplianceFormData(),
+        credentials: "include",
+      });
+
+      const responseData = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          extractResponseMessage(responseData, t.complianceFailed),
+        );
+      }
+
+      const previewText =
+        responseData?.preview_markdown || responseData?.previewMarkdown || "";
+
+      setPreviewMarkdown(previewText);
+      setPreviewReport(responseData?.report || null);
+      setCounts(extractComplianceCounts(responseData));
+
+      setResultSummary(
+        previewText ||
+          [
+            "Compliance preview completed.",
+            "",
+            `${t.inputFile}: ${selectedFile.name}`,
+            `${t.jurisdictionResult}: ${selectedCountryLabel}`,
+            `${t.sectorPacksResult}: ${selectedSectorLabels}`,
+            "",
+            t.humanReviewRequired,
+          ].join("\n"),
+      );
+    } catch (previewError) {
+      setError(previewError?.message || t.complianceFailed);
+    } finally {
+      setIsPreviewing(false);
+    }
+  }
+
   async function handleSubmit(event) {
-    event.preventDefault();
+    event?.preventDefault();
 
     if (!selectedFile) {
       setError(t.chooseFileToCheck);
@@ -621,7 +745,7 @@ export default function CompliancePage() {
 
     setIsSubmitting(true);
     setError("");
-    resetResultState();
+    setDownloadInfo(null);
 
     try {
       const fallbackFilename = buildFallbackFilename(
@@ -629,27 +753,9 @@ export default function CompliancePage() {
         reportVariant,
       );
 
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("jurisdiction", jurisdiction);
-      formData.append("report_variant", reportVariant);
-      formData.append("require_human_review", "true");
-      formData.append(
-        "system_language",
-        language === "fr" ? "french" : "english",
-      );
-
-      for (const sectorPack of sectorPacks) {
-        formData.append("sector_packs", sectorPack);
-      }
-
-      for (const regulatoryDomain of regulatoryDomains) {
-        formData.append("regulatory_domains", regulatoryDomain);
-      }
-
       const response = await fetch(COMPLIANCE_ENDPOINT, {
         method: "POST",
-        body: formData,
+        body: await buildComplianceFormData(),
         credentials: "include",
       });
 
@@ -751,7 +857,7 @@ export default function CompliancePage() {
 
           <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handlePreview}
               className="relative min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
@@ -932,21 +1038,34 @@ export default function CompliancePage() {
                   <div className="flex flex-wrap items-center gap-3">
                     <button
                       type="submit"
-                      disabled={!canSubmit}
+                      disabled={!canPreview}
                       className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
-                        canSubmit
+                        canPreview
                           ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
                           : "cursor-not-allowed bg-white/10 text-white/40"
                       }`}
                     >
-                      {isSubmitting ? t.checking : t.checkAction}
+                      {isPreviewing ? "Previewing..." : "Preview compliance"}
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={!canGenerate}
+                      onClick={handleSubmit}
+                      className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
+                        canGenerate
+                          ? "border border-cyan-300/30 bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/15"
+                          : "cursor-not-allowed border border-white/10 bg-white/5 text-white/35"
+                      }`}
+                    >
+                      {isSubmitting ? t.checking : "Generate downloadable file"}
                     </button>
 
                     {downloadInfo?.downloadUrl && (
                       <button
                         type="button"
                         onClick={handleDownload}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-cyan-300/30 bg-cyan-400/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/15"
+                        className="inline-flex items-center gap-2 rounded-2xl border border-emerald-300/30 bg-emerald-400/10 px-5 py-2.5 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-400/15"
                       >
                         <Download className="h-4 w-4" />
                         {common.download}
@@ -1011,7 +1130,7 @@ export default function CompliancePage() {
                         {resultSummary}
                       </pre>
 
-                      {downloadInfo?.downloadUrl && (
+                      {getArtifactDownloadUrl(downloadInfo) && (
                         <div className="shrink-0 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3">
                           <div className="flex items-start gap-3">
                             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />

@@ -83,11 +83,11 @@
         "on_partial": "review_required",
         "required_signals": [
           "Arcep",
-          "opérateur de communications électroniques",
-          "numérotation",
+          "opÃ©rateur de communications Ã©lectroniques",
+          "numÃ©rotation",
           "couverture mobile",
           "service universel",
-          "réseau",
+          "rÃ©seau",
           "autorisation"
         ]
       },
@@ -116,12 +116,12 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "portabilité",
-          "neutralité du net",
-          "réclamation",
-          "accessibilité",
-          "qualité de service",
-          "résiliation",
+          "portabilitÃ©",
+          "neutralitÃ© du net",
+          "rÃ©clamation",
+          "accessibilitÃ©",
+          "qualitÃ© de service",
+          "rÃ©siliation",
           "information consommateur"
         ],
         "min_count": 2
@@ -153,13 +153,13 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "sécurité des réseaux",
+          "sÃ©curitÃ© des rÃ©seaux",
           "incident",
-          "résilience",
-          "contrôle d'accès",
-          "vulnérabilité",
-          "cybersécurité",
-          "continuité de service"
+          "rÃ©silience",
+          "contrÃ´le d'accÃ¨s",
+          "vulnÃ©rabilitÃ©",
+          "cybersÃ©curitÃ©",
+          "continuitÃ© de service"
         ],
         "min_count": 2
       },
@@ -191,13 +191,13 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "données personnelles",
-          "abonné",
-          "données de trafic",
-          "données de localisation",
+          "donnÃ©es personnelles",
+          "abonnÃ©",
+          "donnÃ©es de trafic",
+          "donnÃ©es de localisation",
           "RGPD",
           "conservation",
-          "confidentialité"
+          "confidentialitÃ©"
         ],
         "min_count": 2
       },

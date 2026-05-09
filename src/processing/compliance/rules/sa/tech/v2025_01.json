@@ -2,7 +2,7 @@
   "pack_id": "tech",
   "pack_name": "Technology",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -64,11 +64,7 @@
       {
         "name": "Consumer Protection Act framework",
         "issuer": "NCC / Republic of South Africa",
-        "used_for": [
-          "digital consumer terms",
-          "disclosures",
-          "complaints"
-        ],
+        "used_for": ["digital consumer terms", "disclosures", "complaints"],
         "url": "https://www.thencc.gov.za/"
       }
     ]
@@ -104,9 +100,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA"
-        ]
+        "source_basis": ["POPIA"]
       }
     },
     {
@@ -139,9 +133,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA operator and security safeguard controls"
-        ]
+        "source_basis": ["POPIA operator and security safeguard controls"]
       }
     },
     {
@@ -173,9 +165,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Cybercrimes Act / POPIA security safeguards"
-        ]
+        "source_basis": ["Cybercrimes Act / POPIA security safeguards"]
       }
     },
     {
@@ -207,9 +197,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Electronic Communications and Transactions Act"
-        ]
+        "source_basis": ["Electronic Communications and Transactions Act"]
       }
     },
     {
@@ -241,9 +229,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Consumer Protection Act routing"
-        ]
+        "source_basis": ["Consumer Protection Act routing"]
       }
     }
   ]

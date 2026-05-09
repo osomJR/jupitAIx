@@ -30,7 +30,7 @@ from src.processing.data_protection.redaction.redact import (
     preview_redaction_candidates,
 )
 
-from src.processing.compliance.compliance import run_compliance
+from src.processing.compliance.compliance import run_compliance, preview_compliance
 from src.processing.compliance.registry import RuleRegistryError
 from src.processing.structured_extraction.structured_extraction import (
     run_structured_extraction,
@@ -201,7 +201,7 @@ def _run_privacy_request(
 def _download_url_for_storage_key(storage_key: str | None) -> str | None:
     if not isinstance(storage_key, str) or not storage_key.strip():
         return None
-    return f"/api/v1/analyzer/artifacts/{storage_key.strip()}"
+    return f"/api/analyzer/artifacts/{storage_key.strip()}"
 
 
 def _ensure_download_url(response: AnalyzerResponse) -> AnalyzerResponse:
@@ -258,16 +258,77 @@ def _clean_repeated_strings(values: list[str] | None) -> list[str]:
 
     return cleaned
 
+def _normalize_compliance_sector_packs(
+    sector_packs: list[ComplianceSectorPack] | None,
+) -> list[ComplianceSectorPack]:
+    core_pack = ComplianceSectorPack.core_control_library
+    legacy_core_pack = getattr(
+        ComplianceSectorPack,
+        "nigeria_core_control_library",
+        None,
+    )
+
+    resolved: list[ComplianceSectorPack] = []
+    seen: set[ComplianceSectorPack] = set()
+
+    for pack in list(sector_packs or []):
+        if legacy_core_pack is not None and pack == legacy_core_pack:
+            pack = core_pack
+
+        if pack not in seen:
+            resolved.append(pack)
+            seen.add(pack)
+
+    if core_pack not in seen:
+        resolved.insert(0, core_pack)
+
+    return resolved
+
+def _build_compliance_request(
+    *,
+    file: UploadFile,
+    jurisdiction: ComplianceJurisdiction,
+    sector_packs: list[ComplianceSectorPack] | None,
+    regulatory_domains: list[ComplianceRegulatoryDomain] | None,
+    report_variant: ComplianceReportVariant,
+    system_language: SystemLanguage,
+) -> AnalyzerRequest:
+    try:
+        input_payload = build_uploaded_document_payload(
+            action=FeatureType.compliance,
+            upload=file,
+        )
+    except UploadError as exc:
+        raise _bad_request(str(exc)) from exc
+    except ValueError as exc:
+        raise _bad_request(str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise _bad_request(str(exc)) from exc
+
+    resolved_sector_packs = _normalize_compliance_sector_packs(
+        sector_packs or _default_compliance_sector_packs(jurisdiction)
+    )
+
+    payload = ComplianceRequest(
+        feature=FeatureType.compliance,
+        jurisdiction=jurisdiction,
+        sector_packs=resolved_sector_packs,
+        regulatory_domains=regulatory_domains or [],
+        report_variant=report_variant,
+        require_human_review=True,
+    )
+
+    return AnalyzerRequest(
+        action=FeatureType.compliance,
+        input=input_payload,
+        payload=payload,
+        policy=_policy_for_action(FeatureType.compliance),
+        system_language=system_language,
+    )
 
 def _default_compliance_sector_packs(
     jurisdiction: ComplianceJurisdiction,
 ) -> list[ComplianceSectorPack]:
-    if (
-        jurisdiction == ComplianceJurisdiction.nigeria
-        and hasattr(ComplianceSectorPack, "nigeria_core_control_library")
-    ):
-        return [ComplianceSectorPack.nigeria_core_control_library]
-
     return [ComplianceSectorPack.core_control_library]
 
 def _privacy_payload_kwargs(
@@ -807,40 +868,67 @@ def compliance_route(
     ),
     system_language: SystemLanguage = Form(SystemLanguage.english),
 ) -> AnalyzerResponse:
-    try:
-        input_payload = build_uploaded_document_payload(
-            action=FeatureType.compliance,
-            upload=file,
-        )
-    except UploadError as exc:
-        raise _bad_request(str(exc)) from exc
-    except ValueError as exc:
-        raise _bad_request(str(exc)) from exc
-
-    resolved_sector_packs = (
-        sector_packs
-        if sector_packs
-        else _default_compliance_sector_packs(jurisdiction)
-    )
-
-    payload = ComplianceRequest(
-        feature=FeatureType.compliance,
+    request = _build_compliance_request(
+        file=file,
         jurisdiction=jurisdiction,
-        sector_packs=resolved_sector_packs,
-        regulatory_domains=regulatory_domains or [],
+        sector_packs=sector_packs,
+        regulatory_domains=regulatory_domains,
         report_variant=report_variant,
-        require_human_review=True,
-    )
-
-    request = AnalyzerRequest(
-        action=FeatureType.compliance,
-        input=input_payload,
-        payload=payload,
-        policy=_policy_for_action(FeatureType.compliance),
         system_language=system_language,
     )
 
     return _run_standalone_feature_request(request)
+
+@router.post(
+    "/compliance/preview",
+    dependencies=[Depends(rate_limit_for_feature(FeatureType.compliance))],
+)
+def compliance_preview_route(
+    current_user: AuthenticatedUser = Depends(get_current_user),
+    file: UploadFile = File(...),
+    jurisdiction: ComplianceJurisdiction = Form(ComplianceJurisdiction.nigeria),
+    sector_packs: list[ComplianceSectorPack] | None = Form(default=None),
+    regulatory_domains: list[ComplianceRegulatoryDomain] | None = Form(default=None),
+    report_variant: ComplianceReportVariant = Form(
+        ComplianceReportVariant.human_readable_report
+    ),
+    system_language: SystemLanguage = Form(SystemLanguage.english),
+) -> dict[str, Any]:
+    try:
+        request = _build_compliance_request(
+            file=file,
+            jurisdiction=jurisdiction,
+            sector_packs=sector_packs,
+            regulatory_domains=regulatory_domains,
+            report_variant=report_variant,
+            system_language=system_language,
+        )
+
+        preview = preview_compliance(request)
+        report = preview.report.model_dump(mode="json")
+
+        return {
+            "preview_markdown": preview.preview_markdown,
+            "report": report,
+            "counts": report.get("counts"),
+            "rule_results": report.get("rule_results", []),
+            "human_review": preview.human_review.model_dump(mode="json"),
+        }
+
+    except HTTPException:
+        raise
+    except RuleRegistryError as exc:
+        raise _bad_request(str(exc)) from exc
+    except UploadError as exc:
+        raise _bad_request(str(exc)) from exc
+    except ValueError as exc:
+        raise _bad_request(str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise _bad_request(str(exc)) from exc
+    except TypeError as exc:
+        raise _bad_request(str(exc)) from exc
+    except RuntimeError as exc:
+        raise _service_unavailable(str(exc)) from exc
 
 @router.get("/artifacts/{storage_key:path}")
 def download_artifact(storage_key: str):

@@ -2,7 +2,7 @@
   "pack_id": "ngo",
   "pack_name": "NGO",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -53,19 +53,13 @@
       {
         "name": "Companies Act nonprofit-company framework",
         "issuer": "CIPC / dtic",
-        "used_for": [
-          "nonprofit company formation and governance"
-        ],
+        "used_for": ["nonprofit company formation and governance"],
         "url": "https://www.cipc.co.za/"
       },
       {
         "name": "Protection of Personal Information Act, 2013",
         "issuer": "Information Regulator / Republic of South Africa",
-        "used_for": [
-          "donor data",
-          "beneficiary data",
-          "employee data"
-        ],
+        "used_for": ["donor data", "beneficiary data", "employee data"],
         "url": "https://www.dffe.gov.za/legislation/paia_popia"
       }
     ]
@@ -100,9 +94,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NPO Act / DSD registration guidance"
-        ]
+        "source_basis": ["NPO Act / DSD registration guidance"]
       }
     },
     {
@@ -135,9 +127,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NPO Act governance expectations"
-        ]
+        "source_basis": ["NPO Act governance expectations"]
       }
     },
     {
@@ -169,9 +159,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NPO Act definition of NPO"
-        ]
+        "source_basis": ["NPO Act definition of NPO"]
       }
     },
     {
@@ -203,9 +191,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NPO transparency and accountability framework"
-        ]
+        "source_basis": ["NPO transparency and accountability framework"]
       }
     },
     {
@@ -237,9 +223,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA"
-        ]
+        "source_basis": ["POPIA"]
       }
     }
   ]

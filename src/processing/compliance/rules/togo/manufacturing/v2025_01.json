@@ -98,10 +98,10 @@
           "norme togolaise",
           "standard",
           "conformity",
-          "conformité",
+          "conformitÃ©",
           "certification",
           "quality management",
-          "système qualité"
+          "systÃ¨me qualitÃ©"
         ],
         "on_prohibited_match": "failed"
       },
@@ -133,10 +133,10 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "métrologie",
+          "mÃ©trologie",
           "metrology",
           "calibration",
-          "étalonnage",
+          "Ã©talonnage",
           "instrument de mesure",
           "measurement control",
           "ATOMET",
@@ -173,10 +173,10 @@
         "required_signals": [
           "batch",
           "lot number",
-          "numéro de lot",
+          "numÃ©ro de lot",
           "serial number",
           "traceability",
-          "traçabilité",
+          "traÃ§abilitÃ©",
           "recall",
           "rappel produit",
           "product identification"
@@ -201,7 +201,7 @@
       "rule_id": "TGO-MFG-ENV-004",
       "rule_version": "2025.01",
       "title": "Environmental and waste-management evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for environmental authorization, pollution prevention, waste handling, emissions, or environmental impact evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -215,12 +215,12 @@
           "environmental",
           "environnement",
           "waste",
-          "déchet",
+          "dÃ©chet",
           "pollution",
           "emissions",
           "effluent",
           "impact assessment",
-          "étude d’impact"
+          "Ã©tude dâ€™impact"
         ],
         "on_prohibited_match": "failed"
       },
@@ -258,7 +258,7 @@
           "warranty",
           "garantie",
           "complaint",
-          "réclamation",
+          "rÃ©clamation",
           "consumer",
           "consommateur"
         ],
@@ -278,3 +278,4 @@
     }
   ]
 }
+

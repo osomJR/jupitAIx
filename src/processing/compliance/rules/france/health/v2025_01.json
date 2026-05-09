@@ -31,7 +31,7 @@
     },
     "primary_sources": [
       {
-        "name": "Haute Autorité de Santé quality and certification materials",
+        "name": "Haute AutoritÃ© de SantÃ© quality and certification materials",
         "issuer": "HAS",
         "url": "https://www.has-sante.fr/",
         "used_for": [
@@ -60,7 +60,7 @@
       },
       {
         "name": "French Medical Council professional ethics materials",
-        "issuer": "Conseil national de l'Ordre des médecins",
+        "issuer": "Conseil national de l'Ordre des mÃ©decins",
         "url": "https://www.conseil-national.medecin.fr/",
         "used_for": [
           "medical confidentiality",
@@ -85,12 +85,12 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "secret médical",
-          "confidentialité patient",
-          "données de santé",
+          "secret mÃ©dical",
+          "confidentialitÃ© patient",
+          "donnÃ©es de santÃ©",
           "RGPD",
           "consentement",
-          "dossier médical"
+          "dossier mÃ©dical"
         ],
         "min_count": 2
       },
@@ -125,9 +125,9 @@
         "required_signals": [
           "HAS",
           "certification",
-          "qualité des soins",
+          "qualitÃ© des soins",
           "parcours de soins",
-          "événement indésirable",
+          "Ã©vÃ©nement indÃ©sirable",
           "gestion des risques"
         ],
         "min_count": 2
@@ -161,10 +161,10 @@
         "required_signals": [
           "ARS",
           "autorisation sanitaire",
-          "établissement de santé",
-          "activité de soins",
-          "agrément",
-          "professionnel de santé"
+          "Ã©tablissement de santÃ©",
+          "activitÃ© de soins",
+          "agrÃ©ment",
+          "professionnel de santÃ©"
         ]
       },
       "metadata": {
@@ -195,11 +195,11 @@
         "on_partial": "review_required",
         "required_signals": [
           "ANSM",
-          "dispositif médical",
+          "dispositif mÃ©dical",
           "marquage CE",
           "pharmacovigilance",
-          "matériovigilance",
-          "produit de santé"
+          "matÃ©riovigilance",
+          "produit de santÃ©"
         ]
       },
       "metadata": {

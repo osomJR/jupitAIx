@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector overlay for non-governmental organizations, incorporated trustees, charities, donor-funded bodies, associations, foundations, and civil-society documentation in Nigeria.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay controls for NGO. Intended to be used with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay controls for NGO. Intended to be used with core_control_library.",
     "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -56,9 +56,7 @@
       {
         "name": "Nigeria Data Protection Act, 2023",
         "issuer": "Federal Republic of Nigeria / NDPC",
-        "used_for": [
-          "donor/beneficiary/employee data handling"
-        ]
+        "used_for": ["donor/beneficiary/employee data handling"]
       }
     ]
   },

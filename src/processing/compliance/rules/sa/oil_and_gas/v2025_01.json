@@ -2,7 +2,7 @@
   "pack_id": "oil_and_gas",
   "pack_name": "Oil and Gas",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -43,10 +43,7 @@
       {
         "name": "Upstream Petroleum Resources Development Act, 2024",
         "issuer": "Department of Mineral and Petroleum Resources",
-        "used_for": [
-          "upstream petroleum sector",
-          "investment and inclusivity"
-        ],
+        "used_for": ["upstream petroleum sector", "investment and inclusivity"],
         "url": "https://www.dmpr.gov.za/About-Us/Overview"
       },
       {
@@ -62,10 +59,7 @@
       {
         "name": "Mineral and Petroleum Resources Development Act, 2002",
         "issuer": "DMPR",
-        "used_for": [
-          "petroleum resources",
-          "rights and permits"
-        ],
+        "used_for": ["petroleum resources", "rights and permits"],
         "url": "https://www.dmpr.gov.za/About-Us/Overview"
       }
     ]
@@ -100,9 +94,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Petroleum Products Act 1977"
-        ]
+        "source_basis": ["Petroleum Products Act 1977"]
       }
     },
     {
@@ -134,9 +126,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Upstream Petroleum Resources Development Act 2024"
-        ]
+        "source_basis": ["Upstream Petroleum Resources Development Act 2024"]
       }
     },
     {
@@ -169,9 +159,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Petroleum Pipelines Act / NERSA"
-        ]
+        "source_basis": ["Petroleum Pipelines Act / NERSA"]
       }
     },
     {
@@ -204,16 +192,14 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "petroleum HSE and environmental obligations"
-        ]
+        "source_basis": ["petroleum HSE and environmental obligations"]
       }
     },
     {
       "rule_id": "OILGAS-SA-ENV-005",
       "rule_version": "2025.01",
       "title": "Environmental management or decommissioning evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for environmental authorization, rehabilitation, decommissioning, waste, emissions, or pollution controls.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -238,10 +224,9 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NEMA / petroleum environmental controls"
-        ]
+        "source_basis": ["NEMA / petroleum environmental controls"]
       }
     }
   ]
 }
+

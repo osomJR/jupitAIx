@@ -2,7 +2,7 @@
   "pack_id": "pharmaceuticals",
   "pack_name": "Pharmaceuticals",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -104,9 +104,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Medicines and Related Substances Act / SAHPRA"
-        ]
+        "source_basis": ["Medicines and Related Substances Act / SAHPRA"]
       }
     },
     {
@@ -139,9 +137,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "SAHPRA inspectorate and licensing framework"
-        ]
+        "source_basis": ["SAHPRA inspectorate and licensing framework"]
       }
     },
     {
@@ -173,9 +169,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "SAHPRA clinical trial regulation"
-        ]
+        "source_basis": ["SAHPRA clinical trial regulation"]
       }
     },
     {
@@ -207,9 +201,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "SAHPRA monitoring and safety functions"
-        ]
+        "source_basis": ["SAHPRA monitoring and safety functions"]
       }
     },
     {
@@ -241,9 +233,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Pharmacy Act / SAPC framework"
-        ]
+        "source_basis": ["Pharmacy Act / SAPC framework"]
       }
     }
   ]

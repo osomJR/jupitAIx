@@ -55,6 +55,7 @@ HEAVY_FEATURES = frozenset(
         FeatureType.transcribe,
         FeatureType.redact,
         FeatureType.data_mask,
+        FeatureType.compliance,
     }
 )
 
@@ -67,6 +68,7 @@ ANONYMOUS_BLOCKED_FEATURES = frozenset(
         FeatureType.transcribe,
         FeatureType.redact,
         FeatureType.data_mask,
+        FeatureType.compliance
     }
 )
 
@@ -723,8 +725,8 @@ ANONYMOUS_POLICY = RateLimitPolicy(
 
 AUTHENTICATED_FREE_POLICY = RateLimitPolicy(
     tier_name="authenticated_free",
-    total_limit=7,
-    heavy_limit=3,
+    total_limit=700,
+    heavy_limit=300,
 )
 
 

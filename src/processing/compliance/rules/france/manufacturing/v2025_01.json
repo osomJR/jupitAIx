@@ -51,7 +51,7 @@
         ]
       },
       {
-        "name": "Installations Classées pour la Protection de l’Environnement (ICPE)",
+        "name": "Installations ClassÃ©es pour la Protection de lâ€™Environnement (ICPE)",
         "issuer": "Ministry for Ecological Transition",
         "url": "https://www.ecologie.gouv.fr/politiques-publiques/installations-classees-protection-lenvironnement",
         "used_for": [
@@ -89,10 +89,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "marquage CE",
-          "déclaration UE de conformité",
-          "déclaration CE de conformité",
+          "dÃ©claration UE de conformitÃ©",
+          "dÃ©claration CE de conformitÃ©",
           "dossier technique",
-          "organisme notifié",
+          "organisme notifiÃ©",
           "exigences essentielles"
         ],
         "min_count": 2
@@ -124,11 +124,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "sécurité des produits",
-          "évaluation des risques",
+          "sÃ©curitÃ© des produits",
+          "Ã©valuation des risques",
           "avertissement",
           "notice",
-          "traçabilité",
+          "traÃ§abilitÃ©",
           "retrait",
           "rappel"
         ],
@@ -163,10 +163,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "ICPE",
-          "installation classée",
+          "installation classÃ©e",
           "autorisation environnementale",
           "enregistrement",
-          "déclaration",
+          "dÃ©claration",
           "Seveso",
           "IED"
         ]
@@ -198,11 +198,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "assurance qualité",
-          "contrôle qualité",
-          "contrôle de production",
+          "assurance qualitÃ©",
+          "contrÃ´le qualitÃ©",
+          "contrÃ´le de production",
           "rapport d'essai",
-          "non-conformité",
+          "non-conformitÃ©",
           "action corrective",
           "lot"
         ],

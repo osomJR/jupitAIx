@@ -9,7 +9,7 @@
   "intended_engine": "jupitAIx compliance rule-pack registry/evaluator v1",
   "requires_core_control_library": true,
   "metadata": {
-    "scope_note": "Nigeria v1 sector overlay pack. Use together with nigeria_core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
+    "scope_note": "Nigeria v1 sector overlay pack. Use together with core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
     "versioning_note": "This is a frozen starter snapshot. Do not mutate after use in reports; publish v2025_02 or later for changes.",
     "official_sources_consulted": [
       {

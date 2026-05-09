@@ -441,8 +441,6 @@ class ComplianceSectorPack(str, Enum):
 def compliance_core_pack_for_jurisdiction(
     jurisdiction: ComplianceJurisdiction,
 ) -> ComplianceSectorPack:
-    if jurisdiction == ComplianceJurisdiction.nigeria:
-        return ComplianceSectorPack.nigeria_core_control_library
     return ComplianceSectorPack.core_control_library
 
 class ComplianceRegulatoryDomain(str, Enum):
@@ -466,8 +464,8 @@ class ComplianceRequest(BaseModel):
     feature: Literal[FeatureType.compliance]
     jurisdiction: ComplianceJurisdiction = ComplianceJurisdiction.nigeria
     sector_packs: List[ComplianceSectorPack] = Field(
-        default_factory=lambda: [ComplianceSectorPack.nigeria_core_control_library],
-        min_length=1,
+    default_factory=lambda: [ComplianceSectorPack.core_control_library],
+    min_length=1,
     )
     regulatory_domains: List[ComplianceRegulatoryDomain] = Field(default_factory=list)
     report_variant: ComplianceReportVariant = ComplianceReportVariant.human_readable_report

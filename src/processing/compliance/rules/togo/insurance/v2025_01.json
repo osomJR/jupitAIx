@@ -84,13 +84,13 @@
         "required_signals": [
           "CIMA",
           "assurance",
-          "agrément",
+          "agrÃ©ment",
           "licence",
           "Direction Nationale des Assurances",
           "DNA",
-          "courtier d’assurance",
+          "courtier dâ€™assurance",
           "courtier d'assurance",
-          "compagnie d’assurance",
+          "compagnie dâ€™assurance",
           "compagnie d'assurance"
         ]
       },
@@ -122,15 +122,15 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "conditions générales",
+          "conditions gÃ©nÃ©rales",
           "prime",
           "garantie",
           "exclusion",
           "sinistre",
-          "assuré",
-          "police d’assurance",
+          "assurÃ©",
+          "police dâ€™assurance",
           "police d'assurance",
-          "résiliation"
+          "rÃ©siliation"
         ],
         "min_count": 2
       },
@@ -163,9 +163,9 @@
         "required_signals": [
           "sinistre",
           "indemnisation",
-          "réclamation",
+          "rÃ©clamation",
           "plainte",
-          "délai",
+          "dÃ©lai",
           "recours",
           "traitement des sinistres"
         ]
@@ -201,8 +201,8 @@
           "connaissance du client",
           "lutte contre le blanchiment",
           "financement du terrorisme",
-          "bénéficiaire effectif",
-          "opération suspecte"
+          "bÃ©nÃ©ficiaire effectif",
+          "opÃ©ration suspecte"
         ],
         "min_count": 2
       },
@@ -234,12 +234,12 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "données personnelles",
-          "données de l’assuré",
-          "données de l'assuré",
-          "confidentialité",
+          "donnÃ©es personnelles",
+          "donnÃ©es de lâ€™assurÃ©",
+          "donnÃ©es de l'assurÃ©",
+          "confidentialitÃ©",
           "consentement",
-          "protection des données",
+          "protection des donnÃ©es",
           "sinistre"
         ],
         "min_count": 2

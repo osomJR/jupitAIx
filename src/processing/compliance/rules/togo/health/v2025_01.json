@@ -86,10 +86,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "autorisation",
-          "agrément",
+          "agrÃ©ment",
           "formation sanitaire",
-          "établissement de santé",
-          "Ministère de la Santé",
+          "Ã©tablissement de santÃ©",
+          "MinistÃ¨re de la SantÃ©",
           "licence",
           "approval"
         ]
@@ -122,13 +122,13 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "confidentialité",
-          "dossier médical",
-          "données de santé",
+          "confidentialitÃ©",
+          "dossier mÃ©dical",
+          "donnÃ©es de santÃ©",
           "patient",
           "consentement",
-          "données personnelles",
-          "secret médical"
+          "donnÃ©es personnelles",
+          "secret mÃ©dical"
         ],
         "min_count": 2
       },
@@ -160,10 +160,10 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "hygiène",
+          "hygiÃ¨ne",
           "assainissement",
           "infection",
-          "déchets",
+          "dÃ©chets",
           "vaccination",
           "risque infectieux",
           "public hygiene"
@@ -197,9 +197,9 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "personnel qualifié",
-          "professionnel de santé",
-          "médecin",
+          "personnel qualifiÃ©",
+          "professionnel de santÃ©",
+          "mÃ©decin",
           "infirmier",
           "formation",
           "supervision",
@@ -233,12 +233,12 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "médicament",
+          "mÃ©dicament",
           "pharmacie",
           "avertissement sanitaire",
-          "produit de santé",
+          "produit de santÃ©",
           "tabac",
-          "dispositif médical"
+          "dispositif mÃ©dical"
         ]
       },
       "metadata": {

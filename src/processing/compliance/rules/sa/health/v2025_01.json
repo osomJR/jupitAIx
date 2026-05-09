@@ -2,7 +2,7 @@
   "pack_id": "health",
   "pack_name": "Health Sector Compliance Overlay",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -53,10 +53,7 @@
       {
         "name": "Health Professions Act, 1974 and HPCSA framework",
         "issuer": "HPCSA",
-        "used_for": [
-          "health professions regulation",
-          "professional conduct"
-        ],
+        "used_for": ["health professions regulation", "professional conduct"],
         "url": "https://www.hpcsa.co.za/"
       },
       {
@@ -72,9 +69,7 @@
       {
         "name": "Occupational Health and Safety Act, 1993",
         "issuer": "Republic of South Africa / Department of Employment and Labour",
-        "used_for": [
-          "workplace health and safety"
-        ],
+        "used_for": ["workplace health and safety"],
         "url": "https://www.gov.za/documents/occupational-health-and-safety-act"
       }
     ]
@@ -110,10 +105,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "National Health Act",
-          "POPIA"
-        ]
+        "source_basis": ["National Health Act", "POPIA"]
       }
     },
     {
@@ -146,10 +138,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "National Health Act",
-          "HPCSA framework"
-        ]
+        "source_basis": ["National Health Act", "HPCSA framework"]
       }
     },
     {
@@ -182,17 +171,14 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Medicines Act",
-          "SAHPRA mandate"
-        ]
+        "source_basis": ["Medicines Act", "SAHPRA mandate"]
       }
     },
     {
       "rule_id": "HEALTH-SA-OHS-001",
       "rule_version": "2025.01",
       "title": "Clinical, facility, worker, or infection-control safety evidence is present",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for infection prevention, occupational health and safety, clinical safety, adverse event, or facility risk controls.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -254,10 +240,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "National Health Act",
-          "PAIA"
-        ]
+        "source_basis": ["National Health Act", "PAIA"]
       }
     }
   ]

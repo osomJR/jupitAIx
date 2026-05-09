@@ -31,18 +31,18 @@
     },
     "primary_sources": [
       {
-        "name": "Port Autonome de Lomé official materials",
-        "issuer": "Port Autonome de Lomé / Togolese Republic",
+        "name": "Port Autonome de LomÃ© official materials",
+        "issuer": "Port Autonome de LomÃ© / Togolese Republic",
         "url": "https://www.togo-port.net/presentation-pal/organisation-port-lome/",
         "used_for": [
           "port governance",
           "port operations",
-          "Lomé port authority controls"
+          "LomÃ© port authority controls"
         ]
       },
       {
-        "name": "Port Autonome de Lomé contact and operational materials",
-        "issuer": "Port Autonome de Lomé",
+        "name": "Port Autonome de LomÃ© contact and operational materials",
+        "issuer": "Port Autonome de LomÃ©",
         "url": "https://www.togo-port.net/contact-port-autonome-de-lome/",
         "used_for": [
           "port authority routing",
@@ -82,7 +82,7 @@
       "rule_version": "2025.01",
       "title": "Port authority or port-access evidence is present",
       "regulatory_domain": "sector_regulator_requirements",
-      "summary": "Checks for Port Autonome de Lomé, berth, harbour-master, port authorization, terminal, or port-access evidence.",
+      "summary": "Checks for Port Autonome de LomÃ©, berth, harbour-master, port authorization, terminal, or port-access evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
         "search_mode": "substring",
@@ -92,7 +92,7 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "Port Autonome de Lomé",
+          "Port Autonome de LomÃ©",
           "PAL",
           "harbour master",
           "capitainerie",
@@ -110,7 +110,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Port Autonome de Lomé official materials"
+          "Port Autonome de LomÃ© official materials"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
@@ -149,7 +149,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Port Autonome de Lomé official materials",
+          "Port Autonome de LomÃ© official materials",
           "Applicable international maritime safety/security conventions"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
@@ -172,11 +172,11 @@
         "required_signals": [
           "ISPS",
           "security plan",
-          "plan de sûreté",
+          "plan de sÃ»retÃ©",
           "port security",
           "access control",
           "cargo screening",
-          "sûreté portuaire"
+          "sÃ»retÃ© portuaire"
         ],
         "on_prohibited_match": "failed"
       },
@@ -196,7 +196,7 @@
       "rule_id": "TGO-MAR-ENV-004",
       "rule_version": "2025.01",
       "title": "Marine pollution or environmental-control evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for pollution prevention, spill response, ballast, waste reception, or environmental control evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -212,7 +212,7 @@
           "spill response",
           "ballast",
           "waste reception",
-          "déchets",
+          "dÃ©chets",
           "MARPOL",
           "environmental control"
         ],
@@ -248,7 +248,7 @@
           "customs",
           "douane",
           "clearance",
-          "dédouanement",
+          "dÃ©douanement",
           "import",
           "export",
           "transit",
@@ -264,10 +264,11 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Port Autonome de Lomé official materials"
+          "Port Autonome de LomÃ© official materials"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
     }
   ]
 }
+

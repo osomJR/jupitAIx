@@ -2,7 +2,7 @@
   "pack_id": "agriculture",
   "pack_name": "Agriculture",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -62,9 +62,7 @@
       {
         "name": "Occupational Health and Safety Act, 1993",
         "issuer": "Republic of South Africa / Department of Employment and Labour",
-        "used_for": [
-          "workplace health and safety"
-        ],
+        "used_for": ["workplace health and safety"],
         "url": "https://www.gov.za/documents/occupational-health-and-safety-act"
       }
     ]
@@ -100,9 +98,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Agricultural Product Standards Act"
-        ]
+        "source_basis": ["Agricultural Product Standards Act"]
       }
     },
     {
@@ -135,16 +131,14 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Plant Health (Phytosanitary) Act"
-        ]
+        "source_basis": ["Plant Health (Phytosanitary) Act"]
       }
     },
     {
       "rule_id": "AGRI-SA-ENV-001",
       "rule_version": "2025.01",
       "title": "Agricultural resource conservation or environmental control evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for soil, water, vegetation, conservation, environmental management, or waste-control language.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -179,7 +173,7 @@
       "rule_id": "AGRI-SA-OHS-001",
       "rule_version": "2025.01",
       "title": "Farm, processing, or operational health-and-safety evidence is present",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for occupational health and safety, machinery, worker safety, pesticide handling, or safe operations evidence.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -205,9 +199,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Occupational Health and Safety Act"
-        ]
+        "source_basis": ["Occupational Health and Safety Act"]
       }
     },
     {
@@ -240,9 +232,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Agricultural Product Standards Act"
-        ]
+        "source_basis": ["Agricultural Product Standards Act"]
       }
     }
   ]

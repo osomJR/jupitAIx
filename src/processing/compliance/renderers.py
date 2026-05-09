@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Sequence
 import json
+import os
 
 import fitz  # PyMuPDF
 from fpdf import FPDF
@@ -41,6 +42,10 @@ except ImportError:  # pragma: no cover
         HumanReviewRequirement,
     )
     from validation import build_compliance_file_result
+try:
+    from src.storage.artifacts import LocalArtifactStorage, guess_content_type
+except ImportError:  # pragma: no cover
+    from storage.artifacts import LocalArtifactStorage, guess_content_type
 
 try:
     from .evidence import EvidenceDocument, get_source_reference
@@ -49,6 +54,41 @@ except ImportError:  # pragma: no cover
 
 DEFAULT_ARTIFACTS_DIR = Path("artifacts/compliance")
 
+PDF_FONT_FAMILY = "NotoSans"
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_FONT_DIR = PROJECT_ROOT / "assets" / "fonts"
+
+DEFAULT_PDF_FONT_REGULAR = DEFAULT_FONT_DIR / "NotoSans-Regular.ttf"
+DEFAULT_PDF_FONT_BOLD = DEFAULT_FONT_DIR / "NotoSans-Bold.ttf"
+
+
+def _resolve_font_path(env_name: str, default_path: Path) -> Path:
+    configured = os.getenv(env_name, "").strip()
+    return Path(configured).expanduser() if configured else default_path
+
+
+def _configure_unicode_pdf(pdf: FPDF) -> None:
+    regular_font = _resolve_font_path(
+        "COMPLIANCE_PDF_FONT_REGULAR",
+        DEFAULT_PDF_FONT_REGULAR,
+    )
+    bold_font = _resolve_font_path(
+        "COMPLIANCE_PDF_FONT_BOLD",
+        DEFAULT_PDF_FONT_BOLD,
+    )
+
+    missing = [str(path) for path in (regular_font, bold_font) if not path.exists()]
+    if missing:
+        raise ComplianceRenderError(
+            "Unicode PDF font file(s) missing: "
+            + ", ".join(missing)
+            + ". Add Unicode .ttf fonts under assets/fonts or set "
+              "COMPLIANCE_PDF_FONT_REGULAR and COMPLIANCE_PDF_FONT_BOLD."
+        )
+
+    pdf.add_font(PDF_FONT_FAMILY, "", str(regular_font), uni=True)
+    pdf.add_font(PDF_FONT_FAMILY, "B", str(bold_font), uni=True)
 
 @dataclass(frozen=True)
 class RenderedArtifact:
@@ -75,6 +115,7 @@ class ComplianceRenderer:
     def __init__(self, artifacts_dir: Optional[str | Path] = None) -> None:
         self.artifacts_dir = Path(artifacts_dir) if artifacts_dir is not None else DEFAULT_ARTIFACTS_DIR
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        self.storage = LocalArtifactStorage()
 
     def render_variant(
         self,
@@ -165,11 +206,12 @@ class ComplianceRenderer:
     ) -> RenderedArtifact:
         target = self.artifacts_dir / f"{base_name}.pdf"
         pdf = FPDF()
+        _configure_unicode_pdf(pdf)
         pdf.set_auto_page_break(auto=True, margin=12)
         pdf.add_page()
-        pdf.set_font("Arial", "B", 16)
+        pdf.set_font(PDF_FONT_FAMILY, "B", 16)
         pdf.multi_cell(0, 8, "Compliance Report")
-        pdf.set_font("Arial", size=11)
+        pdf.set_font(PDF_FONT_FAMILY, size=11)
         pdf.multi_cell(0, 7, f"Jurisdiction: {report.jurisdiction.value}")
         pdf.multi_cell(0, 7, f"Sector packs: {', '.join(pack.value for pack in report.sector_packs)}")
         pdf.multi_cell(
@@ -184,9 +226,9 @@ class ComplianceRenderer:
         pdf.multi_cell(0, 7, "Human review is required before reliance or final export.")
         if report.rule_pack_versions:
             pdf.ln(1)
-            pdf.set_font("Arial", "B", 12)
+            pdf.set_font(PDF_FONT_FAMILY, "B", 12)
             pdf.multi_cell(0, 7, "Rule Pack Versions")
-            pdf.set_font("Arial", size=11)
+            pdf.set_font(PDF_FONT_FAMILY, size=11)
             for pack_version in report.rule_pack_versions:
                 pdf.multi_cell(0, 6, f"- {pack_version.sector_pack.value}: {pack_version.version}")
         pdf.ln(2)
@@ -213,11 +255,12 @@ class ComplianceRenderer:
 
         target = self.artifacts_dir / f"{base_name}.pdf"
         pdf = FPDF()
+        _configure_unicode_pdf(pdf)
         pdf.set_auto_page_break(auto=True, margin=12)
         pdf.add_page()
-        pdf.set_font("Arial", "B", 16)
+        pdf.set_font(PDF_FONT_FAMILY, "B", 16)
         pdf.multi_cell(0, 8, "Annotated Source Output (Evidence Overlay Report)")
-        pdf.set_font("Arial", size=11)
+        pdf.set_font(PDF_FONT_FAMILY, size=11)
         pdf.multi_cell(
             0,
             7,
@@ -227,9 +270,9 @@ class ComplianceRenderer:
         for evidence_document in documents:
             source_name = get_source_reference(request_input, source_document_index=evidence_document.source_document_index)
             label = source_name or evidence_document.source_reference or f"doc[{evidence_document.source_document_index}]"
-            pdf.set_font("Arial", "B", 11)
+            pdf.set_font(PDF_FONT_FAMILY, "B", 11)
             pdf.multi_cell(0, 6, f"Source document {evidence_document.source_document_index}: {label}")
-            pdf.set_font("Arial", size=10)
+            pdf.set_font(PDF_FONT_FAMILY, size=10)
             pdf.multi_cell(0, 6, f"Input format: {evidence_document.input_format.value}")
             pdf.ln(1)
         for item in report.rule_results:
@@ -272,34 +315,50 @@ class ComplianceRenderer:
             pdf.save(target_path)
 
     def _write_rule_result(self, pdf: FPDF, item: ComplianceRuleResult) -> None:
-        pdf.set_font("Arial", "B", 12)
+        pdf.set_font(PDF_FONT_FAMILY, "B", 12)
         pdf.multi_cell(0, 7, f"{item.rule_id} [{item.status.value}] — {item.title}")
-        pdf.set_font("Arial", size=11)
+
+        pdf.set_font(PDF_FONT_FAMILY, size=11)
         pdf.multi_cell(0, 6, item.summary)
+
         if item.evidence_references:
             for evidence in item.evidence_references:
                 parts = [f"doc={evidence.source_document_index}"]
+
                 if evidence.page_number is not None:
                     parts.append(f"page={evidence.page_number}")
+
                 if evidence.section_label:
                     parts.append(f"section={evidence.section_label}")
+
                 parts.append(f"locator={evidence.locator_text or '-'}")
+
                 pdf.multi_cell(0, 6, "Evidence: " + "; ".join(parts))
+
                 if evidence.excerpt:
                     pdf.multi_cell(0, 6, f"Excerpt: {evidence.excerpt}")
         else:
             pdf.multi_cell(0, 6, "Evidence: none captured")
+
         pdf.ln(2)
 
     def _artifact_from_path(self, path: Path, *, output_format: str) -> RenderedArtifact:
-        file_size_mb = round(path.stat().st_size / (1024 * 1024), 4)
+        stored = self.storage.persist(
+            source_file_path=str(path),
+            artifact_name=path.name,
+            content_type=guess_content_type(str(path)),
+        )
+
+        stored_path = Path(stored.stored_path)
+        file_size_mb = round(stored_path.stat().st_size / (1024 * 1024), 4)
+
         return RenderedArtifact(
-            filename=path.name,
-            path=str(path),
+            filename=stored.original_artifact_name,
+            path=stored.stored_path,
             file_size_mb=file_size_mb,
             output_format=output_format,
-            storage_key=str(path),
-            download_url=None,
+            storage_key=stored.storage_key,
+            download_url=stored.download_url,
         )
 
 

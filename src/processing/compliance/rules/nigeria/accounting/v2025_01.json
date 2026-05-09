@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector overlay for accounting firms, audit practices, assurance providers, financial reporting professionals, and related professional-services documentation in Nigeria.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay controls for Accounting. Intended to be used with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay controls for Accounting. Intended to be used with core_control_library.",
     "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -51,17 +51,12 @@
       {
         "name": "FRC Rules including ISA 701 adoption guidance",
         "issuer": "FRC Nigeria",
-        "used_for": [
-          "audit reporting",
-          "key audit matters"
-        ]
+        "used_for": ["audit reporting", "key audit matters"]
       },
       {
         "name": "AML/CFT requirements applicable to DNFBPs where applicable",
         "issuer": "SCUML/EFCC",
-        "used_for": [
-          "client due diligence for relevant professional services"
-        ]
+        "used_for": ["client due diligence for relevant professional services"]
       }
     ]
   },

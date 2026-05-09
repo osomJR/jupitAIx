@@ -43,7 +43,7 @@
       },
       {
         "name": "French Maritime Affairs administration",
-        "issuer": "Direction générale des affaires maritimes, de la pêche et de l'aquaculture",
+        "issuer": "Direction gÃ©nÃ©rale des affaires maritimes, de la pÃªche et de l'aquaculture",
         "url": "https://www.mer.gouv.fr/",
         "used_for": [
           "maritime administration",
@@ -87,11 +87,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "sécurité maritime",
-          "sécurité des navires",
+          "sÃ©curitÃ© maritime",
+          "sÃ©curitÃ© des navires",
           "navigation maritime",
           "CROSS",
-          "certificat de sécurité",
+          "certificat de sÃ©curitÃ©",
           "inspection",
           "sauvetage en mer"
         ],
@@ -161,10 +161,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "pollution marine",
-          "prévention de la pollution",
-          "déchets",
+          "prÃ©vention de la pollution",
+          "dÃ©chets",
           "eaux de ballast",
-          "déversement",
+          "dÃ©versement",
           "hydrocarbures",
           "environnement marin"
         ],
@@ -198,11 +198,11 @@
         "on_partial": "review_required",
         "required_signals": [
           "gens de mer",
-          "équipage",
+          "Ã©quipage",
           "formation maritime",
-          "aptitude médicale",
-          "rôle d'équipage",
-          "exercice de sécurité"
+          "aptitude mÃ©dicale",
+          "rÃ´le d'Ã©quipage",
+          "exercice de sÃ©curitÃ©"
         ],
         "min_count": 2
       },

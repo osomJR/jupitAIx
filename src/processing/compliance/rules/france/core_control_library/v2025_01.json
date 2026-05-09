@@ -100,10 +100,10 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "politique de confidentialité",
+          "politique de confidentialitÃ©",
           "privacy policy",
           "notice d'information",
-          "données personnelles",
+          "donnÃ©es personnelles",
           "RGPD",
           "CNIL"
         ]
@@ -136,13 +136,13 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "finalité",
+          "finalitÃ©",
           "purpose of processing",
-          "base légale",
+          "base lÃ©gale",
           "lawful basis",
           "consentement",
-          "obligation légale",
-          "exécution du contrat"
+          "obligation lÃ©gale",
+          "exÃ©cution du contrat"
         ],
         "min_count": 2
       },
@@ -171,11 +171,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "droit d'accès",
+          "droit d'accÃ¨s",
           "droit de rectification",
-          "droit à l'effacement",
+          "droit Ã  l'effacement",
           "droit d'opposition",
-          "délégué à la protection des données",
+          "dÃ©lÃ©guÃ© Ã  la protection des donnÃ©es",
           "DPO",
           "contact CNIL"
         ],
@@ -206,8 +206,8 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "politique de sécurité",
-          "contrôle d'accès",
+          "politique de sÃ©curitÃ©",
+          "contrÃ´le d'accÃ¨s",
           "gestion des incidents",
           "sauvegarde",
           "chiffrement",
@@ -243,10 +243,10 @@
         "required_signals": [
           "information consommateur",
           "prix",
-          "conditions générales",
-          "réclamation",
-          "droit de rétractation",
-          "médiation",
+          "conditions gÃ©nÃ©rales",
+          "rÃ©clamation",
+          "droit de rÃ©tractation",
+          "mÃ©diation",
           "DGCCRF"
         ],
         "min_count": 2
@@ -281,9 +281,9 @@
         "required_signals": [
           "LCB-FT",
           "lutte contre le blanchiment",
-          "bénéficiaire effectif",
+          "bÃ©nÃ©ficiaire effectif",
           "vigilance client",
-          "déclaration de soupçon",
+          "dÃ©claration de soupÃ§on",
           "TRACFIN",
           "gel des avoirs"
         ],

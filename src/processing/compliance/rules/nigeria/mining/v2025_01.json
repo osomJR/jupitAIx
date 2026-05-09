@@ -8,7 +8,7 @@
   "status": "draft_starter_pack_requires_legal_review",
   "description": "Sector overlay for exploration, mining, quarrying, mineral title holders, environmental compliance, and mineral operations documentation in Nigeria.",
   "metadata": {
-    "scope": "Nigeria-only sector overlay controls for Mining. Intended to be used with nigeria_core_control_library.",
+    "scope": "Nigeria-only sector overlay controls for Mining. Intended to be used with core_control_library.",
     "source_note": "Source basis is mapped from official Nigerian legal/regulatory sources available at rule-pack publication time. This starter pack is not legal advice and requires expert validation before production reliance.",
     "human_review_required": true,
     "external_knowledge_policy": "No external knowledge is introduced during document evaluation. Regulatory source mappings live only in this versioned rule pack.",
@@ -51,16 +51,12 @@
       {
         "name": "Mining Cadastre Office legal documents",
         "issuer": "Nigeria Mining Cadastre Office",
-        "used_for": [
-          "mineral title and permit documentation"
-        ]
+        "used_for": ["mineral title and permit documentation"]
       },
       {
         "name": "NESREA environmental regulations",
         "issuer": "NESREA",
-        "used_for": [
-          "environmental compliance"
-        ]
+        "used_for": ["environmental compliance"]
       }
     ]
   },

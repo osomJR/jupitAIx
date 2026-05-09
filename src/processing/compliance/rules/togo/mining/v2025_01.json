@@ -31,7 +31,7 @@
     },
     "primary_sources": [
       {
-        "name": "Law No. 96-004/PR portant Code minier de la République togolaise",
+        "name": "Law No. 96-004/PR portant Code minier de la RÃƒÂ©publique togolaise",
         "issuer": "Togolese Republic / Mining administration",
         "url": "https://www.a-mla.org/en/country/pdf/54",
         "used_for": [
@@ -53,7 +53,7 @@
       },
       {
         "name": "Journal Officiel mining permit examples",
-        "issuer": "Journal Officiel de la République Togolaise",
+        "issuer": "Journal Officiel de la RÃƒÂ©publique Togolaise",
         "url": "https://www.jo.gouv.tg/sites/default/files/JO/JOS_31_01_2024%20-%2069%20E%20ANNEE%20N%C2%B0%209%20BIS.pdf",
         "used_for": [
           "permit renewals",
@@ -95,13 +95,13 @@
         "on_partial": "review_required",
         "required_signals": [
           "permis de recherche",
-          "permis d’exploitation",
+          "permis dÃ¢â‚¬â„¢exploitation",
           "mining permit",
           "mining licence",
           "mineral title",
           "titre minier",
           "quarry",
-          "carrière",
+          "carriÃƒÂ¨re",
           "autorisation"
         ],
         "on_prohibited_match": "failed"
@@ -113,7 +113,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 96-004/PR portant Code minier de la République togolaise",
+          "Law No. 96-004/PR portant Code minier de la RÃƒÂ©publique togolaise",
           "Mining code amendment Law No. 2003-012 materials"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
@@ -123,7 +123,7 @@
       "rule_id": "TGO-MIN-ENV-002",
       "rule_version": "2025.01",
       "title": "Environmental and rehabilitation obligations are documented",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for environmental impact, rehabilitation, closure, restoration, waste, water, or pollution-control evidence.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -135,9 +135,9 @@
         "on_partial": "review_required",
         "required_signals": [
           "environmental impact",
-          "étude d’impact",
+          "ÃƒÂ©tude dÃ¢â‚¬â„¢impact",
           "rehabilitation",
-          "réhabilitation",
+          "rÃƒÂ©habilitation",
           "mine closure",
           "fermeture",
           "waste",
@@ -154,7 +154,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 96-004/PR portant Code minier de la République togolaise",
+          "Law No. 96-004/PR portant Code minier de la RÃƒÂ©publique togolaise",
           "Mining code amendment Law No. 2003-012 materials"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
@@ -164,7 +164,7 @@
       "rule_id": "TGO-MIN-HSE-003",
       "rule_version": "2025.01",
       "title": "Mine health, safety, or worker-protection evidence is present",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for safety plan, PPE, explosives safety, worker protection, accidents, or emergency-response evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -176,13 +176,13 @@
         "on_partial": "review_required",
         "required_signals": [
           "health and safety",
-          "santé sécurité",
+          "santÃƒÂ© sÃƒÂ©curitÃƒÂ©",
           "PPE",
           "EPI",
           "explosives",
           "accident",
           "emergency response",
-          "plan d’urgence",
+          "plan dÃ¢â‚¬â„¢urgence",
           "worker protection"
         ],
         "on_prohibited_match": "failed"
@@ -194,7 +194,7 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 96-004/PR portant Code minier de la République togolaise"
+          "Law No. 96-004/PR portant Code minier de la RÃƒÂ©publique togolaise"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
@@ -219,7 +219,7 @@
           "production report",
           "rapport de production",
           "tax",
-          "impôt",
+          "impÃƒÂ´t",
           "ITIE",
           "EITI",
           "payment disclosure"
@@ -254,13 +254,13 @@
         "on_partial": "review_required",
         "required_signals": [
           "community",
-          "communauté",
+          "communautÃƒÂ©",
           "consultation",
           "land access",
-          "accès au terrain",
+          "accÃƒÂ¨s au terrain",
           "compensation",
           "resettlement",
-          "réinstallation",
+          "rÃƒÂ©installation",
           "grievance"
         ],
         "on_prohibited_match": "failed"
@@ -272,10 +272,11 @@
         "legal_review_required": true,
         "review_guidance": "A qualified Togolese legal/compliance reviewer must confirm applicability, current-law status, and legal sufficiency before relying on the automated result.",
         "source_basis": [
-          "Law No. 96-004/PR portant Code minier de la République togolaise"
+          "Law No. 96-004/PR portant Code minier de la RÃƒÂ©publique togolaise"
         ],
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
     }
   ]
 }
+

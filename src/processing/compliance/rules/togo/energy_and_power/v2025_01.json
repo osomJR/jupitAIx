@@ -31,7 +31,7 @@
     },
     "primary_sources": [
       {
-        "name": "Autorité de Réglementation du Secteur de l’Electricité (ARSE)",
+        "name": "AutoritÃ© de RÃ©glementation du Secteur de lâ€™ElectricitÃ© (ARSE)",
         "issuer": "ARSE Togo",
         "url": "http://www.arse.tg/",
         "used_for": [
@@ -89,11 +89,11 @@
           "concession",
           "autorisation",
           "permis",
-          "production d’électricité",
-          "production d'électricité",
-          "distribution d’électricité",
-          "distribution d'électricité",
-          "agrément"
+          "production dâ€™Ã©lectricitÃ©",
+          "production d'Ã©lectricitÃ©",
+          "distribution dâ€™Ã©lectricitÃ©",
+          "distribution d'Ã©lectricitÃ©",
+          "agrÃ©ment"
         ]
       },
       "metadata": {
@@ -128,7 +128,7 @@
           "facturation",
           "compteur",
           "client",
-          "réclamation",
+          "rÃ©clamation",
           "conditions de service",
           "metering"
         ]
@@ -160,11 +160,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "sécurité électrique",
+          "sÃ©curitÃ© Ã©lectrique",
           "norme technique",
           "raccordement",
           "maintenance",
-          "risque électrique",
+          "risque Ã©lectrique",
           "protection",
           "technical standard"
         ],
@@ -198,10 +198,10 @@
         "on_partial": "review_required",
         "required_signals": [
           "AT2ER",
-          "électrification rurale",
-          "énergie renouvelable",
+          "Ã©lectrification rurale",
+          "Ã©nergie renouvelable",
           "solaire",
-          "mini-réseau",
+          "mini-rÃ©seau",
           "off-grid",
           "renewable"
         ]
@@ -235,11 +235,11 @@
         "required_signals": [
           "environnement",
           "impact environnemental",
-          "étude d’impact",
-          "étude d'impact",
+          "Ã©tude dâ€™impact",
+          "Ã©tude d'impact",
           "pollution",
           "social",
-          "réinstallation",
+          "rÃ©installation",
           "EIES"
         ]
       },

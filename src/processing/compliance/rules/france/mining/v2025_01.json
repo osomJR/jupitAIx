@@ -53,7 +53,7 @@
         ]
       },
       {
-        "name": "Installations Classées pour la Protection de l’Environnement (ICPE)",
+        "name": "Installations ClassÃ©es pour la Protection de lâ€™Environnement (ICPE)",
         "issuer": "Ministry for Ecological Transition",
         "url": "https://www.ecologie.gouv.fr/politiques-publiques/installations-classees-protection-lenvironnement",
         "used_for": [
@@ -126,10 +126,10 @@
         "required_signals": [
           "autorisation de travaux",
           "forage",
-          "carrière",
+          "carriÃ¨re",
           "excavation",
           "plan d'exploitation",
-          "sécurité",
+          "sÃ©curitÃ©",
           "inspection"
         ],
         "min_count": 2
@@ -162,9 +162,9 @@
         "on_partial": "review_required",
         "required_signals": [
           "autorisation environnementale",
-          "étude d'impact",
-          "réhabilitation",
-          "remise en état",
+          "Ã©tude d'impact",
+          "rÃ©habilitation",
+          "remise en Ã©tat",
           "pollution",
           "eaux",
           "sols"
@@ -188,7 +188,7 @@
       "rule_version": "2025.01",
       "title": "Public participation or consultation evidence is present where applicable",
       "regulatory_domain": "sector_regulator_requirements",
-      "summary": "Checks for public consultation, enquête publique, consultation record, or public-decision file evidence.",
+      "summary": "Checks for public consultation, enquÃªte publique, consultation record, or public-decision file evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",
         "search_mode": "substring",
@@ -198,7 +198,7 @@
         "on_missing": "review_required",
         "on_partial": "review_required",
         "required_signals": [
-          "enquête publique",
+          "enquÃªte publique",
           "participation du public",
           "consultation",
           "avis du public",

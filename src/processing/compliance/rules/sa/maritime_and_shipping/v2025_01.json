@@ -2,7 +2,7 @@
   "pack_id": "maritime_and_shipping",
   "pack_name": "Maritime and Shipping",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -63,11 +63,7 @@
       {
         "name": "National Ports Act and port-regulatory framework",
         "issuer": "Republic of South Africa / Ports Regulator",
-        "used_for": [
-          "port operations",
-          "port access",
-          "terminal services"
-        ],
+        "used_for": ["port operations", "port access", "terminal services"],
         "url": "https://www.portsregulator.org/"
       }
     ]
@@ -102,9 +98,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "SAMSA Act 1998"
-        ]
+        "source_basis": ["SAMSA Act 1998"]
       }
     },
     {
@@ -137,16 +131,14 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Merchant Shipping / SAMSA safety framework"
-        ]
+        "source_basis": ["Merchant Shipping / SAMSA safety framework"]
       }
     },
     {
       "rule_id": "MAR-SA-POLL-003",
       "rule_version": "2025.01",
       "title": "Marine pollution prevention evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for pollution prevention, oil spill, ballast, waste, MARPOL, or marine environment controls.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -171,9 +163,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "SAMSA pollution-prevention mandate"
-        ]
+        "source_basis": ["SAMSA pollution-prevention mandate"]
       }
     },
     {
@@ -205,9 +195,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Merchant Shipping / seafarer competency framework"
-        ]
+        "source_basis": ["Merchant Shipping / seafarer competency framework"]
       }
     },
     {
@@ -239,10 +227,9 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "National Ports / port access framework"
-        ]
+        "source_basis": ["National Ports / port access framework"]
       }
     }
   ]
 }
+

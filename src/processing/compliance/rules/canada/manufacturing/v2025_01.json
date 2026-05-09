@@ -178,7 +178,7 @@
       "rule_id": "MFG-ENV-001",
       "rule_version": "2025.01",
       "title": "Environmental or hazardous-substance controls are documented",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for environmental, hazardous substance, waste, emissions, or CEPA-linked controls.",
       "evaluation": {
         "strategy": "any_signal_presence",

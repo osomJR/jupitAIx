@@ -2,7 +2,7 @@
   "pack_id": "payment_platforms_and_services",
   "pack_name": "Payment Platforms and Services",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -43,11 +43,7 @@
       {
         "name": "Payment Association of South Africa legal and regulatory framework",
         "issuer": "PASA",
-        "used_for": [
-          "PSMB participation",
-          "PCH agreements",
-          "clearing rules"
-        ],
+        "used_for": ["PSMB participation", "PCH agreements", "clearing rules"],
         "url": "https://pasa.org.za/national-payment-system/nps-legal-regulatory-framework/"
       },
       {
@@ -63,10 +59,7 @@
       {
         "name": "Protection of Personal Information Act, 2013",
         "issuer": "Information Regulator / Republic of South Africa",
-        "used_for": [
-          "payment data privacy",
-          "customer personal information"
-        ],
+        "used_for": ["payment data privacy", "customer personal information"],
         "url": "https://www.dffe.gov.za/legislation/paia_popia"
       }
     ]
@@ -101,9 +94,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NPS Act / SARB payments oversight"
-        ]
+        "source_basis": ["NPS Act / SARB payments oversight"]
       }
     },
     {
@@ -136,9 +127,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "PASA legal and regulatory framework"
-        ]
+        "source_basis": ["PASA legal and regulatory framework"]
       }
     },
     {
@@ -171,9 +160,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "FIC Act routing for payment services"
-        ]
+        "source_basis": ["FIC Act routing for payment services"]
       }
     },
     {
@@ -240,9 +227,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "payment security / POPIA / cybersecurity controls"
-        ]
+        "source_basis": ["payment security / POPIA / cybersecurity controls"]
       }
     }
   ]

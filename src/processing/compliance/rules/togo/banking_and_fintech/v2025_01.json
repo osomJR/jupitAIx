@@ -84,9 +84,9 @@
         "required_signals": [
           "BCEAO",
           "service de paiement",
-          "établissement de paiement",
-          "monnaie électronique",
-          "agrément",
+          "Ã©tablissement de paiement",
+          "monnaie Ã©lectronique",
+          "agrÃ©ment",
           "autorisation",
           "payment service provider",
           "electronic money issuer"
@@ -123,7 +123,7 @@
           "KYC",
           "connaissance du client",
           "identification du client",
-          "bénéficiaire effectif",
+          "bÃ©nÃ©ficiaire effectif",
           "due diligence",
           "screening",
           "vigilance"
@@ -159,8 +159,8 @@
         "required_signals": [
           "surveillance des transactions",
           "transaction monitoring",
-          "opération suspecte",
-          "déclaration de soupçon",
+          "opÃ©ration suspecte",
+          "dÃ©claration de soupÃ§on",
           "sanctions",
           "alerte AML"
         ],
@@ -193,11 +193,11 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "données personnelles",
-          "données client",
+          "donnÃ©es personnelles",
+          "donnÃ©es client",
           "consentement",
-          "protection des données",
-          "confidentialité",
+          "protection des donnÃ©es",
+          "confidentialitÃ©",
           "privacy"
         ],
         "min_count": 2
@@ -229,14 +229,14 @@
         "on_missing": "missing",
         "on_partial": "review_required",
         "required_signals": [
-          "cybersécurité",
+          "cybersÃ©curitÃ©",
           "fraude",
-          "incident de sécurité",
-          "contrôle d’accès",
-          "contrôle d'accès",
-          "continuité d’activité",
-          "continuité d'activité",
-          "sécurité informatique"
+          "incident de sÃ©curitÃ©",
+          "contrÃ´le dâ€™accÃ¨s",
+          "contrÃ´le d'accÃ¨s",
+          "continuitÃ© dâ€™activitÃ©",
+          "continuitÃ© d'activitÃ©",
+          "sÃ©curitÃ© informatique"
         ],
         "min_count": 2
       },
@@ -269,9 +269,9 @@
         "on_partial": "review_required",
         "required_signals": [
           "frais",
-          "conditions générales",
+          "conditions gÃ©nÃ©rales",
           "plainte",
-          "réclamation",
+          "rÃ©clamation",
           "recours",
           "protection du consommateur",
           "service client"

@@ -148,7 +148,7 @@
       "rule_id": "UK-TEL-VUL-003",
       "rule_version": "2025.01",
       "title": "Vulnerable or disabled customer protections are documented",
-      "regulatory_domain": "accessibility",
+      "regulatory_domain": "consumer_protection",
       "summary": "Checks for vulnerable customer policy, disabled customer services, priority fault repair, text relay, or accessibility evidence.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -185,7 +185,7 @@
       "rule_id": "UK-TEL-NET-004",
       "rule_version": "2025.01",
       "title": "Network standards, interfaces, or resilience controls are documented",
-      "regulatory_domain": "technical_standards",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for standards, specifications, network resilience, service availability, interface, emergency calls, or outage evidence.",
       "evaluation": {
         "strategy": "any_signal_presence",

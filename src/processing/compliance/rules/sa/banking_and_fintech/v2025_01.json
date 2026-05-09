@@ -2,7 +2,7 @@
   "pack_id": "banking_and_fintech",
   "pack_name": "Banking and Fintech",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -44,29 +44,19 @@
       {
         "name": "Banks Act 94 of 1990",
         "issuer": "Republic of South Africa / Prudential Authority",
-        "used_for": [
-          "bank licensing",
-          "prudential supervision"
-        ],
+        "used_for": ["bank licensing", "prudential supervision"],
         "url": "https://www.gov.za/documents/banks-act"
       },
       {
         "name": "National Payment System Act 78 of 1998",
         "issuer": "Republic of South Africa / SARB",
-        "used_for": [
-          "payment system regulation",
-          "clearing and settlement"
-        ],
+        "used_for": ["payment system regulation", "clearing and settlement"],
         "url": "https://www.gov.za/documents/national-payment-system-act"
       },
       {
         "name": "Financial Intelligence Centre Act, 2001 and FIC compliance guidance",
         "issuer": "Financial Intelligence Centre",
-        "used_for": [
-          "AML/CFT/CPF",
-          "customer due diligence",
-          "reporting"
-        ],
+        "used_for": ["AML/CFT/CPF", "customer due diligence", "reporting"],
         "url": "https://www.fic.gov.za/compliance/"
       },
       {
@@ -82,11 +72,7 @@
       {
         "name": "Consumer Protection Act, 2008",
         "issuer": "Republic of South Africa / National Consumer Commission",
-        "used_for": [
-          "consumer protection",
-          "disclosures",
-          "fair marketing"
-        ],
+        "used_for": ["consumer protection", "disclosures", "fair marketing"],
         "url": "https://www.gov.za/documents/consumer-protection-act"
       }
     ]
@@ -162,9 +148,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "FIC Act obligations"
-        ]
+        "source_basis": ["FIC Act obligations"]
       }
     },
     {
@@ -198,9 +182,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "National Payment System Act"
-        ]
+        "source_basis": ["National Payment System Act"]
       }
     },
     {
@@ -233,9 +215,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "POPIA"
-        ]
+        "source_basis": ["POPIA"]
       }
     },
     {

@@ -2,7 +2,7 @@
   "pack_id": "mining",
   "pack_name": "Mining",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -43,11 +43,7 @@
       {
         "name": "Mine Health and Safety Act, 1996 and Mine Health and Safety Inspectorate",
         "issuer": "DMPR / Mine Health and Safety Inspectorate",
-        "used_for": [
-          "mine health and safety",
-          "inspections",
-          "audits"
-        ],
+        "used_for": ["mine health and safety", "inspections", "audits"],
         "url": "https://www.dmre.gov.za/mineral-resources/mine-health-and-safety/overview"
       },
       {
@@ -102,9 +98,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "MPRDA"
-        ]
+        "source_basis": ["MPRDA"]
       }
     },
     {
@@ -137,9 +131,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Mine Health and Safety Act / MHSI"
-        ]
+        "source_basis": ["Mine Health and Safety Act / MHSI"]
       }
     },
     {
@@ -171,16 +163,14 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "MHSI guidelines for mandatory COPs"
-        ]
+        "source_basis": ["MHSI guidelines for mandatory COPs"]
       }
     },
     {
       "rule_id": "MIN-SA-ENV-004",
       "rule_version": "2025.01",
       "title": "Environmental authorization or rehabilitation evidence is present",
-      "regulatory_domain": "environmental",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for environmental authorization, EMP/EMPr, rehabilitation, closure, waste, or water-use controls.",
       "evaluation": {
         "strategy": "any_signal_presence",
@@ -205,9 +195,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NEMA / mining environmental management framework"
-        ]
+        "source_basis": ["NEMA / mining environmental management framework"]
       }
     },
     {
@@ -239,10 +227,9 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "MPRDA social and labour obligations"
-        ]
+        "source_basis": ["MPRDA social and labour obligations"]
       }
     }
   ]
 }
+

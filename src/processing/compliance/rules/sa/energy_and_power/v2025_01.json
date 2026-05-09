@@ -2,7 +2,7 @@
   "pack_id": "energy_and_power",
   "pack_name": "Energy and Power Sector Compliance Overlay",
   "pack_version": "v2025_01",
-  "jurisdiction": "south_africa",
+  "jurisdiction": "sa",
   "effective_date": "2025-01-01",
   "last_reviewed": "2026-05-07",
   "status": "draft_starter_pack_requires_legal_review",
@@ -33,10 +33,7 @@
       {
         "name": "National Energy Regulator Act, 2004",
         "issuer": "Republic of South Africa / NERSA",
-        "used_for": [
-          "energy regulator establishment",
-          "energy regulation"
-        ],
+        "used_for": ["energy regulator establishment", "energy regulation"],
         "url": "https://www.nersa.org.za/about-us/our-profile"
       },
       {
@@ -52,35 +49,25 @@
       {
         "name": "Gas Act, 2001",
         "issuer": "Republic of South Africa / NERSA",
-        "used_for": [
-          "piped gas regulation"
-        ],
+        "used_for": ["piped gas regulation"],
         "url": "https://www.nersa.org.za/about-us/our-profile"
       },
       {
         "name": "Petroleum Pipelines Act, 2003",
         "issuer": "Republic of South Africa / NERSA",
-        "used_for": [
-          "petroleum pipeline licensing and regulation"
-        ],
+        "used_for": ["petroleum pipeline licensing and regulation"],
         "url": "https://www.nersa.org.za/about-us/our-profile"
       },
       {
         "name": "Occupational Health and Safety Act, 1993",
         "issuer": "Republic of South Africa / Department of Employment and Labour",
-        "used_for": [
-          "workplace health and safety"
-        ],
+        "used_for": ["workplace health and safety"],
         "url": "https://www.gov.za/documents/occupational-health-and-safety-act"
       },
       {
         "name": "Consumer Protection Act, 2008",
         "issuer": "Republic of South Africa / National Consumer Commission",
-        "used_for": [
-          "consumer protection",
-          "disclosures",
-          "fair marketing"
-        ],
+        "used_for": ["consumer protection", "disclosures", "fair marketing"],
         "url": "https://www.gov.za/documents/consumer-protection-act"
       }
     ]
@@ -189,16 +176,14 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "NERSA electricity licensing and compliance"
-        ]
+        "source_basis": ["NERSA electricity licensing and compliance"]
       }
     },
     {
       "rule_id": "POWER-SA-HSE-001",
       "rule_version": "2025.01",
       "title": "Energy-sector health, safety, or environmental controls are documented",
-      "regulatory_domain": "health_safety",
+      "regulatory_domain": "sector_regulator_requirements",
       "summary": "Checks for OHS, electrical safety, environmental management, incident reporting, emergency response, or hazard controls.",
       "evaluation": {
         "strategy": "min_signal_count",
@@ -224,9 +209,7 @@
         "evidence_expectation": "The reviewed document/document set should contain direct textual evidence for this control, or the engine should return missing/review_required according to the rule strategy.",
         "legal_review_required": true,
         "review_guidance": "A qualified South African legal/compliance reviewer must confirm applicability, current-law accuracy, legal sufficiency, and whether absence of textual evidence should be treated as non-compliance.",
-        "source_basis": [
-          "Occupational Health and Safety Act"
-        ]
+        "source_basis": ["Occupational Health and Safety Act"]
       }
     },
     {

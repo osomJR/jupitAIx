@@ -1,15 +1,15 @@
 {
-  "pack_id": "nigeria.legal_law_firm",
+  "pack_id": "nigeria.law_and_legal",
   "pack_version": "v2025_01",
   "jurisdiction": "nigeria",
-  "sector_pack": "legal_law_firm",
+  "sector_pack": "law_and_legal",
   "display_name": "Legal and Law Firm",
   "status": "draft_starter_pack_requires_legal_review",
   "generated_at": "2026-04-29",
   "intended_engine": "jupitAIx compliance rule-pack registry/evaluator v1",
   "requires_core_control_library": true,
   "metadata": {
-    "scope_note": "Nigeria v1 sector overlay pack. Use together with nigeria_core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
+    "scope_note": "Nigeria v1 sector overlay pack. Use together with core_control_library for baseline privacy, cybersecurity, governance, evidence, and human-review controls.",
     "versioning_note": "This is a frozen starter snapshot. Do not mutate after use in reports; publish v2025_02 or later for changes.",
     "official_sources_consulted": [
       {
@@ -127,10 +127,7 @@
           "beneficial owner",
           "engagement letter"
         ],
-        "optional_signals": [
-          "risk assessment",
-          "retainer"
-        ],
+        "optional_signals": ["risk assessment", "retainer"],
         "min_count": 2,
         "on_missing": "missing",
         "on_partial": "review_required",
@@ -228,19 +225,14 @@
           "retention",
           "lawful basis"
         ],
-        "optional_signals": [
-          "processor",
-          "consent"
-        ],
+        "optional_signals": ["processor", "consent"],
         "min_count": 2,
         "on_missing": "missing",
         "on_partial": "review_required",
         "on_prohibited_match": "failed"
       },
       "metadata": {
-        "source_basis": [
-          "NDPC Nigeria Data Protection Act GAID 2025"
-        ],
+        "source_basis": ["NDPC Nigeria Data Protection Act GAID 2025"],
         "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
@@ -270,10 +262,7 @@
         "on_prohibited_match": "failed"
       },
       "metadata": {
-        "source_basis": [
-          "NDPC GAID 2025",
-          "Cybercrimes Act 2024"
-        ],
+        "source_basis": ["NDPC GAID 2025", "Cybercrimes Act 2024"],
         "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
@@ -336,9 +325,7 @@
         "on_prohibited_match": "failed"
       },
       "metadata": {
-        "source_basis": [
-          "Professional conduct/client-service controls"
-        ],
+        "source_basis": ["Professional conduct/client-service controls"],
         "implementation_note": "Evidence is text-derived and must be reviewed by a qualified compliance/legal reviewer before reliance.",
         "legal_review_status": "draft_starter_pack_requires_legal_review"
       }
