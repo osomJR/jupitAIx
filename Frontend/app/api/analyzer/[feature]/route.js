@@ -3,16 +3,16 @@ import { auth0 } from "@/lib/auth0";
 const ALLOWED_FEATURES = [
   "convert",
   "summarize",
-  "grammar correct",
+  "grammar-correct",
   "translate",
   "transcribe",
   "explain",
-  "generate questions",
-  "generate answers",
+  "generate-questions",
+  "generate-answers",
   "redact",
-  "data mask",
+  "data-mask",
   "compliance",
-  "structured extraction",
+  "structured-extraction",
 ];
 
 export async function GET() {

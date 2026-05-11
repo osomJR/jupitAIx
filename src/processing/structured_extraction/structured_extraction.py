@@ -48,6 +48,10 @@ from src.validation import (
     validate_analyzer_request,
     validate_analyzer_response,
 )
+try:
+    from src.storage.artifacts import LocalArtifactStorage, guess_content_type
+except ImportError:  # pragma: no cover
+    from storage.artifacts import LocalArtifactStorage, guess_content_type
 
 
 STRUCTURED_EXTRACTION_RULES = """
@@ -100,7 +104,11 @@ class SourceEvidence:
             "line_number": self.line_number,
             "excerpt": self.excerpt,
         }
-
+@dataclass(frozen=True)
+class StructuredExtractionExecution:
+    response: AnalyzerResponse
+    preview_payload: dict[str, Any]
+    preview_rows: list[dict[str, Any]]
 
 @dataclass(frozen=True)
 class ExtractedField:
@@ -741,7 +749,6 @@ LocalStructuredExtractionArtifactStore = LocalStructuredArtifactWriter
 # Engine facade
 # =========================
 
-
 class StructuredExtractionEngine:
     def __init__(
         self,
@@ -753,13 +760,37 @@ class StructuredExtractionEngine:
         self.backend = backend or DeterministicStructuredExtractionBackend()
         self.writer = writer or LocalStructuredArtifactWriter(self.config.artifact_base_dir)
 
-    def run(self, request: Union[AnalyzerRequest, Mapping[str, Any]]) -> AnalyzerResponse:
+    def _validate_engine_scope(self, request: AnalyzerRequest) -> None:
+        if request.action != FeatureType.structured_extract:
+            raise ValueError(
+                "StructuredExtractionEngine only handles the structured_extract action."
+            )
+
+        if not isinstance(request.payload, StructuredExtractionRequest):
+            raise ValueError(
+                "structured_extract requires StructuredExtractionRequest payload."
+            )
+
+        if not isinstance(request.policy, OutputPolicy):
+            raise ValueError("structured_extract requires OutputPolicy.")
+
+        if not isinstance(request.input, (DocumentPayload, DocumentSetPayload)):
+            raise ValueError(
+                "structured_extract requires DocumentPayload or DocumentSetPayload input."
+            )
+
+    def execute(
+        self,
+        request: Union[AnalyzerRequest, Mapping[str, Any]],
+    ) -> StructuredExtractionExecution:
         req = validate_analyzer_request(request)
         self._validate_engine_scope(req)
+
         payload = req.payload
         assert isinstance(payload, StructuredExtractionRequest)
 
         documents = _iter_request_documents(req)
+
         extraction_output = self.backend.extract(
             documents=documents,
             result_shape=payload.result_shape,
@@ -794,19 +825,30 @@ class StructuredExtractionEngine:
             ),
             human_review=HumanReviewRequirement(),
         )
-        return validate_analyzer_response(response, request=req)
 
-    def _validate_engine_scope(self, request: AnalyzerRequest) -> None:
-        if request.action != FeatureType.structured_extract:
-            raise ValueError("StructuredExtractionEngine only handles the structured_extract action.")
-        if not isinstance(request.payload, StructuredExtractionRequest):
-            raise ValueError("structured_extract requires StructuredExtractionRequest payload.")
-        if not isinstance(request.policy, OutputPolicy):
-            raise ValueError("structured_extract requires OutputPolicy.")
+        validated_response = validate_analyzer_response(response, request=req)
+
+        return StructuredExtractionExecution(
+            response=validated_response,
+            preview_payload=extraction_output.payload,
+            preview_rows=extraction_output.tabular_rows,
+        )
+
+    def run(
+        self,
+        request: Union[AnalyzerRequest, Mapping[str, Any]],
+    ) -> AnalyzerResponse:
+        return self.execute(request).response
 
 
 def run_structured_extraction(request: Union[AnalyzerRequest, Mapping[str, Any]]) -> AnalyzerResponse:
     return StructuredExtractionEngine().run(request)
+
+
+def run_structured_extraction_with_preview(
+    request: Union[AnalyzerRequest, Mapping[str, Any]],
+) -> StructuredExtractionExecution:
+    return StructuredExtractionEngine().execute(request)
 
 
 # =========================
@@ -1244,14 +1286,24 @@ def _timestamp_iso() -> str:
 
 
 def _artifact_from_path(path: Path) -> PersistedArtifact:
-    size_mb = round(path.stat().st_size / (1024 * 1024), 4)
+    storage = LocalArtifactStorage()
+
+    stored = storage.persist(
+        source_file_path=str(path),
+        artifact_name=path.name,
+        content_type=guess_content_type(str(path)),
+    )
+
+    stored_path = Path(stored.stored_path)
+    size_mb = round(stored_path.stat().st_size / (1024 * 1024), 4)
+
     return PersistedArtifact(
-        file_name=path.name,
-        file_extension=path.suffix.lstrip("."),
+        file_name=stored.original_artifact_name,
+        file_extension=stored_path.suffix.lstrip("."),
         file_size_mb=size_mb,
-        file_path=str(path),
-        storage_key=str(path),
-        download_url=None,
+        file_path=stored.stored_path,
+        storage_key=stored.storage_key,
+        download_url=stored.download_url,
     )
 
 

@@ -1096,7 +1096,7 @@ export const structuredExtractionPageTranslations = {
     badge: "Structured document extraction",
     title: "Extract structured data from documents",
     description:
-      "Upload a PDF, Word document, JPG, JPEG, or PNG and export extracted fields, tables, or records as JSON, CSV, or Excel",
+      "Upload files or document and export extracted fields, tables, and records",
     uploadTitle: "Upload document to extract",
     allowedFileInputs: "Allowed inputs: .pdf, .docx, .jpg, .jpeg, .png",
     extractionOutput: "Extraction result",
@@ -1124,7 +1124,7 @@ export const structuredExtractionPageTranslations = {
     resultShapeLabel: "Output layout",
     resultShapeHelp: "Choose how the extracted data should be organized",
     resultShapeExamples: "Not sure? Use Complete structured output",
-    documentClassesLabel: "Document type(s)",
+    documentClassesLabel: "Document types",
     documentClassesHelp:
       "Select the document type that best matches your file, select more than one only if the file combines document types",
     documentClassesEmptyHelp: "At least one document type is required",
@@ -1218,7 +1218,7 @@ export const structuredExtractionPageTranslations = {
     badge: "Extraction structurée de documents",
     title: "Extraire des données structurées de documents",
     description:
-      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et exportez les champs, tableaux ou enregistrements extraits en JSON, CSV ou Excel",
+      "Téléversez des fichiers ou documents et exportez les champs, tableaux et enregistrements extraits",
     uploadTitle: "Téléverser un document à extraire",
     allowedFileInputs: "Entrées autorisées: .pdf, .docx, .jpg, .jpeg, .png",
     extractionOutput: "Résultat de l’extraction",
@@ -1250,7 +1250,7 @@ export const structuredExtractionPageTranslations = {
       "Choisissez comment les données extraites doivent être organisées",
     resultShapeExamples:
       "Vous hésitez ? Utilisez la sortie structurée complète",
-    documentClassesLabel: "Type(s) de document",
+    documentClassesLabel: "Types de document",
     documentClassesHelp:
       "Sélectionnez le type qui correspond le mieux au fichier, sélectionnez plusieurs types seulement si le fichier combine réellement plusieurs documents",
     documentClassesEmptyHelp: "Au moins un type de document est requis",
@@ -1345,9 +1345,9 @@ export const structuredExtractionPageTranslations = {
 export const compliancePageTranslations = {
   en: {
     badge: "Multi-country compliance checks",
-    title: "Check documents against country-specific compliance rules",
+    title: "Check documents against compliance rules",
     description:
-      "Upload a PDF, Word document, JPG, JPEG, or PNG and generate a compliance report from configured jurisdiction and sector rule packs",
+      "Upload files or documents and generate a compliance report from configured jurisdiction and sector rule packs",
     uploadTitle: "Upload document to check",
     allowedFileInputs: "Allowed inputs: .pdf, .docx, .jpg, .jpeg, .png",
     complianceOutput: "Compliance result",
@@ -1505,10 +1505,9 @@ export const compliancePageTranslations = {
 
   fr: {
     badge: "Contrôles de conformité multi-pays",
-    title:
-      "Vérifier les documents selon les règles de conformité propres à chaque pays",
+    title: "Vérifier les documents selon les règles de conformité",
     description:
-      "Téléversez un PDF, un document Word, un JPG, un JPEG ou un PNG et générez un rapport de conformité à partir des packs de règles configurés par juridiction et par secteur",
+      "Téléversez des fichiers ou documents et générez un rapport de conformité à partir des packs de règles configurés par juridiction et par secteur",
     uploadTitle: "Téléverser un document à vérifier",
     allowedFileInputs: "Entrées autorisées: .pdf, .docx, .jpg, .jpeg, .png",
     complianceOutput: "Résultat de conformité",

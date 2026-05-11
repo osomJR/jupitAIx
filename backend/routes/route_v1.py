@@ -33,7 +33,7 @@ from src.processing.data_protection.redaction.redact import (
 from src.processing.compliance.compliance import run_compliance, preview_compliance
 from src.processing.compliance.registry import RuleRegistryError
 from src.processing.structured_extraction.structured_extraction import (
-    run_structured_extraction,
+    run_structured_extraction, run_structured_extraction_with_preview,
 )
 
 from src.schema import (
@@ -201,7 +201,16 @@ def _run_privacy_request(
 def _download_url_for_storage_key(storage_key: str | None) -> str | None:
     if not isinstance(storage_key, str) or not storage_key.strip():
         return None
-    return f"/api/analyzer/artifacts/{storage_key.strip()}"
+
+    key = storage_key.strip().replace("\\", "/")
+
+    # Remove prefixes if the caller accidentally stored a full/partial artifact path.
+    key = key.removeprefix("/api/analyzer/artifacts/")
+    key = key.removeprefix("/api/v1/analyzer/artifacts/")
+    key = key.removeprefix("/artifacts/")
+    key = key.removeprefix("artifacts/")
+
+    return f"/api/analyzer/artifacts/{key}"
 
 
 def _ensure_download_url(response: AnalyzerResponse) -> AnalyzerResponse:
@@ -214,6 +223,37 @@ def _ensure_download_url(response: AnalyzerResponse) -> AnalyzerResponse:
 
     return response
 
+def _run_structured_extraction_request_with_preview(
+    request: AnalyzerRequest,
+) -> dict[str, Any]:
+    try:
+        execution = run_structured_extraction_with_preview(request)
+        response = _ensure_download_url(execution.response)
+
+        preview_rows_limit = 50
+        preview_rows = execution.preview_rows[:preview_rows_limit]
+
+        return {
+            "analyzer_response": response.model_dump(mode="json"),
+            "preview_payload": execution.preview_payload,
+            "preview_rows": preview_rows,
+            "preview_truncated": len(execution.preview_rows) > preview_rows_limit,
+        }
+
+    except HTTPException:
+        raise
+    except RuleRegistryError as exc:
+        raise _bad_request(str(exc)) from exc
+    except UploadError as exc:
+        raise _bad_request(str(exc)) from exc
+    except ValueError as exc:
+        raise _bad_request(str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise _bad_request(str(exc)) from exc
+    except TypeError as exc:
+        raise _bad_request(str(exc)) from exc
+    except RuntimeError as exc:
+        raise _service_unavailable(str(exc)) from exc
 
 def _run_standalone_feature_request(
     request: AnalyzerRequest,
@@ -808,7 +848,6 @@ def data_mask_route(
 
 @router.post(
     "/structured-extraction",
-    response_model=AnalyzerResponse,
     dependencies=[Depends(rate_limit_for_feature(FeatureType.structured_extract))],
 )
 def structured_extraction_route(
@@ -821,7 +860,7 @@ def structured_extraction_route(
         StructuredExtractionResultShape.machine_readable
     ),
     system_language: SystemLanguage = Form(SystemLanguage.english),
-) -> AnalyzerResponse:
+) -> dict[str, Any]:
     try:
         input_payload = build_uploaded_document_payload(
             action=FeatureType.structured_extract,
@@ -850,7 +889,7 @@ def structured_extraction_route(
         system_language=system_language,
     )
 
-    return _run_standalone_feature_request(request)
+    return _run_structured_extraction_request_with_preview(request)
 
 @router.post(
     "/compliance",

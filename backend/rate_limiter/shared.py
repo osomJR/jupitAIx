@@ -56,6 +56,7 @@ HEAVY_FEATURES = frozenset(
         FeatureType.redact,
         FeatureType.data_mask,
         FeatureType.compliance,
+        FeatureType.structured_extract,
     }
 )
 
@@ -68,7 +69,8 @@ ANONYMOUS_BLOCKED_FEATURES = frozenset(
         FeatureType.transcribe,
         FeatureType.redact,
         FeatureType.data_mask,
-        FeatureType.compliance
+        FeatureType.compliance,
+        FeatureType.structured_extract,
     }
 )
 

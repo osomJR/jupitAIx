@@ -11,6 +11,7 @@ Allowed heavy features:
 - redact
 - data_mask
 - compliance
+- structured_extract
 
 Tier policy:
 - total requests per day: 7

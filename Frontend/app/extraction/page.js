@@ -307,6 +307,27 @@ function extractDownloadInfo(responseData, fallbackFilename = "") {
   };
 }
 
+function extractStructuredPreview(responseData) {
+  const previewPayload =
+    responseData?.preview_payload ||
+    responseData?.previewPayload ||
+    responseData?.preview ||
+    null;
+
+  const previewRows = Array.isArray(responseData?.preview_rows)
+    ? responseData.preview_rows
+    : Array.isArray(responseData?.previewRows)
+      ? responseData.previewRows
+      : [];
+
+  return {
+    previewPayload,
+    previewRows,
+    previewTruncated: Boolean(
+      responseData?.preview_truncated || responseData?.previewTruncated,
+    ),
+  };
+}
 function SearchableMultiSelect({
   title,
   helpText,
@@ -317,6 +338,7 @@ function SearchableMultiSelect({
   onToggle,
   getLabel,
   searchPlaceholder,
+  disabled = false,
 }) {
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLowerCase();
@@ -342,8 +364,13 @@ function SearchableMultiSelect({
           <button
             key={value}
             type="button"
-            onClick={() => onToggle(value)}
-            className="rounded-full border border-cyan-300/30 bg-cyan-400/15 px-3 py-1 text-xs text-cyan-50 transition hover:bg-cyan-400/20"
+            disabled={disabled}
+            onClick={() => !disabled && onToggle(value)}
+            className={`rounded-full border px-3 py-1 text-xs transition ${
+              disabled
+                ? "cursor-not-allowed border-white/10 bg-white/5 text-white/35"
+                : "border-cyan-300/30 bg-cyan-400/15 text-cyan-50 hover:bg-cyan-400/20"
+            }`}
           >
             {getLabel(value)} ×
           </button>
@@ -353,12 +380,17 @@ function SearchableMultiSelect({
       <input
         type="search"
         value={query}
+        disabled={disabled}
         onChange={(event) => setQuery(event.target.value)}
         placeholder={searchPlaceholder}
-        className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-cyan-300/40 focus:bg-white/10"
+        className={`mt-3 w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/35 ${
+          disabled
+            ? "cursor-not-allowed bg-white/5 text-white/35"
+            : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+        }`}
       />
 
-      <div className="mt-3 grid max-h-32 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+      <div className="mt-3 grid max-h-24 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
         {filteredItems.map((item) => {
           const checked = selectedValues.includes(item);
 
@@ -366,11 +398,14 @@ function SearchableMultiSelect({
             <button
               key={item}
               type="button"
-              onClick={() => onToggle(item)}
+              disabled={disabled}
+              onClick={() => !disabled && onToggle(item)}
               className={`flex items-center justify-between gap-2 rounded-xl border px-3 py-2 text-left text-xs transition ${
-                checked
-                  ? "border-cyan-300/40 bg-cyan-300/15 text-cyan-50"
-                  : "border-white/10 bg-white/5 text-white/65 hover:bg-white/10"
+                disabled
+                  ? "cursor-not-allowed border-white/10 bg-white/5 text-white/35 opacity-80"
+                  : checked
+                    ? "border-cyan-300/40 bg-cyan-300/15 text-cyan-50"
+                    : "border-white/10 bg-white/5 text-white/65 hover:bg-white/10"
               }`}
             >
               <span>{getLabel(item)}</span>
@@ -402,6 +437,9 @@ export default function StructuredExtractionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resultSummary, setResultSummary] = useState("");
   const [downloadInfo, setDownloadInfo] = useState(null);
+  const [previewPayload, setPreviewPayload] = useState(null);
+  const [previewRows, setPreviewRows] = useState([]);
+  const [previewTruncated, setPreviewTruncated] = useState(false);
 
   const inputExtension = useMemo(() => {
     if (!selectedFile) return "";
@@ -439,10 +477,14 @@ export default function StructuredExtractionPage() {
     documentClasses.length > 0 &&
     OUTPUT_FORMATS.includes(outputFormat) &&
     RESULT_SHAPES.includes(resultShape);
+  const isProcessing = isSubmitting;
 
   function resetResultState() {
     setResultSummary("");
     setDownloadInfo(null);
+    setPreviewPayload(null);
+    setPreviewRows([]);
+    setPreviewTruncated(false);
   }
 
   function rejectFile(message) {
@@ -487,6 +529,7 @@ export default function StructuredExtractionPage() {
   function handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
+    if (isProcessing) return;
 
     const file = event.dataTransfer.files?.[0];
     handlePickedFile(file);
@@ -498,6 +541,7 @@ export default function StructuredExtractionPage() {
   }
 
   function toggleDocumentClass(value) {
+    if (isProcessing) return;
     setDocumentClasses((current) => {
       if (current.includes(value)) {
         if (current.length === 1) return current;
@@ -510,6 +554,7 @@ export default function StructuredExtractionPage() {
   }
 
   function addSuggestedField(field) {
+    if (isProcessing) return;
     setSelectedFieldsText((current) => {
       const next = uniqueStrings([...parseSelectedFields(current), field]);
       return next.join("\n");
@@ -519,6 +564,7 @@ export default function StructuredExtractionPage() {
   }
 
   function clearSelectedFields() {
+    if (isProcessing) return;
     setSelectedFieldsText("");
     setError("");
     resetResultState();
@@ -600,6 +646,11 @@ export default function StructuredExtractionPage() {
       );
 
       setDownloadInfo(resolvedDownload);
+      const structuredPreview = extractStructuredPreview(responseData);
+
+      setPreviewPayload(structuredPreview.previewPayload);
+      setPreviewRows(structuredPreview.previewRows);
+      setPreviewTruncated(structuredPreview.previewTruncated);
 
       const classLabels = documentClasses
         .map((item) => t.documentClassLabels[item] || item)
@@ -643,8 +694,8 @@ export default function StructuredExtractionPage() {
       <div className="relative isolate min-h-screen overflow-x-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 
-        <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-5 md:px-6 lg:py-6">
-          <header className="mb-4 shrink-0">
+        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 md:px-5 lg:py-4">
+          <header className="mb-3 shrink-0">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <button
                 type="button"
@@ -661,20 +712,20 @@ export default function StructuredExtractionPage() {
               </div>
             </div>
 
-            <div className="mt-4">
-              <h1 className="max-w-full text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:whitespace-nowrap lg:text-[2.65rem] lg:leading-tight xl:text-5xl">
+            <div className="mt-3">
+              <h1 className="max-w-full text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:whitespace-nowrap lg:text-[2.15rem] lg:leading-tight xl:text-[2.35rem]">
                 {t.title}
               </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-white/70 md:text-base">
+              <p className="mt-1 max-w-4xl text-sm leading-5 text-white/70 md:text-base">
                 {t.description}
               </p>
             </div>
           </header>
 
-          <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+          <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,1.08fr)] lg:items-stretch">
             <form
               onSubmit={handleSubmit}
-              className="relative min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5"
+              className="relative min-h-0 overflow-y-auto rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-8.5rem)]"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
 
@@ -700,14 +751,22 @@ export default function StructuredExtractionPage() {
                     ref={fileInputRef}
                     type="file"
                     accept=".pdf,.docx,.jpg,.jpeg,.png"
+                    disabled={isProcessing}
                     onChange={handleFileChange}
                     className="hidden"
                   />
 
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="mt-3 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                    disabled={isProcessing}
+                    onClick={() =>
+                      !isProcessing && fileInputRef.current?.click()
+                    }
+                    className={`mt-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition ${
+                      isProcessing
+                        ? "cursor-not-allowed bg-white/10 text-white/35"
+                        : "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
+                    }`}
                   >
                     {common.chooseFile}
                   </button>
@@ -740,12 +799,18 @@ export default function StructuredExtractionPage() {
                     </span>
                     <select
                       value={outputFormat}
+                      disabled={isProcessing}
                       onChange={(event) => {
+                        if (isProcessing) return;
                         setOutputFormat(event.target.value);
                         setError("");
                         resetResultState();
                       }}
-                      className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300/40 focus:bg-white/10"
+                      className={`w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition ${
+                        isProcessing
+                          ? "cursor-not-allowed bg-white/5 text-white/35"
+                          : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+                      }`}
                     >
                       {OUTPUT_FORMATS.map((format) => (
                         <option
@@ -771,12 +836,18 @@ export default function StructuredExtractionPage() {
                     </span>
                     <select
                       value={resultShape}
+                      disabled={isProcessing}
                       onChange={(event) => {
+                        if (isProcessing) return;
                         setResultShape(event.target.value);
                         setError("");
                         resetResultState();
                       }}
-                      className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300/40 focus:bg-white/10"
+                      className={`w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition ${
+                        isProcessing
+                          ? "cursor-not-allowed bg-white/5 text-white/35"
+                          : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+                      }`}
                     >
                       {RESULT_SHAPES.map((shape) => (
                         <option
@@ -808,6 +879,7 @@ export default function StructuredExtractionPage() {
                     <div className="min-w-0 flex-1">
                       <SearchableMultiSelect
                         title={t.documentClassesLabel}
+                        disabled={isProcessing}
                         helpText={t.documentClassesHelp}
                         emptyText={t.documentClassesEmptyHelp}
                         examplesText={t.documentClassesExamples}
@@ -832,8 +904,13 @@ export default function StructuredExtractionPage() {
                     {selectedFields.length > 0 && (
                       <button
                         type="button"
-                        onClick={clearSelectedFields}
-                        className="text-xs font-medium text-cyan-200 hover:text-cyan-100"
+                        disabled={isProcessing}
+                        onClick={() => !isProcessing && clearSelectedFields()}
+                        className={`text-xs font-medium transition ${
+                          isProcessing
+                            ? "cursor-not-allowed text-white/30"
+                            : "text-cyan-200 hover:text-cyan-100"
+                        }`}
                       >
                         {t.clearFields}
                       </button>
@@ -848,14 +925,20 @@ export default function StructuredExtractionPage() {
 
                   <textarea
                     value={selectedFieldsText}
+                    disabled={isProcessing}
                     onChange={(event) => {
+                      if (isProcessing) return;
                       setSelectedFieldsText(event.target.value);
                       setError("");
                       resetResultState();
                     }}
                     placeholder={t.selectedFieldsPlaceholder}
                     rows={3}
-                    className="w-full resize-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/35 focus:border-cyan-300/40 focus:bg-white/10"
+                    className={`w-full resize-none rounded-2xl border border-white/10 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/35 ${
+                      isProcessing
+                        ? "cursor-not-allowed bg-white/5 text-white/35"
+                        : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+                    }`}
                   />
                 </label>
 
@@ -874,8 +957,15 @@ export default function StructuredExtractionPage() {
                       <button
                         key={field}
                         type="button"
-                        onClick={() => addSuggestedField(field)}
-                        className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/65 transition hover:border-cyan-300/30 hover:bg-cyan-400/10 hover:text-cyan-100"
+                        disabled={isProcessing}
+                        onClick={() =>
+                          !isProcessing && addSuggestedField(field)
+                        }
+                        className={`rounded-full border px-3 py-1 text-xs transition ${
+                          isProcessing
+                            ? "cursor-not-allowed border-white/10 bg-white/5 text-white/35"
+                            : "border-white/10 bg-white/5 text-white/65 hover:border-cyan-300/30 hover:bg-cyan-400/10 hover:text-cyan-100"
+                        }`}
                       >
                         {field}
                       </button>
@@ -921,30 +1011,105 @@ export default function StructuredExtractionPage() {
                   <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/55">
                     {t.extractionLabel}{" "}
                     <span className="font-medium text-white/85">
-                      {inputExtension || "—"} → .{outputFormat}
+                      .{outputFormat}
                     </span>
                   </div>
                 </div>
               </div>
             </form>
 
-            <aside className="min-h-0">
-              <div className="flex min-h-[270px] flex-col rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5 lg:max-h-[calc(100vh-11rem)]">
+            <aside className="min-h-0 lg:h-full">
+              <div className="flex min-h-[360px] flex-col rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5 lg:min-h-[calc(100vh-8.5rem)] lg:max-h-[calc(100vh-8.5rem)]">
                 <div className="flex items-center justify-between gap-3">
                   <h2 className="text-lg font-semibold text-white">
                     {t.extractionOutput}
                   </h2>
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/55">
-                    {inputExtension || "—"} → .{outputFormat}
+                    .{outputFormat}
                   </span>
                 </div>
 
-                <div className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-4 max-h-[420px] lg:max-h-[calc(100vh-16rem)]">
+                <div className="mt-3 min-h-[320px] flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-4 lg:max-h-none">
                   {resultSummary ? (
                     <div className="flex h-full min-h-0 flex-col gap-3">
                       <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 text-white/80 md:text-sm">
                         {resultSummary}
                       </pre>
+
+                      {previewPayload && (
+                        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
+                          <div className="mb-3 flex items-center justify-between gap-3">
+                            <div>
+                              <p className="text-sm font-semibold text-cyan-100">
+                                Generated preview
+                              </p>
+                              <p className="mt-1 text-xs text-cyan-100/70">
+                                Review the extracted data before downloading the
+                                file.
+                              </p>
+                            </div>
+                            <FileJson className="h-5 w-5 shrink-0 text-cyan-200" />
+                          </div>
+
+                          {previewRows.length > 0 && (
+                            <div className="mb-3 overflow-x-auto rounded-xl border border-white/10 bg-black/20">
+                              <table className="min-w-full text-left text-xs text-white/75">
+                                <thead className="border-b border-white/10 text-white/90">
+                                  <tr>
+                                    {Object.keys(previewRows[0])
+                                      .slice(0, 8)
+                                      .map((key) => (
+                                        <th
+                                          key={key}
+                                          className="px-3 py-2 font-medium"
+                                        >
+                                          {key}
+                                        </th>
+                                      ))}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {previewRows
+                                    .slice(0, 10)
+                                    .map((row, rowIndex) => (
+                                      <tr
+                                        key={rowIndex}
+                                        className="border-b border-white/5"
+                                      >
+                                        {Object.keys(previewRows[0])
+                                          .slice(0, 8)
+                                          .map((key) => (
+                                            <td
+                                              key={key}
+                                              className="max-w-[220px] truncate px-3 py-2"
+                                            >
+                                              {String(row?.[key] ?? "")}
+                                            </td>
+                                          ))}
+                                      </tr>
+                                    ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+
+                          <details className="rounded-xl border border-white/10 bg-black/20 p-3">
+                            <summary className="cursor-pointer text-xs font-medium text-cyan-100">
+                              View structured JSON
+                            </summary>
+                            <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-words text-xs leading-5 text-white/70">
+                              {JSON.stringify(previewPayload, null, 2)}
+                            </pre>
+                          </details>
+
+                          {previewTruncated && (
+                            <p className="mt-2 text-xs text-amber-100/80">
+                              Preview shortened. Download the full file to see
+                              all rows.
+                            </p>
+                          )}
+                        </div>
+                      )}
 
                       {downloadInfo?.downloadUrl && (
                         <div className="shrink-0 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3">
