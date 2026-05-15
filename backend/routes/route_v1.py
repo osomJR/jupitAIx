@@ -3,7 +3,8 @@ from __future__ import annotations
 from dataclasses import asdict
 import os
 from pathlib import Path
-from typing import Any, Mapping, Union
+from typing import Any, Literal, Mapping, Union
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
@@ -67,7 +68,7 @@ from src.schema import (
     TranslationRequest,
 )
 
-from src.storage.artifacts import LocalArtifactStorage
+from src.storage.artifacts import LocalArtifactStorage, guess_content_type
 
 API_V1_ANALYZER_PREFIX = "/analyzer"
 
@@ -186,6 +187,7 @@ def _run_privacy_request(
     request: AnalyzerRequest,
     *,
     source_path: str,
+    custom_redactions: list[str] | None = None,
 ) -> ProtectedArtifactResult:
     try:
         return process_privacy_action_and_persist(
@@ -194,6 +196,7 @@ def _run_privacy_request(
             output_dir=DEFAULT_PRIVACY_OUTPUT_DIR,
             project_id=_google_sdp_project_id(),
             location=DEFAULT_GOOGLE_SDP_LOCATION,
+            custom_redactions=custom_redactions,
         )
     except HTTPException as exc:
         raise to_http_exception(exc) from exc
@@ -725,6 +728,7 @@ def redact_review_route(
     document_type: RedactionMaskingDocumentType | None = Form(default=None),
     target_data: list[SensitiveDataType] | None = Form(default=None),
     review_exclusions: list[str] | None = Form(default=None),
+    custom_redactions: list[str] | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
 ) -> dict[str, Any]:
     input_payload, request = _build_privacy_request(
@@ -736,15 +740,19 @@ def redact_review_route(
         system_language=system_language,
     )
 
+    cleaned_custom_redactions = _clean_repeated_strings(custom_redactions)
+
     processed = _run_privacy_request(
         request,
         source_path=_privacy_source_path(input_payload),
+        custom_redactions=cleaned_custom_redactions,
     )
 
     candidates = preview_redaction_candidates(
         request,
         project_id=_google_sdp_project_id(),
         location=DEFAULT_GOOGLE_SDP_LOCATION,
+        custom_redactions=cleaned_custom_redactions,
     )
 
     return {
@@ -763,6 +771,7 @@ def data_mask_review_route(
     document_type: RedactionMaskingDocumentType | None = Form(default=None),
     target_data: list[SensitiveDataType] | None = Form(default=None),
     review_exclusions: list[str] | None = Form(default=None),
+    custom_redactions: list[str] | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
 ) -> dict[str, Any]:
     input_payload, request = _build_privacy_request(
@@ -774,15 +783,19 @@ def data_mask_review_route(
         system_language=system_language,
     )
 
+    cleaned_custom_redactions = _clean_repeated_strings(custom_redactions)
+
     processed = _run_privacy_request(
         request,
         source_path=_privacy_source_path(input_payload),
+        custom_redactions=cleaned_custom_redactions,
     )
 
     candidates = preview_data_mask_candidates(
         request,
         project_id=_google_sdp_project_id(),
         location=DEFAULT_GOOGLE_SDP_LOCATION,
+        custom_redactions=cleaned_custom_redactions,
     )
 
     return {
@@ -801,6 +814,7 @@ def redact_route(
     document_type: RedactionMaskingDocumentType | None = Form(default=None),
     target_data: list[SensitiveDataType] | None = Form(default=None),
     review_exclusions: list[str] | None = Form(default=None),
+    custom_redactions: list[str] | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
 ) -> dict[str, Any]:
     input_payload, request = _build_privacy_request(
@@ -815,6 +829,7 @@ def redact_route(
     processed = _run_privacy_request(
         request,
         source_path=_privacy_source_path(input_payload),
+        custom_redactions=_clean_repeated_strings(custom_redactions),
     )
     return _serialize_processed_result(processed)
 
@@ -829,6 +844,7 @@ def data_mask_route(
     document_type: RedactionMaskingDocumentType | None = Form(default=None),
     target_data: list[SensitiveDataType] | None = Form(default=None),
     review_exclusions: list[str] | None = Form(default=None),
+    custom_redactions: list[str] | None = Form(default=None),
     system_language: SystemLanguage = Form(SystemLanguage.english),
 ) -> dict[str, Any]:
     input_payload, request = _build_privacy_request(
@@ -843,6 +859,7 @@ def data_mask_route(
     processed = _run_privacy_request(
         request,
         source_path=_privacy_source_path(input_payload),
+        custom_redactions=_clean_repeated_strings(custom_redactions),
     )
     return _serialize_processed_result(processed)
 
@@ -969,14 +986,37 @@ def compliance_preview_route(
     except RuntimeError as exc:
         raise _service_unavailable(str(exc)) from exc
 
-@router.get("/artifacts/{storage_key:path}")
-def download_artifact(storage_key: str):
+@router.api_route("/artifacts/{storage_key:path}", methods=["GET", "HEAD"])
+def download_artifact(
+    storage_key: str,
+    disposition: Literal["attachment", "inline"] = "attachment",
+):
     storage = LocalArtifactStorage()
+
+    content_disposition_type = (
+        "inline" if disposition == "inline" else "attachment"
+    )
+
+    def _file_response(path: Path):
+        response = FileResponse(
+            path=str(path),
+            media_type=guess_content_type(str(path)),
+        )
+
+        filename = path.name.replace('"', "")
+        encoded_filename = quote(filename)
+
+        response.headers["Content-Disposition"] = (
+            f'{content_disposition_type}; filename="{filename}"; '
+            f"filename*=UTF-8''{encoded_filename}"
+        )
+
+        return response
 
     try:
         path = storage.resolve_storage_key(storage_key)
-        if path.exists():
-            return FileResponse(path=str(path), filename=path.name)
+        if path.exists() and path.is_file():
+            return _file_response(path)
     except ValueError:
         pass
 
@@ -1001,12 +1041,12 @@ def download_artifact(storage_key: str):
     }
 
     resolved = candidate.resolve()
-    if not any(str(resolved).startswith(str(root)) for root in allowed_roots):
+    if not any(resolved == root or root in resolved.parents for root in allowed_roots):
         raise HTTPException(
             status_code=400,
             detail="Artifact path is outside the allowed artifact directories.",
         )
 
-    return FileResponse(path=str(resolved), filename=resolved.name)
+    return _file_response(resolved)
 
 __all__ = ["router", "API_V1_ANALYZER_PREFIX"]

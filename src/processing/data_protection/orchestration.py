@@ -110,6 +110,7 @@ def process_redaction_and_persist(
     min_likelihood: str = DEFAULT_MIN_LIKELIHOOD,
     client: Any | None = None,
     ocr_languages: Optional[Sequence[str]] = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> ProtectedArtifactResult:
     """
     Run redaction, persist the generated file in artifact storage, and return
@@ -136,6 +137,7 @@ def process_redaction_and_persist(
         min_likelihood=min_likelihood,
         client=client,
         ocr_languages=ocr_languages,
+        custom_redactions=custom_redactions,
     )
 
     if not expected_output.exists():
@@ -170,6 +172,7 @@ def process_data_mask_and_persist(
     min_likelihood: str = DEFAULT_MIN_LIKELIHOOD,
     client: Any | None = None,
     ocr_languages: Optional[Sequence[str]] = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> ProtectedArtifactResult:
     """
     Run data masking, persist the generated file in artifact storage, and return
@@ -196,6 +199,7 @@ def process_data_mask_and_persist(
         min_likelihood=min_likelihood,
         client=client,
         ocr_languages=ocr_languages,
+        custom_redactions=custom_redactions,
     )
 
     if not expected_output.exists():
@@ -230,6 +234,7 @@ def process_privacy_action_and_persist(
     min_likelihood: str = DEFAULT_MIN_LIKELIHOOD,
     client: Any | None = None,
     ocr_languages: Optional[Sequence[str]] = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> ProtectedArtifactResult:
     """
     Unified orchestration entrypoint for privacy actions.
@@ -252,6 +257,7 @@ def process_privacy_action_and_persist(
             min_likelihood=min_likelihood,
             client=client,
             ocr_languages=ocr_languages,
+            custom_redactions=custom_redactions,
         )
 
     if req.action == FeatureType.data_mask:
@@ -266,6 +272,7 @@ def process_privacy_action_and_persist(
             min_likelihood=min_likelihood,
             client=client,
             ocr_languages=ocr_languages,
+            custom_redactions=custom_redactions,
         )
 
     raise ValueError(

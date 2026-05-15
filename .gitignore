@@ -13,3 +13,5 @@ _ _pycache_ _/
 uploads/
 # artifacts
 artifacts/
+# outputs
+outputs/

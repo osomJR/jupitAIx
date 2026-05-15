@@ -3,13 +3,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language_provider";
+import { getAccessToken } from "@/lib/api_client";
 import {
   ArrowLeft,
   Upload,
   Sparkles,
   XCircle,
   CheckCircle2,
-  ShieldCheck,
   EyeClosed,
   Download,
 } from "lucide-react";
@@ -156,7 +156,7 @@ function getInputTypeLabel(ext) {
   return "Unknown";
 }
 
-function parseReviewExclusions(value = "") {
+function parseDelimitedItems(value = "") {
   return value
     .split(/[\n,]/g)
     .map((item) => item.trim())
@@ -226,6 +226,52 @@ function extractDownloadInfo(responseData, backendBase, fallbackFilename = "") {
   };
 }
 
+function toAbsoluteBackendUrl(url, backendBase) {
+  if (!url) return "";
+
+  if (/^https?:\/\//i.test(url)) {
+    return url;
+  }
+
+  return `${backendBase}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+function toInlinePreviewUrl(url, backendBase) {
+  const absoluteUrl = toAbsoluteBackendUrl(url, backendBase);
+  if (!absoluteUrl) return "";
+
+  try {
+    const parsed = new URL(absoluteUrl);
+    parsed.searchParams.set("disposition", "inline");
+    return parsed.toString();
+  } catch {
+    return absoluteUrl.includes("?")
+      ? `${absoluteUrl}&disposition=inline`
+      : `${absoluteUrl}?disposition=inline`;
+  }
+}
+
+function resolveProcessedPreviewUrl(
+  responseData,
+  backendBase,
+  resolvedDownload,
+  inputExtension,
+) {
+  if (!canInlinePreview(inputExtension) && inputExtension !== ".docx") {
+    return "";
+  }
+
+  const previewUrl = extractPreviewUrl(responseData, backendBase);
+
+  if (inputExtension === ".docx") {
+    return previewUrl ? toInlinePreviewUrl(previewUrl, backendBase) : "";
+  }
+
+  return resolvedDownload?.downloadUrl
+    ? toInlinePreviewUrl(resolvedDownload.downloadUrl, backendBase)
+    : "";
+}
+
 function extractPreviewUrl(responseData, backendBase) {
   const preview = responseData?.preview_artifact || {};
   const storageKey = pickFirstString([
@@ -250,18 +296,23 @@ function candidateId(candidate) {
   );
 }
 
-function buildMergedReviewExclusions(
-  reviewExclusionsText,
-  reviewCandidates,
-  approvedCandidateIds,
-) {
-  const manual = parseReviewExclusions(reviewExclusionsText);
+function buildReviewExclusions(reviewCandidates, approvedCandidateIds) {
   const deselectedQuotes = reviewCandidates
     .filter((candidate) => !approvedCandidateIds.has(candidateId(candidate)))
     .map((candidate) => (candidate?.quote || "").trim())
     .filter(Boolean);
 
-  return [...new Set([...manual, ...deselectedQuotes])];
+  return [...new Set(deselectedQuotes)];
+}
+
+function appendCustomMaskItems(formData, customMaskText) {
+  for (const item of parseDelimitedItems(customMaskText)) {
+    formData.append("custom_redactions", item);
+  }
+}
+
+function customMaskItemCount(customMaskText) {
+  return parseDelimitedItems(customMaskText).length;
 }
 
 export default function DataMaskPage() {
@@ -277,7 +328,7 @@ export default function DataMaskPage() {
   const [targetData, setTargetData] = useState(
     SUPPORTED_BY_DOCUMENT_TYPE.legal_document,
   );
-  const [reviewExclusionsText, setReviewExclusionsText] = useState("");
+  const [customMaskText, setCustomMaskText] = useState("");
   const [error, setError] = useState("");
   const [isReviewing, setIsReviewing] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -292,9 +343,6 @@ export default function DataMaskPage() {
     if (!selectedFile) return "";
     return getFileExtension(selectedFile.name);
   }, [selectedFile]);
-
-  const outputExtension =
-    inputExtension || ".pdf / .docx / .jpg / .jpeg / .png";
 
   const isValidFile = useMemo(() => {
     if (!selectedFile) return false;
@@ -313,6 +361,7 @@ export default function DataMaskPage() {
   ).length;
 
   const deselectedCount = reviewCandidates.length - approvedCount;
+  const isBusy = isReviewing || isFinalizing;
 
   useEffect(() => {
     setTargetData(SUPPORTED_BY_DOCUMENT_TYPE[documentType] || []);
@@ -334,6 +383,7 @@ export default function DataMaskPage() {
   }
 
   function handlePickedFile(file) {
+    if (isBusy) return;
     if (!file) return;
 
     const ext = getFileExtension(file.name);
@@ -369,6 +419,7 @@ export default function DataMaskPage() {
   function handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
+    if (isBusy) return;
     const file = event.dataTransfer.files?.[0];
     handlePickedFile(file);
   }
@@ -379,6 +430,7 @@ export default function DataMaskPage() {
   }
 
   function toggleTarget(value) {
+    if (isBusy) return;
     setTargetData((current) =>
       current.includes(value)
         ? current.filter((item) => item !== value)
@@ -451,15 +503,17 @@ export default function DataMaskPage() {
         formData.append("target_data", item);
       }
 
-      const manualExclusions = parseReviewExclusions(reviewExclusionsText);
-      for (const item of manualExclusions) {
-        formData.append("review_exclusions", item);
-      }
+      appendCustomMaskItems(formData, customMaskText);
+
+      const token = await getAccessToken();
 
       const response = await fetch(
         `${backendBase}/api/v1/analyzer/data-mask/review`,
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
           credentials: "include",
         },
@@ -477,7 +531,6 @@ export default function DataMaskPage() {
         `${getFileStem(selectedFile.name)}_masked${inputExtension}`,
       );
 
-      const previewUrl = extractPreviewUrl(responseData, backendBase);
       const candidates = Array.isArray(responseData?.candidates)
         ? responseData.candidates
         : [];
@@ -486,11 +539,12 @@ export default function DataMaskPage() {
       setApprovedCandidateIds(new Set(candidates.map(candidateId)));
       setDownloadInfo(resolvedDownload);
       setProcessedPreviewUrl(
-        inputExtension === ".docx"
-          ? previewUrl
-          : resolvedDownload.downloadUrl && canInlinePreview(inputExtension)
-            ? resolvedDownload.downloadUrl
-            : "",
+        resolveProcessedPreviewUrl(
+          responseData,
+          backendBase,
+          resolvedDownload,
+          inputExtension,
+        ),
       );
       setStage("review");
 
@@ -545,8 +599,7 @@ export default function DataMaskPage() {
         formData.append("target_data", item);
       }
 
-      const exclusions = buildMergedReviewExclusions(
-        reviewExclusionsText,
+      const exclusions = buildReviewExclusions(
         reviewCandidates,
         approvedCandidateIds,
       );
@@ -555,8 +608,15 @@ export default function DataMaskPage() {
         formData.append("review_exclusions", item);
       }
 
+      appendCustomMaskItems(formData, customMaskText);
+
+      const token = await getAccessToken();
+
       const response = await fetch(`${backendBase}/api/v1/analyzer/data-mask`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
         credentials: "include",
       });
@@ -573,15 +633,14 @@ export default function DataMaskPage() {
         `${getFileStem(selectedFile.name)}_masked${inputExtension}`,
       );
 
-      const previewUrl = extractPreviewUrl(responseData, backendBase);
-
       setDownloadInfo(resolvedDownload);
       setProcessedPreviewUrl(
-        inputExtension === ".docx"
-          ? previewUrl
-          : resolvedDownload.downloadUrl && canInlinePreview(inputExtension)
-            ? resolvedDownload.downloadUrl
-            : "",
+        resolveProcessedPreviewUrl(
+          responseData,
+          backendBase,
+          resolvedDownload,
+          inputExtension,
+        ),
       );
       setStage("done");
 
@@ -600,12 +659,12 @@ export default function DataMaskPage() {
         `${t.approvedCountLabel}: ${approvedCount}`,
         `${t.deselectedCountLabel}: ${deselectedCount}`,
         `${t.exclusionsCount}: ${
-          buildMergedReviewExclusions(
-            reviewExclusionsText,
+          buildReviewExclusions(
             reviewCandidates,
             approvedCandidateIds,
           ).length
         }`,
+        `${t.customMaskCount}: ${customMaskItemCount(customMaskText)}`,
         `${t.processedFile}: ${
           resolvedDownload.filename ||
           `${getFileStem(selectedFile.name)}_masked${inputExtension}`
@@ -636,39 +695,39 @@ export default function DataMaskPage() {
 
   return (
     <main className="app-shell">
-      <div className="relative isolate overflow-hidden">
+      <div className="relative isolate min-h-screen overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 
-        <div className="relative mx-auto max-w-6xl px-6 py-12 md:px-8 md:py-16">
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="mb-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {common.back}
-          </button>
+        <div className="relative mx-auto max-w-[1600px] px-3 py-3 md:px-5 md:py-4">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {common.back}
+            </button>
 
-          <section className="mb-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-xs font-medium text-cyan-200 backdrop-blur sm:text-sm">
               <Sparkles className="h-4 w-4" />
               {t.badge}
             </div>
+          </div>
 
-            <div className="mt-6 max-w-3xl">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                {t.title}
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
-                {t.description}
-              </p>
-            </div>
+          <section className="mb-4 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              {t.title}
+            </h1>
+            <p className="mt-2 max-w-2xl text-xs leading-5 text-white/70 md:text-sm">
+              {t.description}
+            </p>
           </section>
 
-          <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <section className="grid gap-4 lg:grid-cols-[minmax(380px,0.9fr)_minmax(520px,1.1fr)]">
             <form
               onSubmit={handleProcessAndReview}
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl md:p-8"
+              className="relative rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
 
@@ -676,23 +735,21 @@ export default function DataMaskPage() {
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className="rounded-3xl border border-dashed border-white/15 bg-white/5 p-8 text-center transition hover:border-white/25 hover:bg-white/10"
+                  className={`rounded-2xl border border-dashed border-white/15 bg-white/5 p-3 text-center transition ${
+                    isBusy
+                      ? "cursor-not-allowed opacity-60"
+                      : "hover:border-white/25 hover:bg-white/10"
+                  }`}
                 >
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                    <Upload className="h-7 w-7 text-cyan-300" />
+                  <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/10">
+                    <Upload className="h-5 w-5 text-cyan-300" />
                   </div>
 
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-base font-semibold text-white">
                     {t.uploadTitle}
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-white/65">
+                  <p className="mt-1 text-xs leading-5 text-white/65">
                     {t.allowedFileInputs}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-white/55">
-                    {t.outputExtensionWillBe}{" "}
-                    <span className="font-medium text-white">
-                      {outputExtension}
-                    </span>
                   </p>
 
                   <input
@@ -700,30 +757,38 @@ export default function DataMaskPage() {
                     type="file"
                     accept={ACCEPTED_EXTENSIONS.join(",")}
                     onChange={handleFileChange}
+                    disabled={isBusy}
                     className="hidden"
                   />
 
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                    onClick={() => {
+                      if (!isBusy) fileInputRef.current?.click();
+                    }}
+                    disabled={isBusy}
+                    className={`mt-3 rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                      isBusy
+                        ? "cursor-not-allowed bg-white/10 text-white/40"
+                        : "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
+                    }`}
                   >
                     {common.chooseFile}
                   </button>
                 </div>
 
                 {selectedFile && isValidFile && (
-                  <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                  <div className="mt-2 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-2.5">
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
                       <div>
                         <p className="font-medium text-emerald-100">
                           {t.fileAcceptedLabel}
                         </p>
-                        <p className="mt-1 text-sm text-emerald-100/80">
+                        <p className="mt-0.5 text-xs text-emerald-100/80">
                           {selectedFile.name} • {formatBytes(selectedFile.size)}
                         </p>
-                        <p className="mt-1 text-sm text-emerald-100/80">
+                        <p className="mt-0.5 text-xs text-emerald-100/80">
                           {t.fileTypeLabel} {getInputTypeLabel(inputExtension)}
                         </p>
                       </div>
@@ -731,19 +796,21 @@ export default function DataMaskPage() {
                   </div>
                 )}
 
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                     <label className="block text-sm font-medium text-white/85">
                       {t.docTypeLabel}
                     </label>
                     <select
                       value={documentType}
                       onChange={(e) => {
+                        if (isBusy) return;
                         setDocumentType(e.target.value);
                         setError("");
                         resetResultState();
                       }}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/40"
+                      disabled={isBusy}
+                      className="mt-2 w-full rounded-xl border border-white/10 bg-[#081120] px-3 py-2 text-sm text-white outline-none transition disabled:cursor-not-allowed disabled:opacity-50 focus:border-cyan-300/40"
                     >
                       {DOCUMENT_TYPES.map((item) => (
                         <option
@@ -757,26 +824,28 @@ export default function DataMaskPage() {
                     </select>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                     <label className="block text-sm font-medium text-white/85">
                       {t.exclusionsLabel}
                     </label>
                     <textarea
-                      value={reviewExclusionsText}
+                      value={customMaskText}
                       onChange={(e) => {
-                        setReviewExclusionsText(e.target.value);
+                        if (isBusy) return;
+                        setCustomMaskText(e.target.value);
                         setError("");
                         resetResultState();
                       }}
                       placeholder={t.exclusionsPlaceholder}
-                      rows={5}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/30 focus:border-cyan-300/40"
+                      rows={2}
+                      disabled={isBusy}
+                      className="mt-2 w-full rounded-xl border border-white/10 bg-[#081120] px-3 py-2 text-sm leading-5 text-white outline-none transition placeholder:text-white/30 disabled:cursor-not-allowed disabled:opacity-50 focus:border-cyan-300/40"
                     />
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-2.5">
+                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                     <p className="text-sm font-medium text-white/85">
                       {t.sensitiveTargetsLabel}
                     </p>
@@ -785,11 +854,13 @@ export default function DataMaskPage() {
                       <button
                         type="button"
                         onClick={() => {
+                          if (isBusy) return;
                           setTargetData(supportedTargets);
                           setError("");
                           resetResultState();
                         }}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                        disabled={isBusy}
+                        className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-white/80 transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-white/10 hover:text-white"
                       >
                         {t.selectAll}
                       </button>
@@ -797,24 +868,28 @@ export default function DataMaskPage() {
                       <button
                         type="button"
                         onClick={() => {
+                          if (isBusy) return;
                           setTargetData([]);
                           setError("");
                           resetResultState();
                         }}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                        disabled={isBusy}
+                        className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-white/80 transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-white/10 hover:text-white"
                       >
                         {t.clearAll}
                       </button>
                     </div>
                   </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                     {supportedTargets.map((item) => {
                       const checked = targetData.includes(item);
                       return (
                         <label
                           key={item}
-                          className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition ${
+                          className={`flex items-center gap-2 rounded-xl border px-2.5 py-1.5 text-xs transition ${
+                            isBusy ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+                          } ${
                             checked
                               ? "border-cyan-300/30 bg-cyan-400/10 text-white"
                               : "border-white/10 bg-white/5 text-white/75 hover:bg-white/10"
@@ -824,7 +899,8 @@ export default function DataMaskPage() {
                             type="checkbox"
                             checked={checked}
                             onChange={() => toggleTarget(item)}
-                            className="h-4 w-4 rounded border-white/20 bg-transparent"
+                            disabled={isBusy}
+                            className="h-4 w-4 rounded border-white/20 bg-transparent disabled:cursor-not-allowed"
                           />
                           <span>{SENSITIVE_LABELS[item] || item}</span>
                         </label>
@@ -834,7 +910,7 @@ export default function DataMaskPage() {
                 </div>
 
                 {error && (
-                  <div className="mt-5 rounded-2xl border border-red-400/20 bg-red-400/10 p-4">
+                  <div className="mt-2 rounded-2xl border border-red-400/20 bg-red-400/10 p-2.5">
                     <div className="flex items-start gap-3">
                       <XCircle className="mt-0.5 h-5 w-5 text-red-300" />
                       <p className="text-sm leading-6 text-red-100">{error}</p>
@@ -842,7 +918,7 @@ export default function DataMaskPage() {
                   </div>
                 )}
 
-                <div className="mt-6 flex flex-wrap items-center gap-3">
+                <div className="sticky bottom-0 z-10 -mx-3 mt-3 flex flex-wrap items-center gap-3 border-t border-white/10 bg-[#081120]/95 px-3 py-3 backdrop-blur md:-mx-4 md:px-4">
                   <button
                     type="submit"
                     disabled={
@@ -853,7 +929,7 @@ export default function DataMaskPage() {
                       !documentType ||
                       targetData.length === 0
                     }
-                    className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${
+                    className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
                       !isReviewing &&
                       !isFinalizing &&
                       selectedFile &&
@@ -872,7 +948,7 @@ export default function DataMaskPage() {
                       type="button"
                       onClick={handleFinalize}
                       disabled={isFinalizing}
-                      className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${
+                      className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
                         !isFinalizing
                           ? "bg-cyan-300 text-slate-900 hover:scale-[1.02]"
                           : "cursor-not-allowed bg-cyan-300/30 text-slate-900/50"
@@ -885,23 +961,22 @@ export default function DataMaskPage() {
               </div>
             </form>
 
-            <div className="space-y-6">
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+            <div className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)]">
+              <div className="rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/10">
                     <EyeClosed className="h-5 w-5 text-cyan-300" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="text-base font-semibold text-white">
                       {t.resultTitle}
                     </h2>
-                    <p className="text-sm text-white/55">{t.policySubtitle}</p>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
-                  {downloadInfo?.downloadUrl && (
-                    <div className="mb-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                <div className="rounded-2xl border border-white/10 bg-[#081120] p-2.5">
+                  {downloadInfo?.downloadUrl && stage === "done" && (
+                    <div className="mb-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-2.5">
                       <div className="flex items-start gap-3">
                         <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
                         <div className="flex-1">
@@ -910,7 +985,7 @@ export default function DataMaskPage() {
                               ? t.finalReady
                               : t.provisionalReady}
                           </p>
-                          <p className="mt-1 text-sm text-emerald-100/80">
+                          <p className="mt-0.5 text-xs text-emerald-100/80">
                             {downloadInfo.filename}
                           </p>
                         </div>
@@ -918,7 +993,7 @@ export default function DataMaskPage() {
                         <button
                           type="button"
                           onClick={handleDownload}
-                          className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
+                          className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
                         >
                           <Download className="h-4 w-4" />
                           {common.download}
@@ -929,7 +1004,7 @@ export default function DataMaskPage() {
 
                   {processedPreviewUrl &&
                     [".pdf", ".docx"].includes(inputExtension) && (
-                      <div className="mb-4">
+                      <div className="mb-3">
                         <p className="mb-2 text-sm font-medium text-white/80">
                           {t.processedPreviewTitle}
                         </p>
@@ -937,7 +1012,7 @@ export default function DataMaskPage() {
                           <iframe
                             src={processedPreviewUrl}
                             title="Processed preview"
-                            className="h-[520px] w-full"
+                            className="h-[38vh] min-h-[250px] w-full"
                           />
                         </div>
                       </div>
@@ -945,17 +1020,15 @@ export default function DataMaskPage() {
 
                   {processedPreviewUrl &&
                     [".jpg", ".jpeg", ".png"].includes(inputExtension) && (
-                      <div className="mb-4">
+                      <div className="mb-3">
                         <p className="mb-2 text-sm font-medium text-white/80">
                           {t.processedPreviewTitle}
                         </p>
                         <div className="overflow-hidden rounded-2xl border border-white/10 bg-white p-2">
-                          <image
+                          <img
                             src={processedPreviewUrl}
                             alt="Processed preview"
-                            fill
-                            unoptimized
-                            className="max-h-[520px] w-full rounded-xl object-contain"
+                            className="max-h-[38vh] w-full rounded-xl object-contain"
                           />
                         </div>
                       </div>
@@ -964,14 +1037,14 @@ export default function DataMaskPage() {
                   {!processedPreviewUrl &&
                     inputExtension === ".docx" &&
                     stage !== "edit" && (
-                      <div className="mb-4 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-100">
+                      <div className="mb-3 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-100">
                         {t.docxPreviewNotice}
                       </div>
                     )}
 
                   {stage === "review" && (
-                    <div className="mb-4 space-y-4">
-                      <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4">
+                    <div className="mb-3 space-y-3">
+                      <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
                         <p className="font-medium text-cyan-100">
                           {t.reviewTitle}
                         </p>
@@ -1002,8 +1075,8 @@ export default function DataMaskPage() {
                         </button>
                       </div>
 
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                           <p className="text-sm font-medium text-white/85">
                             {t.approvedCountLabel}
                           </p>
@@ -1011,7 +1084,7 @@ export default function DataMaskPage() {
                             {approvedCount}
                           </p>
                         </div>
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                           <p className="text-sm font-medium text-white/85">
                             {t.deselectedCountLabel}
                           </p>
@@ -1021,7 +1094,7 @@ export default function DataMaskPage() {
                         </div>
                       </div>
 
-                      <div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
+                      <div className="max-h-[min(28vh,240px)] space-y-2 overflow-y-auto pr-1">
                         {reviewCandidates.length ? (
                           reviewCandidates.map((candidate) => {
                             const checked = approvedCandidateIds.has(
@@ -1030,7 +1103,7 @@ export default function DataMaskPage() {
                             return (
                               <label
                                 key={candidateId(candidate)}
-                                className={`block rounded-2xl border p-4 transition ${
+                                className={`block rounded-xl border p-3 transition ${
                                   checked
                                     ? "border-cyan-300/30 bg-cyan-400/10"
                                     : "border-white/10 bg-white/5"
@@ -1056,7 +1129,7 @@ export default function DataMaskPage() {
                                       </span>
                                     </div>
 
-                                    <p className="mt-2 break-words text-sm leading-6 text-white/85">
+                                    <p className="mt-1.5 break-words text-sm leading-5 text-white/85">
                                       {candidate.quote}
                                     </p>
                                   </div>
@@ -1074,51 +1147,14 @@ export default function DataMaskPage() {
                   )}
 
                   {resultSummary ? (
-                    <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
+                    <pre className="max-h-[180px] overflow-y-auto rounded-xl bg-white/5 p-3 whitespace-pre-wrap break-words text-xs leading-5 text-white/80">
                       {resultSummary}
                     </pre>
                   ) : (
-                    <p className="text-sm leading-6 text-white/45">
+                    <p className="text-sm leading-5 text-white/45">
                       {t.previewEmpty}
                     </p>
                   )}
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                    <ShieldCheck className="h-5 w-5 text-cyan-300" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-white">
-                      {common.formatPolicy}
-                    </h2>
-                    <p className="text-sm text-white/55">{t.policySubtitle}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-sm leading-6 text-white/70">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
-                      {t.allowedUploadsLabel}
-                    </p>
-                    <p className="mt-1 text-white/65">{t.allowedFileInputs}</p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
-                      {t.outputRuleLabel}
-                    </p>
-                    <p className="mt-1 text-white/65">{t.outputRuleValue}</p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
-                      {t.selectedTargetsLabel}
-                    </p>
-                    <p className="mt-1 text-white/65">{targetData.length}</p>
-                  </div>
                 </div>
               </div>
             </div>

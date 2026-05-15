@@ -9,7 +9,6 @@ import {
   Sparkles,
   XCircle,
   CheckCircle2,
-  ShieldCheck,
   EyeOff,
   Download,
 } from "lucide-react";
@@ -40,6 +39,7 @@ const SENSITIVE_LABELS = {
   date_of_birth: "Date of birth",
   age: "Age",
   signature: "Signature",
+  custom_redaction: "Typed text",
 };
 
 const SUPPORTED_BY_DOCUMENT_TYPE = {
@@ -153,7 +153,7 @@ function getInputTypeLabel(ext) {
   return "Unknown";
 }
 
-function parseReviewExclusions(value = "") {
+function parseCustomRedactions(value = "") {
   return value
     .split(/[\n,]/g)
     .map((item) => item.trim())
@@ -240,6 +240,39 @@ function canInlinePreview(ext) {
   return [".pdf", ".jpg", ".jpeg", ".png"].includes(ext);
 }
 
+function withInlineDisposition(url) {
+  if (!url) return "";
+
+  try {
+    const parsed = new URL(url, window.location.origin);
+    parsed.searchParams.set("disposition", "inline");
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return parsed.toString();
+    }
+
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    const separator = url.includes("?") ? "&" : "?";
+    return `${url}${separator}disposition=inline`;
+  }
+}
+
+function resolveProcessedPreviewUrl({
+  inputExtension,
+  downloadUrl,
+  previewUrl,
+}) {
+  const rawPreviewUrl =
+    inputExtension === ".docx"
+      ? previewUrl
+      : downloadUrl && canInlinePreview(inputExtension)
+        ? downloadUrl
+        : "";
+
+  return withInlineDisposition(rawPreviewUrl);
+}
+
 function candidateId(candidate) {
   return (
     candidate?.id ||
@@ -247,18 +280,16 @@ function candidateId(candidate) {
   );
 }
 
-function buildMergedReviewExclusions(
-  reviewExclusionsText,
+function parseReviewExclusionsFromDeselected(
   reviewCandidates,
   approvedCandidateIds,
 ) {
-  const manual = parseReviewExclusions(reviewExclusionsText);
   const deselectedQuotes = reviewCandidates
     .filter((candidate) => !approvedCandidateIds.has(candidateId(candidate)))
     .map((candidate) => (candidate?.quote || "").trim())
     .filter(Boolean);
 
-  return [...new Set([...manual, ...deselectedQuotes])];
+  return [...new Set(deselectedQuotes)];
 }
 
 export default function RedactPage() {
@@ -274,7 +305,7 @@ export default function RedactPage() {
   const [targetData, setTargetData] = useState(
     SUPPORTED_BY_DOCUMENT_TYPE.legal_document,
   );
-  const [reviewExclusionsText, setReviewExclusionsText] = useState("");
+  const [customRedactionsText, setCustomRedactionsText] = useState("");
   const [error, setError] = useState("");
   const [isReviewing, setIsReviewing] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -289,9 +320,6 @@ export default function RedactPage() {
     if (!selectedFile) return "";
     return getFileExtension(selectedFile.name);
   }, [selectedFile]);
-
-  const outputExtension =
-    inputExtension || ".pdf / .docx / .jpg / .jpeg / .png";
 
   const isValidFile = useMemo(() => {
     if (!selectedFile) return false;
@@ -310,6 +338,7 @@ export default function RedactPage() {
   ).length;
 
   const deselectedCount = reviewCandidates.length - approvedCount;
+  const isProcessing = isReviewing || isFinalizing;
 
   useEffect(() => {
     setTargetData(SUPPORTED_BY_DOCUMENT_TYPE[documentType] || []);
@@ -331,7 +360,7 @@ export default function RedactPage() {
   }
 
   function handlePickedFile(file) {
-    if (!file) return;
+    if (isProcessing || !file) return;
 
     const ext = getFileExtension(file.name);
 
@@ -366,6 +395,7 @@ export default function RedactPage() {
   function handleDrop(event) {
     event.preventDefault();
     event.stopPropagation();
+    if (isProcessing) return;
     const file = event.dataTransfer.files?.[0];
     handlePickedFile(file);
   }
@@ -376,6 +406,7 @@ export default function RedactPage() {
   }
 
   function toggleTarget(value) {
+    if (isProcessing) return;
     setTargetData((current) =>
       current.includes(value)
         ? current.filter((item) => item !== value)
@@ -448,19 +479,15 @@ export default function RedactPage() {
         formData.append("target_data", item);
       }
 
-      const manualExclusions = parseReviewExclusions(reviewExclusionsText);
-      for (const item of manualExclusions) {
-        formData.append("review_exclusions", item);
+      const customRedactions = parseCustomRedactions(customRedactionsText);
+      for (const item of customRedactions) {
+        formData.append("custom_redactions", item);
       }
 
-      const response = await fetch(
-        `${backendBase}/api/v1/analyzer/redact/review`,
-        {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        },
-      );
+      const response = await fetch("/api/analyzer/redact/review", {
+        method: "POST",
+        body: formData,
+      });
 
       const responseData = await response.json().catch(() => ({}));
 
@@ -483,14 +510,19 @@ export default function RedactPage() {
 
       setReviewCandidates(candidates);
       setApprovedCandidateIds(new Set(candidates.map(candidateId)));
-      setDownloadInfo(resolvedDownload);
+
+      // Do not expose provisional file as a downloadable output.
+      // It is only used for inline review preview.
+      setDownloadInfo(null);
+
       setProcessedPreviewUrl(
-        inputExtension === ".docx"
-          ? previewUrl
-          : resolvedDownload.downloadUrl && canInlinePreview(inputExtension)
-            ? resolvedDownload.downloadUrl
-            : "",
+        resolveProcessedPreviewUrl({
+          inputExtension,
+          downloadUrl: resolvedDownload.downloadUrl,
+          previewUrl,
+        }),
       );
+
       setStage("review");
 
       const summaryLines = [
@@ -544,8 +576,12 @@ export default function RedactPage() {
         formData.append("target_data", item);
       }
 
-      const exclusions = buildMergedReviewExclusions(
-        reviewExclusionsText,
+      const customRedactions = parseCustomRedactions(customRedactionsText);
+      for (const item of customRedactions) {
+        formData.append("custom_redactions", item);
+      }
+
+      const exclusions = parseReviewExclusionsFromDeselected(
         reviewCandidates,
         approvedCandidateIds,
       );
@@ -554,10 +590,9 @@ export default function RedactPage() {
         formData.append("review_exclusions", item);
       }
 
-      const response = await fetch(`${backendBase}/api/v1/analyzer/redact`, {
+      const response = await fetch("/api/analyzer/redact", {
         method: "POST",
         body: formData,
-        credentials: "include",
       });
 
       const responseData = await response.json().catch(() => ({}));
@@ -577,14 +612,16 @@ export default function RedactPage() {
       const previewUrl = extractPreviewUrl(responseData, backendBase);
 
       setDownloadInfo(resolvedDownload);
-      setProcessedPreviewUrl(
-        inputExtension === ".docx"
-          ? previewUrl
-          : resolvedDownload.downloadUrl && canInlinePreview(inputExtension)
-            ? resolvedDownload.downloadUrl
-            : "",
-      );
-      setStage("done");
+
+setProcessedPreviewUrl(
+  resolveProcessedPreviewUrl({
+    inputExtension,
+    downloadUrl: resolvedDownload.downloadUrl,
+    previewUrl,
+  }),
+);
+
+setStage("done");
 
       const backendMessage = extractResponseMessage(responseData);
       const summaryLines = [
@@ -601,8 +638,7 @@ export default function RedactPage() {
         `${t.approvedCountLabel}: ${approvedCount}`,
         `${t.deselectedCountLabel}: ${deselectedCount}`,
         `${t.exclusionsCount}: ${
-          buildMergedReviewExclusions(
-            reviewExclusionsText,
+          parseReviewExclusionsFromDeselected(
             reviewCandidates,
             approvedCandidateIds,
           ).length
@@ -636,64 +672,58 @@ export default function RedactPage() {
   }
 
   return (
-    <main className="app-shell">
+    <main className="app-shell min-h-screen overflow-hidden">
       <div className="relative isolate overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 
-        <div className="relative mx-auto max-w-6xl px-6 py-12 md:px-8 md:py-16">
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="mb-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {common.back}
-          </button>
+        <div className="relative mx-auto flex h-screen max-w-7xl flex-col px-4 py-4 md:px-5 md:py-5">
+          <div className="mb-3 flex shrink-0 flex-wrap items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {common.back}
+            </button>
 
-          <section className="mb-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-xs font-medium text-cyan-200 backdrop-blur sm:text-sm">
               <Sparkles className="h-4 w-4" />
               {t.badge}
             </div>
+          </div>
 
-            <div className="mt-6 max-w-3xl">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                {t.title}
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
-                {t.description}
-              </p>
-            </div>
+          <section className="mb-4 shrink-0 max-w-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              {t.title}
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-5 text-white/70">
+              {t.description}
+            </p>
           </section>
 
-          <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[0.95fr_1.05fr]">
             <form
               onSubmit={handleProcessAndReview}
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl md:p-8"
+              className="relative min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
 
-              <div className="relative">
+              <div className="relative h-full overflow-y-auto pr-1">
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className="rounded-3xl border border-dashed border-white/15 bg-white/5 p-8 text-center transition hover:border-white/25 hover:bg-white/10"
+                  className={`rounded-3xl border border-dashed border-white/15 bg-white/5 p-4 text-center transition ${isProcessing ? "opacity-60" : "hover:border-white/25 hover:bg-white/10"}`}
                 >
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                    <Upload className="h-7 w-7 text-cyan-300" />
+                  <div className="mx-auto mb-2 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                    <Upload className="h-6 w-6 text-cyan-300" />
                   </div>
 
                   <h2 className="text-lg font-semibold text-white">
                     {t.uploadTitle}
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-white/65">
+                  <p className="mt-1 text-sm leading-5 text-white/65">
                     {t.allowedFileInputs}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-white/55">
-                    {t.outputExtensionWillBe}{" "}
-                    <span className="font-medium text-white">
-                      {outputExtension}
-                    </span>
                   </p>
 
                   <input
@@ -706,15 +736,18 @@ export default function RedactPage() {
 
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                    disabled={isProcessing}
+                    onClick={() =>
+                      !isProcessing && fileInputRef.current?.click()
+                    }
+                    className={`mt-3 rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${isProcessing ? "cursor-not-allowed bg-white/20 text-white/45" : "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"}`}
                   >
                     {common.chooseFile}
                   </button>
                 </div>
 
                 {selectedFile && isValidFile && (
-                  <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                  <div className="mt-2 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-2.5">
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
                       <div>
@@ -732,19 +765,20 @@ export default function RedactPage() {
                   </div>
                 )}
 
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                     <label className="block text-sm font-medium text-white/85">
                       {t.docTypeLabel}
                     </label>
                     <select
                       value={documentType}
+                      disabled={isProcessing}
                       onChange={(e) => {
                         setDocumentType(e.target.value);
                         setError("");
                         resetResultState();
                       }}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-3 text-sm text-white outline-none focus:border-cyan-300/40"
+                      className={`mt-2 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-300/40 ${isProcessing ? "cursor-not-allowed opacity-60" : ""}`}
                     >
                       {DOCUMENT_TYPES.map((item) => (
                         <option
@@ -758,25 +792,26 @@ export default function RedactPage() {
                     </select>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                     <label className="block text-sm font-medium text-white/85">
                       {t.exclusionsLabel}
                     </label>
                     <textarea
-                      value={reviewExclusionsText}
+                      value={customRedactionsText}
+                      disabled={isProcessing}
                       onChange={(e) => {
-                        setReviewExclusionsText(e.target.value);
+                        setCustomRedactionsText(e.target.value);
                         setError("");
                         resetResultState();
                       }}
                       placeholder={t.exclusionsPlaceholder}
-                      rows={5}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/30 focus:border-cyan-300/40"
+                      rows={2}
+                      className={`mt-2 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-2.5 text-sm leading-5 text-white outline-none transition placeholder:text-white/30 focus:border-cyan-300/40 ${isProcessing ? "cursor-not-allowed opacity-60" : ""}`}
                     />
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-2.5">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                     <p className="text-sm font-medium text-white/85">
                       {t.sensitiveTargetsLabel}
@@ -785,37 +820,41 @@ export default function RedactPage() {
                     <div className="flex gap-2">
                       <button
                         type="button"
+                        disabled={isProcessing}
                         onClick={() => {
+                          if (isProcessing) return;
                           setTargetData(supportedTargets);
                           setError("");
                           resetResultState();
                         }}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                        className={`rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition ${isProcessing ? "cursor-not-allowed opacity-50" : "hover:bg-white/10 hover:text-white"}`}
                       >
                         {t.selectAll}
                       </button>
 
                       <button
                         type="button"
+                        disabled={isProcessing}
                         onClick={() => {
+                          if (isProcessing) return;
                           setTargetData([]);
                           setError("");
                           resetResultState();
                         }}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                        className={`rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition ${isProcessing ? "cursor-not-allowed opacity-50" : "hover:bg-white/10 hover:text-white"}`}
                       >
                         {t.clearAll}
                       </button>
                     </div>
                   </div>
 
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                     {supportedTargets.map((item) => {
                       const checked = targetData.includes(item);
                       return (
                         <label
                           key={item}
-                          className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition ${
+                          className={`flex items-center gap-3 rounded-2xl border px-3 py-1.5 text-sm transition ${isProcessing ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${
                             checked
                               ? "border-cyan-300/30 bg-cyan-400/10 text-white"
                               : "border-white/10 bg-white/5 text-white/75 hover:bg-white/10"
@@ -824,6 +863,7 @@ export default function RedactPage() {
                           <input
                             type="checkbox"
                             checked={checked}
+                            disabled={isProcessing}
                             onChange={() => toggleTarget(item)}
                             className="h-4 w-4 rounded border-white/20 bg-transparent"
                           />
@@ -835,7 +875,7 @@ export default function RedactPage() {
                 </div>
 
                 {error && (
-                  <div className="mt-5 rounded-2xl border border-red-400/20 bg-red-400/10 p-4">
+                  <div className="mt-3 rounded-2xl border border-red-400/20 bg-red-400/10 p-3">
                     <div className="flex items-start gap-3">
                       <XCircle className="mt-0.5 h-5 w-5 text-red-300" />
                       <p className="text-sm leading-6 text-red-100">{error}</p>
@@ -843,7 +883,7 @@ export default function RedactPage() {
                   </div>
                 )}
 
-                <div className="mt-6 flex flex-wrap items-center gap-3">
+                <div className="mt-4 flex flex-wrap items-center gap-3">
                   <button
                     type="submit"
                     disabled={
@@ -886,23 +926,22 @@ export default function RedactPage() {
               </div>
             </form>
 
-            <div className="space-y-6">
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+            <div className="min-h-0 space-y-4 overflow-hidden">
+              <div className="flex h-full min-h-0 flex-col rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4">
+                <div className="mb-3 flex shrink-0 items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
                     <EyeOff className="h-5 w-5 text-cyan-300" />
                   </div>
                   <div>
                     <h2 className="text-lg font-semibold text-white">
                       {t.resultTitle}
                     </h2>
-                    <p className="text-sm text-white/55">{t.policySubtitle}</p>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
-                  {downloadInfo?.downloadUrl && (
-                    <div className="mb-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                <div className="min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-3">
+                  {stage === "done" && downloadInfo?.downloadUrl && (
+                    <div className="mb-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3">
                       <div className="flex items-start gap-3">
                         <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />
                         <div className="flex-1">
@@ -938,7 +977,7 @@ export default function RedactPage() {
                           <iframe
                             src={processedPreviewUrl}
                             title="Processed preview"
-                            className="h-[520px] w-full"
+                            className="h-[300px] w-full"
                           />
                         </div>
                       </div>
@@ -954,9 +993,7 @@ export default function RedactPage() {
                           <image
                             src={processedPreviewUrl}
                             alt="Processed preview"
-                            fill
-                            unoptimized
-                            className="max-h-[520px] w-full rounded-xl object-contain"
+                            className="max-h-[300px] w-full rounded-xl object-contain"
                           />
                         </div>
                       </div>
@@ -1004,7 +1041,7 @@ export default function RedactPage() {
                       </div>
 
                       <div className="grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                           <p className="text-sm font-medium text-white/85">
                             {t.approvedCountLabel}
                           </p>
@@ -1012,7 +1049,7 @@ export default function RedactPage() {
                             {approvedCount}
                           </p>
                         </div>
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
                           <p className="text-sm font-medium text-white/85">
                             {t.deselectedCountLabel}
                           </p>
@@ -1022,7 +1059,7 @@ export default function RedactPage() {
                         </div>
                       </div>
 
-                      <div className="max-h-[420px] space-y-3 overflow-y-auto pr-1">
+                      <div className="max-h-[220px] space-y-2 overflow-y-auto pr-1">
                         {reviewCandidates.length ? (
                           reviewCandidates.map((candidate) => {
                             const checked = approvedCandidateIds.has(
@@ -1031,7 +1068,7 @@ export default function RedactPage() {
                             return (
                               <label
                                 key={candidateId(candidate)}
-                                className={`block rounded-2xl border p-4 transition ${
+                                className={`block rounded-2xl border p-3 transition ${
                                   checked
                                     ? "border-cyan-300/30 bg-cyan-400/10"
                                     : "border-white/10 bg-white/5"
@@ -1057,7 +1094,7 @@ export default function RedactPage() {
                                       </span>
                                     </div>
 
-                                    <p className="mt-2 break-words text-sm leading-6 text-white/85">
+                                    <p className="mt-1 break-words text-sm leading-5 text-white/85">
                                       {candidate.quote}
                                     </p>
                                   </div>
@@ -1075,7 +1112,7 @@ export default function RedactPage() {
                   )}
 
                   {resultSummary ? (
-                    <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
+                    <pre className="whitespace-pre-wrap break-words text-sm leading-6 text-white/80">
                       {resultSummary}
                     </pre>
                   ) : (
@@ -1083,43 +1120,6 @@ export default function RedactPage() {
                       {t.previewEmpty}
                     </p>
                   )}
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
-                    <ShieldCheck className="h-5 w-5 text-cyan-300" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-white">
-                      {common.formatPolicy}
-                    </h2>
-                    <p className="text-sm text-white/55">{t.policySubtitle}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-sm leading-6 text-white/70">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
-                      {t.allowedUploadsLabel}
-                    </p>
-                    <p className="mt-1 text-white/65">{t.allowedFileInputs}</p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
-                      {t.outputRuleLabel}
-                    </p>
-                    <p className="mt-1 text-white/65">{t.outputRuleValue}</p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
-                      {t.selectedTargetsLabel}
-                    </p>
-                    <p className="mt-1 text-white/65">{targetData.length}</p>
-                  </div>
                 </div>
               </div>
             </div>

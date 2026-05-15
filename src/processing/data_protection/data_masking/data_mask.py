@@ -3,6 +3,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
+import re
 import docx
 import fitz  
 import pytesseract
@@ -27,6 +28,7 @@ from src.schema import (
     DocumentInputFormat,
     DocumentPayload,
     FeatureType,
+    HumanReviewRequirement,
     SensitiveDataType,
 )
 from src.validation import build_document_file_result, validate_analyzer_request, validate_analyzer_response
@@ -54,6 +56,8 @@ _SUPPORTED_INPUTS = {
     DocumentInputFormat.jpeg,
     DocumentInputFormat.png,
 }
+
+_CUSTOM_MASK_LABEL = "custom_mask"
 
 
 @dataclass(frozen=True)
@@ -123,9 +127,67 @@ def _ocr_words_from_image(image: Image.Image, *, ocr_lang: Optional[str] = None)
 
 
 def _normalize_text_for_compare(value: str) -> str:
-    import re
-
     return re.sub(r"\s+", " ", value.strip()).casefold()
+
+
+def _clean_custom_mask_items(values: Optional[Sequence[str]] = None) -> list[str]:
+    cleaned: list[str] = []
+    seen: set[str] = set()
+
+    for value in values or ():
+        text = str(value).strip()
+        if not text:
+            continue
+
+        key = _normalize_text_for_compare(text)
+        if key in seen:
+            continue
+
+        cleaned.append(text)
+        seen.add(key)
+
+    return cleaned
+
+
+def _custom_mask_findings(text: str, values: Optional[Sequence[str]] = None) -> list[TextFinding]:
+    findings: list[TextFinding] = []
+
+    for value in _clean_custom_mask_items(values):
+        pattern = re.compile(re.escape(value), flags=re.IGNORECASE)
+        for match in pattern.finditer(text):
+            quote = text[match.start():match.end()]
+            if not quote.strip():
+                continue
+            findings.append(
+                TextFinding(
+                    start=match.start(),
+                    end=match.end(),
+                    quote=quote,
+                    label=_CUSTOM_MASK_LABEL,
+                    source="custom_mask",
+                )
+            )
+
+    return findings
+
+
+def _mask_findings_for_text(
+    *,
+    sdp: GoogleSDPClient,
+    text: str,
+    payload: DataMaskingRequest,
+    custom_redactions: Optional[Sequence[str]] = None,
+) -> list[TextFinding]:
+    sensitive_findings = inspect_sensitive_text(
+        sdp=sdp,
+        text=text,
+        targets=payload.target_data,
+        review_exclusions=payload.review_exclusions,
+    )
+    return merge_overlapping_findings(
+        [*sensitive_findings, *_custom_mask_findings(text, custom_redactions)],
+        original_text=text,
+    )
 
 
 def _boxes_for_text_spans(findings: Sequence[TextFinding], words: Sequence[OCRWord]) -> list[tuple[int, int, int, int]]:
@@ -219,6 +281,7 @@ def _build_masking_response(*, request: AnalyzerRequest, output_path: Path) -> A
         policy=request.policy,
         system_language=request.system_language,
         result=result,
+        human_review=HumanReviewRequirement(),
     )
     return validate_analyzer_response(response, request=request)
 
@@ -266,6 +329,8 @@ def _mask_email(value: str) -> str:
 
 def mask_value_by_target(label: str, quote: str) -> str:
     label = (label or "").lower()
+    if label == _CUSTOM_MASK_LABEL:
+        return "".join(char if char.isspace() else "X" for char in quote)
     if label in {SensitiveDataType.name.value, "person_name"}:
         return _mask_name(quote)
     if label in {SensitiveDataType.email_address.value, "email_address"}:
@@ -362,6 +427,7 @@ def preview_data_mask_candidates(
     location: str = DEFAULT_DLP_LOCATION,
     min_likelihood: str = DEFAULT_MIN_LIKELIHOOD,
     client: Any | None = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> list[DetectionCandidate]:
     req = validate_analyzer_request(request)
     input_payload, payload = _ensure_mask_request(req)
@@ -597,6 +663,7 @@ def _mask_docx(
     output_path: Path,
     sdp: GoogleSDPClient,
     payload: DataMaskingRequest,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> None:
     document = docx.Document(source_path)
     for paragraph in _iter_document_paragraphs(document):
@@ -604,11 +671,11 @@ def _mask_docx(
         if not full_text.strip():
             continue
 
-        findings = inspect_sensitive_text(
+        findings = _mask_findings_for_text(
             sdp=sdp,
             text=full_text,
-            targets=payload.target_data,
-            review_exclusions=payload.review_exclusions,
+            payload=payload,
+            custom_redactions=custom_redactions,
         )
 
         if findings:
@@ -624,14 +691,15 @@ def _mask_image_file(
     sdp: GoogleSDPClient,
     payload: DataMaskingRequest,
     ocr_languages: Optional[Sequence[str]] = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> None:
     image = Image.open(source_path).convert("RGB")
     page_text, words = _ocr_words_from_image(image, ocr_lang=resolve_ocr_lang(ocr_languages))
-    findings = inspect_sensitive_text(
+    findings = _mask_findings_for_text(
         sdp=sdp,
         text=page_text,
-        targets=payload.target_data,
-        review_exclusions=payload.review_exclusions,
+        payload=payload,
+        custom_redactions=custom_redactions,
     )
     boxes = _boxes_for_text_spans(findings, words)
     result = pixelate_boxes(image, boxes)
@@ -647,6 +715,7 @@ def _mask_pdf(
     payload: DataMaskingRequest,
     ocr_languages: Optional[Sequence[str]] = None,
     render_scale: float = DEFAULT_PDF_RENDER_SCALE,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> None:
     doc = fitz.open(source_path)
     try:
@@ -654,11 +723,11 @@ def _mask_pdf(
             page_text, words = _page_words_with_offsets(page)
 
             if words:
-                findings = inspect_sensitive_text(
+                findings = _mask_findings_for_text(
                     sdp=sdp,
                     text=page_text,
-                    targets=payload.target_data,
-                    review_exclusions=payload.review_exclusions,
+                    payload=payload,
+                    custom_redactions=custom_redactions,
                 )
 
                 specs = _masked_rect_specs(findings, words, original_text=page_text)
@@ -687,11 +756,11 @@ def _mask_pdf(
                 pix = page.get_pixmap(matrix=fitz.Matrix(render_scale, render_scale))
                 image = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
                 page_text, ocr_words = _ocr_words_from_image(image, ocr_lang=resolve_ocr_lang(ocr_languages))
-                findings = inspect_sensitive_text(
+                findings = _mask_findings_for_text(
                     sdp=sdp,
                     text=page_text,
-                    targets=payload.target_data,
-                    review_exclusions=payload.review_exclusions,
+                    payload=payload,
+                    custom_redactions=custom_redactions,
                 )
                 boxes = _boxes_for_text_spans(findings, ocr_words)
 
@@ -722,6 +791,7 @@ def apply_data_mask(
     min_likelihood: str = DEFAULT_MIN_LIKELIHOOD,
     client: Any | None = None,
     ocr_languages: Optional[Sequence[str]] = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> AnalyzerResponse:
     req = validate_analyzer_request(request)
     input_payload, payload = _ensure_mask_request(req)
@@ -739,7 +809,13 @@ def apply_data_mask(
 
     fmt = input_payload.metadata.input_format
     if fmt == DocumentInputFormat.docx:
-        _mask_docx(source_path=source, output_path=output_path, sdp=resolved, payload=payload)
+        _mask_docx(
+            source_path=source,
+            output_path=output_path,
+            sdp=resolved,
+            payload=payload,
+            custom_redactions=custom_redactions,
+        )
     elif fmt == DocumentInputFormat.pdf:
         _mask_pdf(
             source_path=source,
@@ -747,6 +823,7 @@ def apply_data_mask(
             sdp=resolved,
             payload=payload,
             ocr_languages=ocr_languages,
+            custom_redactions=custom_redactions,
         )
     elif fmt in {DocumentInputFormat.jpg, DocumentInputFormat.jpeg, DocumentInputFormat.png}:
         _mask_image_file(
@@ -755,6 +832,7 @@ def apply_data_mask(
             sdp=resolved,
             payload=payload,
             ocr_languages=ocr_languages,
+            custom_redactions=custom_redactions,
         )
     else:
         raise ValueError("Unsupported data_mask input format.")

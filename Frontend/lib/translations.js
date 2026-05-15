@@ -136,15 +136,17 @@ export const homePageTranslations = {
       },
       {
         key: "redact",
-        name: "Redact",
+        name: "Redaction",
         route: "/redact",
-        description: "XYZ",
+        description:
+          "Redact sensitive data and information from documents preserving the original layout and structure",
       },
       {
         key: "mask",
-        name: "Data Mask",
+        name: "Data Masking",
         route: "/mask",
-        description: "XYZ",
+        description:
+          "Mask sensitive data and information keeping the document readable and usable",
       },
       {
         key: "compliance",
@@ -245,15 +247,17 @@ export const homePageTranslations = {
       },
       {
         key: "redact",
-        name: "Caviarder",
+        name: "Caviardage",
         route: "/redact",
-        description: "XYZ",
+        description:
+          "Caviardez les données et informations sensibles dans vos documents tout en préservant la mise en page et la structure d’origine",
       },
       {
         key: "mask",
         name: "Masquage des données",
         route: "/mask",
-        description: "XYZ",
+        description:
+          "Masquez les données et informations sensibles tout en conservant un document lisible et exploitable",
       },
       {
         key: "compliance",
@@ -819,10 +823,10 @@ export const transcribePageTranslations = {
 export const redactPageTranslations = {
   en: {
     badge: "Privacy-first black-box redaction",
-    title: "Redact sensitive content while preserving the document structure",
+    title: "Redact sensitive data and information",
     description:
-      "Upload a PDF, Word document, or image. The first pass generates a provisional redacted file for review. Then you can deselect any grouped quote you do not want redacted before generating the final file.",
-    uploadTitle: "Upload a document to redact",
+      "Upload files or documents to redact sensitive data and information keeping its structure",
+    uploadTitle: "Upload file or document",
     allowedFileInputs: "Allowed: .pdf, .docx, .jpg, .jpeg, .png.",
     outputExtensionWillBe: "Output extension will be",
     unsupportedFileType:
@@ -845,9 +849,9 @@ export const redactPageTranslations = {
     outputRuleValue: "output extension must always equal input extension",
     docTypeLabel: "Document type",
     sensitiveTargetsLabel: "Sensitive data to redact",
-    exclusionsLabel: "Manual review exclusions",
+    exclusionsLabel: "Type characters to redact",
     exclusionsPlaceholder:
-      "Optional: enter words or phrases to always leave visible, one per line or comma-separated.",
+      "Optional: enter exact words, names, phrases, or characters to redact, one per line or comma-separated.",
     selectedTargetsLabel: "Selected targets:",
     fileAcceptedLabel: "File accepted",
     downloadReady: "Download ready",
@@ -859,7 +863,7 @@ export const redactPageTranslations = {
     inputExtension: "Input extension",
     outputExtension: "Output extension",
     documentTypeResult: "Document type",
-    exclusionsCount: "Review exclusions count",
+    exclusionsCount: "Items left visible count",
     rulesApplied: "Redaction was generated from the reviewed selection set.",
     fileTypeLabel: "Detected type:",
     selectAll: "Select all",
@@ -883,12 +887,11 @@ export const redactPageTranslations = {
       "No grouped sensitive items were detected for the current settings.",
   },
   fr: {
-    badge: "Caviardage boîte noire orienté confidentialité",
-    title:
-      "Caviardez le contenu sensible tout en préservant la structure du document",
+    badge: "Caviardage en boîte noire axé sur la confidentialité",
+    title: "Caviarder les données et informations sensibles",
     description:
-      "Téléversez un PDF, un document Word ou une image. Le premier passage génère un fichier caviardé provisoire pour révision. Ensuite, vous pouvez désélectionner tout groupe de texte que vous ne souhaitez pas caviarder avant de générer le fichier final.",
-    uploadTitle: "Téléverser un document à caviarder",
+      "Téléversez des fichiers ou des documents pour caviarder les données et informations sensibles tout en conservant leur structure",
+    uploadTitle: "Téléverser un fichier ou un document",
     allowedFileInputs: "Autorisés : .pdf, .docx, .jpg, .jpeg, .png.",
     outputExtensionWillBe: "L’extension de sortie sera",
     unsupportedFileType:
@@ -914,9 +917,9 @@ export const redactPageTranslations = {
       "l’extension de sortie doit toujours être identique à l’extension d’entrée",
     docTypeLabel: "Type de document",
     sensitiveTargetsLabel: "Données sensibles à caviarder",
-    exclusionsLabel: "Exclusions manuelles de révision",
+    exclusionsLabel: "Saisir les caractères à caviarder",
     exclusionsPlaceholder:
-      "Optionnel : saisissez les mots ou expressions à toujours laisser visibles, une par ligne ou séparés par des virgules.",
+      "Optionnel : saisissez les mots, noms, expressions ou caractères exacts à caviarder, une entrée par ligne ou séparée par des virgules.",
     selectedTargetsLabel: "Cibles sélectionnées :",
     fileAcceptedLabel: "Fichier accepté",
     downloadReady: "Téléchargement prêt",
@@ -928,7 +931,7 @@ export const redactPageTranslations = {
     inputExtension: "Extension d’entrée",
     outputExtension: "Extension de sortie",
     documentTypeResult: "Type de document",
-    exclusionsCount: "Nombre d’exclusions",
+    exclusionsCount: "Nombre d’éléments laissés visibles",
     rulesApplied:
       "Le caviardage a été généré à partir de l’ensemble sélectionné après révision.",
     fileTypeLabel: "Type détecté :",
@@ -956,11 +959,11 @@ export const redactPageTranslations = {
 
 export const dataMaskPageTranslations = {
   en: {
-    badge: "Privacy-first data masking",
-    title: "Mask sensitive content while preserving the document structure",
+    badge: "Privacy-first black-box data masking",
+    title: "Mask sensitive data and information",
     description:
-      "Upload a PDF, Word document, or image. The first pass generates a provisional masked file for review. Then you can deselect any grouped quote you do not want masked before generating the final file.",
-    uploadTitle: "Upload a document to mask",
+      "Upload files or documents to mask sensitive data and information keeping its structure",
+    uploadTitle: "Upload file or document",
     allowedFileInputs: "Allowed: .pdf, .docx, .jpg, .jpeg, .png.",
     outputExtensionWillBe: "Output extension will be",
     unsupportedFileType:
@@ -983,9 +986,9 @@ export const dataMaskPageTranslations = {
     outputRuleValue: "output extension must always equal input extension",
     docTypeLabel: "Document type",
     sensitiveTargetsLabel: "Sensitive data to mask",
-    exclusionsLabel: "Manual review exclusions",
+    exclusionsLabel: "Type characters to mask",
     exclusionsPlaceholder:
-      "Optional: enter words or phrases to always leave visible, one per line or comma-separated.",
+      "Optional: enter words, characters, or numbers to mask, one per line or comma-separated.",
     selectedTargetsLabel: "Selected targets:",
     fileAcceptedLabel: "File accepted",
     downloadReady: "Download ready",
@@ -997,7 +1000,8 @@ export const dataMaskPageTranslations = {
     inputExtension: "Input extension",
     outputExtension: "Output extension",
     documentTypeResult: "Document type",
-    exclusionsCount: "Review exclusions count",
+    exclusionsCount: "Items left visible count",
+    customMaskCount: "Custom mask items",
     rulesApplied: "Masking was generated from the reviewed selection set.",
     fileTypeLabel: "Detected type:",
     selectAll: "Select all",
@@ -1021,12 +1025,11 @@ export const dataMaskPageTranslations = {
       "No grouped sensitive items were detected for the current settings.",
   },
   fr: {
-    badge: "Masquage de données orienté confidentialité",
-    title:
-      "Masquez le contenu sensible tout en préservant la structure du document",
+    badge: "Masquage en boîte noire axé sur la confidentialité",
+    title: "Masquer les données et informations sensibles",
     description:
-      "Téléversez un PDF, un document Word ou une image. Le premier passage génère un fichier masqué provisoire pour révision. Ensuite, vous pouvez désélectionner tout groupe de texte que vous ne souhaitez pas masquer avant de générer le fichier final.",
-    uploadTitle: "Téléverser un document à masquer",
+      "Téléversez des fichiers ou des documents pour masquer les données et informations sensibles tout en conservant leur structure",
+    uploadTitle: "Téléverser un fichier ou un document",
     allowedFileInputs: "Autorisés : .pdf, .docx, .jpg, .jpeg, .png.",
     outputExtensionWillBe: "L’extension de sortie sera",
     unsupportedFileType:
@@ -1052,9 +1055,9 @@ export const dataMaskPageTranslations = {
       "l’extension de sortie doit toujours être identique à l’extension d’entrée",
     docTypeLabel: "Type de document",
     sensitiveTargetsLabel: "Données sensibles à masquer",
-    exclusionsLabel: "Exclusions manuelles de révision",
+    exclusionsLabel: "Saisir les caractères à masquer",
     exclusionsPlaceholder:
-      "Optionnel : saisissez les mots ou expressions à toujours laisser visibles, une par ligne ou séparés par des virgules.",
+      "Optionnel : saisissez les mots, caractères ou nombres à masquer, une par ligne ou séparés par des virgules.",
     selectedTargetsLabel: "Cibles sélectionnées :",
     fileAcceptedLabel: "Fichier accepté",
     downloadReady: "Téléchargement prêt",
@@ -1066,7 +1069,8 @@ export const dataMaskPageTranslations = {
     inputExtension: "Extension d’entrée",
     outputExtension: "Extension de sortie",
     documentTypeResult: "Type de document",
-    exclusionsCount: "Nombre d’exclusions",
+    exclusionsCount: "Nombre d’éléments laissés visibles",
+    customMaskCount: "Éléments personnalisés à masquer",
     rulesApplied:
       "Le masquage a été généré à partir de l’ensemble sélectionné après révision.",
     fileTypeLabel: "Type détecté :",

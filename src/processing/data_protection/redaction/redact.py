@@ -29,6 +29,7 @@ from src.schema import (
     DocumentInputFormat,
     DocumentPayload,
     FeatureType,
+    HumanReviewRequirement,
     RedactionRequest,
 )
 from src.validation import build_document_file_result, validate_analyzer_request, validate_analyzer_response
@@ -139,6 +140,118 @@ def _normalize_text_for_compare(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip()).casefold()
 
 
+def _normalize_manual_redactions(values: Optional[Sequence[str]] = None) -> list[str]:
+    cleaned: list[str] = []
+    seen: set[str] = set()
+
+    for value in values or []:
+        term = str(value).strip()
+        if not term:
+            continue
+        key = _normalize_text_for_compare(term)
+        if key in seen:
+            continue
+        cleaned.append(term)
+        seen.add(key)
+
+    return cleaned
+
+
+def _literal_text_findings(
+    text: str,
+    *,
+    custom_redactions: Optional[Sequence[str]] = None,
+    review_exclusions: Sequence[str] = (),
+) -> list[TextFinding]:
+    import re
+
+    terms = _normalize_manual_redactions(custom_redactions)
+    if not text or not terms:
+        return []
+
+    excluded = {_normalize_text_for_compare(item) for item in review_exclusions if item and item.strip()}
+    findings: list[TextFinding] = []
+
+    for term in terms:
+        if _normalize_text_for_compare(term) in excluded:
+            continue
+
+        pattern = re.compile(re.escape(term), re.IGNORECASE)
+        for match in pattern.finditer(text):
+            quote = text[match.start():match.end()]
+            if not quote:
+                continue
+            findings.append(
+                TextFinding(
+                    start=match.start(),
+                    end=match.end(),
+                    quote=quote,
+                    label="custom_redaction",
+                    source="manual",
+                )
+            )
+
+    return findings
+
+
+def _manual_candidates_from_text(
+    text: str,
+    *,
+    custom_redactions: Optional[Sequence[str]] = None,
+    review_exclusions: Sequence[str] = (),
+) -> list[DetectionCandidate]:
+    terms = _normalize_manual_redactions(custom_redactions)
+    if not text or not terms:
+        return []
+
+    excluded = {_normalize_text_for_compare(item) for item in review_exclusions if item and item.strip()}
+    candidates: list[DetectionCandidate] = []
+
+    for term in terms:
+        if _normalize_text_for_compare(term) in excluded:
+            continue
+
+        findings = _literal_text_findings(
+            text,
+            custom_redactions=[term],
+            review_exclusions=review_exclusions,
+        )
+        if not findings:
+            continue
+
+        candidates.append(
+            DetectionCandidate(
+                label="custom_redaction",
+                quote=term,
+                occurrences=len(findings),
+                source="manual",
+            )
+        )
+
+    return candidates
+
+
+def _redaction_findings(
+    *,
+    sdp: GoogleSDPClient,
+    text: str,
+    payload: RedactionRequest,
+    custom_redactions: Optional[Sequence[str]] = None,
+) -> list[TextFinding]:
+    detected = inspect_sensitive_text(
+        sdp=sdp,
+        text=text,
+        targets=payload.target_data,
+        review_exclusions=payload.review_exclusions,
+    )
+    manual = _literal_text_findings(
+        text,
+        custom_redactions=custom_redactions,
+        review_exclusions=payload.review_exclusions,
+    )
+    return merge_overlapping_findings([*detected, *manual], original_text=text)
+
+
 def _boxes_for_text_spans(findings: Sequence[TextFinding], words: Sequence[OCRWord]) -> list[tuple[int, int, int, int]]:
     boxes: list[tuple[int, int, int, int]] = []
     for finding in findings:
@@ -238,6 +351,7 @@ def _build_redaction_response(*, request: AnalyzerRequest, output_path: Path) ->
         policy=request.policy,
         system_language=request.system_language,
         result=result,
+        human_review=HumanReviewRequirement(),
     )
     return validate_analyzer_response(response, request=request)
 
@@ -270,6 +384,7 @@ def preview_redaction_candidates(
     location: str = DEFAULT_DLP_LOCATION,
     min_likelihood: str = DEFAULT_MIN_LIKELIHOOD,
     client: Any | None = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> list[DetectionCandidate]:
     req = validate_analyzer_request(request)
     input_payload, payload = _ensure_redaction_request(req)
@@ -285,13 +400,19 @@ def preview_redaction_candidates(
         min_likelihood=min_likelihood,
         client=client,
     )
-    return preview_candidates_from_text(
+    detected_candidates = preview_candidates_from_text(
         sdp=resolved,
         text=input_payload.text,
         targets=payload.target_data,
         review_exclusions=payload.review_exclusions,
         min_likelihood=min_likelihood,
     )
+    manual_candidates = _manual_candidates_from_text(
+        input_payload.text,
+        custom_redactions=custom_redactions,
+        review_exclusions=payload.review_exclusions,
+    )
+    return [*detected_candidates, *manual_candidates]
 
 
 def _paragraph_run_spans(paragraph: Any) -> tuple[str, list[RunSpan]]:
@@ -475,6 +596,7 @@ def _redact_docx(
     output_path: Path,
     sdp: GoogleSDPClient,
     payload: RedactionRequest,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> None:
     document = docx.Document(source_path)
     for paragraph in _iter_document_paragraphs(document):
@@ -482,11 +604,11 @@ def _redact_docx(
         if not full_text.strip():
             continue
 
-        findings = inspect_sensitive_text(
+        findings = _redaction_findings(
             sdp=sdp,
             text=full_text,
-            targets=payload.target_data,
-            review_exclusions=payload.review_exclusions,
+            payload=payload,
+            custom_redactions=custom_redactions,
         )
 
         if findings:
@@ -501,15 +623,16 @@ def _redact_image_file(
     output_path: Path,
     sdp: GoogleSDPClient,
     payload: RedactionRequest,
+    custom_redactions: Optional[Sequence[str]] = None,
     ocr_languages: Optional[Sequence[str]] = None,
 ) -> None:
     image = Image.open(source_path).convert("RGB")
     page_text, words = _ocr_words_from_image(image, ocr_lang=resolve_ocr_lang(ocr_languages))
-    findings = inspect_sensitive_text(
+    findings = _redaction_findings(
         sdp=sdp,
         text=page_text,
-        targets=payload.target_data,
-        review_exclusions=payload.review_exclusions,
+        payload=payload,
+        custom_redactions=custom_redactions,
     )
     boxes = _boxes_for_text_spans(findings, words)
     result = draw_redaction_boxes(image, boxes)
@@ -523,6 +646,7 @@ def _redact_pdf(
     output_path: Path,
     sdp: GoogleSDPClient,
     payload: RedactionRequest,
+    custom_redactions: Optional[Sequence[str]] = None,
     ocr_languages: Optional[Sequence[str]] = None,
     render_scale: float = DEFAULT_PDF_RENDER_SCALE,
 ) -> None:
@@ -532,11 +656,11 @@ def _redact_pdf(
             page_text, words = _page_words_with_offsets(page)
 
             if words:
-                findings = inspect_sensitive_text(
+                findings = _redaction_findings(
                     sdp=sdp,
                     text=page_text,
-                    targets=payload.target_data,
-                    review_exclusions=payload.review_exclusions,
+                    payload=payload,
+                    custom_redactions=custom_redactions,
                 )
 
                 for rect in _pdf_rects_for_findings(findings, words, original_text=page_text):
@@ -547,11 +671,11 @@ def _redact_pdf(
                 pix = page.get_pixmap(matrix=fitz.Matrix(render_scale, render_scale))
                 image = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
                 page_text, ocr_words = _ocr_words_from_image(image, ocr_lang=resolve_ocr_lang(ocr_languages))
-                findings = inspect_sensitive_text(
+                findings = _redaction_findings(
                     sdp=sdp,
                     text=page_text,
-                    targets=payload.target_data,
-                    review_exclusions=payload.review_exclusions,
+                    payload=payload,
+                    custom_redactions=custom_redactions,
                 )
                 boxes = _boxes_for_text_spans(findings, ocr_words)
 
@@ -582,6 +706,7 @@ def apply_redaction(
     min_likelihood: str = DEFAULT_MIN_LIKELIHOOD,
     client: Any | None = None,
     ocr_languages: Optional[Sequence[str]] = None,
+    custom_redactions: Optional[Sequence[str]] = None,
 ) -> AnalyzerResponse:
     req = validate_analyzer_request(request)
     input_payload, payload = _ensure_redaction_request(req)
@@ -599,13 +724,20 @@ def apply_redaction(
 
     fmt = input_payload.metadata.input_format
     if fmt == DocumentInputFormat.docx:
-        _redact_docx(source_path=source, output_path=output_path, sdp=resolved, payload=payload)
+        _redact_docx(
+            source_path=source,
+            output_path=output_path,
+            sdp=resolved,
+            payload=payload,
+            custom_redactions=custom_redactions,
+        )
     elif fmt == DocumentInputFormat.pdf:
         _redact_pdf(
             source_path=source,
             output_path=output_path,
             sdp=resolved,
             payload=payload,
+            custom_redactions=custom_redactions,
             ocr_languages=ocr_languages,
         )
     elif fmt in {DocumentInputFormat.jpg, DocumentInputFormat.jpeg, DocumentInputFormat.png}:
@@ -614,6 +746,7 @@ def apply_redaction(
             output_path=output_path,
             sdp=resolved,
             payload=payload,
+            custom_redactions=custom_redactions,
             ocr_languages=ocr_languages,
         )
     else:
