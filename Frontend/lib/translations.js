@@ -89,6 +89,9 @@ export const homePageTranslations = {
     light: "Light",
     dark: "Dark",
     systemDefault: "System Default",
+    aiFeaturesTitle: "Try out AI Features",
+    aiFeaturesCompactTitle: "AI",
+    requiresSignIn: "Requires sign in",
     enabledActions: [
       {
         key: "convert",
@@ -196,6 +199,9 @@ export const homePageTranslations = {
     light: "Clair",
     dark: "Sombre",
     systemDefault: "Par défaut du système",
+    aiFeaturesTitle: "Essayez les fonctionnalités IA",
+    aiFeaturesCompactTitle: "IA",
+    requiresSignIn: "Connexion requise",
     enabledActions: [
       {
         key: "convert",
