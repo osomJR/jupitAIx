@@ -1,37 +1,35 @@
 "use client";
+
 import { useEffect, useMemo, useState } from "react";
-import { useLanguage } from "@/components/language_provider";
-import ActionCard from "@/components/ActionCard";
-import ProfileMenu from "@/components/profile_menu";
 import { useRouter } from "next/navigation";
-import AuthControls from "@/components/auth_controls";
+import { useLanguage } from "@/components/language_provider";
+import ProfileMenu from "@/components/profile_menu";
 import {
-  FileText,
-  Sparkles,
-  Languages,
   BookOpen,
-  PenTool,
-  Mic,
-  HelpCircle,
-  EyeOff,
   EyeClosed,
-  ShieldCheck,
+  EyeOff,
   FileBraces,
-  LayoutDashboard,
+  HelpCircle,
   KeyRound,
-  UsersRound,
+  Languages,
+  LayoutDashboard,
   Menu,
+  Mic,
+  PenTool,
+  ShieldCheck,
+  Sparkles,
+  UsersRound,
   X,
 } from "lucide-react";
 import { homePageTranslations } from "@/lib/translations";
+
 const actionIcons = {
-  convert: FileText,
   summarize: Sparkles,
   grammar: PenTool,
   translate: Languages,
   explain: BookOpen,
-  transcribe: Mic,
   questions: HelpCircle,
+  transcribe: Mic,
   redact: EyeOff,
   mask: EyeClosed,
   compliance: ShieldCheck,
@@ -49,11 +47,9 @@ const sidebarActionKeys = [
   "questions",
 ];
 
-const sidebarActionKeySet = new Set(sidebarActionKeys);
-
-export default function HomePage() {
+export default function AppSidebarLayout({ children }) {
   const router = useRouter();
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -98,34 +94,11 @@ export default function HomePage() {
     };
   }, []);
 
-
   const isSignedIn = !!user;
 
   const t = useMemo(
     () => homePageTranslations[language] || homePageTranslations.en,
     [language],
-  );
-
-  const enabledActions = useMemo(
-    () =>
-      t.enabledActions
-        .filter((action) => !sidebarActionKeySet.has(action.key))
-        .map((action) => ({
-          ...action,
-          icon: actionIcons[action.key],
-        })),
-    [t],
-  );
-
-  const lockedActions = useMemo(
-    () =>
-      t.lockedActions
-        .filter((action) => !sidebarActionKeySet.has(action.key))
-        .map((action) => ({
-          ...action,
-          icon: actionIcons[action.key],
-        })),
-    [t],
   );
 
   const sidebarActions = useMemo(() => {
@@ -154,7 +127,6 @@ export default function HomePage() {
     [t],
   );
 
-
   const accountName =
     user?.name ||
     user?.fullName ||
@@ -162,7 +134,6 @@ export default function HomePage() {
     [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
     user?.email ||
     "Account";
-
 
   const avatarText =
     accountName
@@ -315,44 +286,8 @@ export default function HomePage() {
     </div>
   );
 
-
-  const languageSwitcher = (
-    <div className="rounded-2xl border app-surface-strong p-2.5 backdrop-blur">
-      <p className="px-1 text-xs font-semibold normal-case tracking-[0.02em] app-text-soft">
-        {t.languageLabel}
-      </p>
-
-      <div className="mt-2 grid gap-1.5">
-        <button
-          type="button"
-          onClick={() => setLanguage("en")}
-          className={`rounded-xl px-3 py-1.5 text-left text-sm font-medium transition ${
-            language === "en"
-              ? "bg-white text-slate-900 shadow-sm"
-              : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
-          }`}
-        >
-          {t.english}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setLanguage("fr")}
-          className={`rounded-xl px-3 py-1.5 text-left text-sm font-medium transition ${
-            language === "fr"
-              ? "bg-white text-slate-900 shadow-sm"
-              : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
-          }`}
-        >
-          {t.french}
-        </button>
-      </div>
-    </div>
-  );
-
-
   return (
-    <main className="app-shell min-h-screen">
+    <main className="app-shell min-h-screen overflow-x-hidden">
       <aside
         className={`fixed left-0 top-0 z-50 flex h-dvh flex-col overflow-visible border-r app-surface backdrop-blur-xl transition-all duration-300 ${
           sidebarOpen ? "w-72" : "w-16"
@@ -395,47 +330,43 @@ export default function HomePage() {
           }`}
         >
           {sidebarOpen ? (
-            <div className="space-y-2">
-              {languageSwitcher}
+            <div className="border-t border-white/10 pt-1.5">
+              {isSignedIn ? (
+                <ProfileMenu
+                  user={user}
+                  settingsLabel={t.settings}
+                  logoutLabel={t.logout}
+                  appearanceLabel={t.appearance}
+                  lightLabel={t.light}
+                  darkLabel={t.dark}
+                  systemLabel={t.systemDefault}
+                  menuPlacement="top"
+                  menuAlign="left"
+                  fullWidth
+                />
+              ) : (
+                <div className="home-sidebar-auth rounded-2xl border app-surface-strong p-2.5 backdrop-blur">
+                  {!authChecked ? (
+                    <div className="text-sm app-text-soft">{t.loading}</div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                      <a
+                        href="/auth/login?returnTo=/"
+                        className="rounded-xl bg-[var(--app-button-bg)] px-3 py-2 text-center text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
+                      >
+                        {t.signIn}
+                      </a>
 
-              <div className="border-t border-white/10 pt-1.5">
-                {isSignedIn ? (
-                  <ProfileMenu
-                    user={user}
-                    settingsLabel={t.settings}
-                    logoutLabel={t.logout}
-                    appearanceLabel={t.appearance}
-                    lightLabel={t.light}
-                    darkLabel={t.dark}
-                    systemLabel={t.systemDefault}
-                    menuPlacement="top"
-                    menuAlign="left"
-                    fullWidth
-                  />
-                ) : (
-                  <div className="home-sidebar-auth rounded-2xl border app-surface-strong p-2.5 backdrop-blur">
-                    {!authChecked ? (
-                      <div className="text-sm app-text-soft">{t.loading}</div>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-2">
-                        <a
-                          href="/auth/login?returnTo=/"
-                          className="rounded-xl bg-[var(--app-button-bg)] px-3 py-2 text-center text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
-                        >
-                          {t.signIn}
-                        </a>
-
-                        <a
-                          href="/auth/login?screen_hint=signup&prompt=login&returnTo=/"
-                          className="rounded-xl border app-surface px-3 py-2 text-center text-sm font-semibold app-text transition hover:bg-[var(--app-surface-strong)]"
-                        >
-                          {t.signUp}
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+                      <a
+                        href="/auth/login?screen_hint=signup&prompt=login&returnTo=/"
+                        className="rounded-xl border app-surface px-3 py-2 text-center text-sm font-semibold app-text transition hover:bg-[var(--app-surface-strong)]"
+                      >
+                        {t.signUp}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ) : isSignedIn ? (
             <button
@@ -460,124 +391,11 @@ export default function HomePage() {
       </aside>
 
       <div
-        className={`relative isolate min-h-screen overflow-visible transition-[padding] duration-300 ${
+        className={`relative min-h-screen overflow-x-hidden transition-[padding] duration-300 ${
           sidebarOpen ? "pl-72" : "pl-16"
         }`}
       >
-        <div className="absolute inset-0 app-hero-overlay" />
-
-        {!isSignedIn ? (
-          <div className="absolute right-6 top-4 z-20 flex items-center gap-3 md:right-8">
-            <AuthControls
-              user={user}
-              authChecked={authChecked}
-              signInLabel={t.signIn}
-              signUpLabel={t.signUp}
-              loadingLabel={t.loading}
-              logoutLabel={t.logout}
-              settingsLabel={t.settings}
-              appearanceLabel={t.appearance}
-              lightLabel={t.light}
-              darkLabel={t.dark}
-              systemLabel={t.systemDefault}
-            />
-          </div>
-        ) : null}
-
-        <div className="relative mx-auto max-w-7xl px-6 py-12 md:px-8 md:py-16">
-          <section className="mb-12 md:mb-14">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
-              <Sparkles className="h-4 w-4" />
-              {t.badge}
-            </div>
-
-            <div className="mt-6 max-w-3xl">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
-                {t.heroTitleStart}{" "}
-                <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 bg-clip-text text-transparent">
-                  {t.heroTitleHighlight}
-                </span>
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 app-text-muted md:text-lg">
-                {t.heroDescription}
-              </p>
-            </div>
-          </section>
-
-          <section>
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold app-text md:text-2xl">
-                  {t.availableNowTitle}
-                </h2>
-                <p className="mt-1 text-sm app-text-soft">
-                  {t.availableNowDescription}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {enabledActions.map((action) => (
-                <ActionCard
-                  key={`${language}-${action.route}`}
-                  action={action}
-                  onClick={() => router.push(action.route)}
-                />
-              ))}
-            </div>
-          </section>
-
-          <section className="my-12 md:my-14">
-            <div className="relative overflow-hidden rounded-3xl border app-surface-strong p-6 backdrop-blur-xl md:p-8">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.18),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.14),transparent_25%)]" />
-              <div className="relative max-w-2xl">
-                <p className="mb-2 text-sm font-semibold normal-case tracking-[0.02em] text-cyan-300/90">
-                  {t.unlockMoreEyebrow}
-                </p>
-
-                <h3 className="text-2xl font-semibold tracking-tight app-text md:text-3xl">
-                  {isSignedIn ? t.unlockedSignedInTitle : t.unlockMoreTitle}
-                </h3>
-
-                <p className="mt-3 text-sm leading-6 app-text-muted md:text-base">
-                  {isSignedIn
-                    ? t.unlockedSignedInDescription
-                    : t.unlockMoreDescription}
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold app-text md:text-2xl">
-                  {t.advancedFeaturesTitle}
-                </h2>
-                <p className="mt-1 text-sm app-text-soft">
-                  {authChecked
-                    ? isSignedIn
-                      ? t.advancedFeaturesSignedInDescription
-                      : t.advancedFeaturesDescription
-                    : t.checkingAccountStatus}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {lockedActions.map((action) => (
-                <ActionCard
-                  key={`${language}-${action.route}`}
-                  action={action}
-                  locked={!isSignedIn}
-                  onClick={
-                    isSignedIn ? () => router.push(action.route) : undefined
-                  }
-                />
-              ))}
-            </div>
-          </section>
-        </div>
+        {children}
       </div>
     </main>
   );

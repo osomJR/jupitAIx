@@ -17,6 +17,7 @@ import {
   commonTranslations,
   dataMaskPageTranslations,
 } from "@/lib/translations";
+import AppSidebarLayout from "@/components/app_sidebar";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx", ".jpg", ".jpeg", ".png"];
 const MAX_FILE_SIZE_MB = 10;
@@ -694,7 +695,7 @@ export default function DataMaskPage() {
   }
 
   return (
-    <main className="app-shell">
+    <AppSidebarLayout>
       <div className="relative isolate min-h-screen overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 
@@ -1161,6 +1162,6 @@ export default function DataMaskPage() {
           </section>
         </div>
       </div>
-    </main>
+    </AppSidebarLayout>
   );
 }

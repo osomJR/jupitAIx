@@ -89,9 +89,27 @@ export const homePageTranslations = {
     light: "Light",
     dark: "Dark",
     systemDefault: "System Default",
-    aiFeaturesTitle: "Try out AI Features",
+    aiFeaturesTitle: "Explore",
     aiFeaturesCompactTitle: "AI",
+    manageTitle: "Manage",
+    manageCompactTitle: "Manage",
+    soon: "Soon",
     requiresSignIn: "Requires sign in",
+    manageActions: [
+      {
+        key: "dashboard",
+        name: "Dashboard",
+        route: "/",
+      },
+      {
+        key: "apiKeys",
+        name: "API Keys",
+      },
+      {
+        key: "projectsTeam",
+        name: "Projects & Team",
+      },
+    ],
     enabledActions: [
       {
         key: "convert",
@@ -199,9 +217,27 @@ export const homePageTranslations = {
     light: "Clair",
     dark: "Sombre",
     systemDefault: "Par défaut du système",
-    aiFeaturesTitle: "Essayez les fonctionnalités IA",
+    aiFeaturesTitle: "Explorer",
     aiFeaturesCompactTitle: "IA",
+    manageTitle: "Gérer",
+    manageCompactTitle: "Gérer",
+    soon: "Bientôt",
     requiresSignIn: "Connexion requise",
+    manageActions: [
+      {
+        key: "dashboard",
+        name: "Tableau de bord",
+        route: "/",
+      },
+      {
+        key: "apiKeys",
+        name: "Clés API",
+      },
+      {
+        key: "projectsTeam",
+        name: "Projets & équipe",
+      },
+    ],
     enabledActions: [
       {
         key: "convert",

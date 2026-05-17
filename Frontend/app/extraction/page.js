@@ -20,6 +20,7 @@ import {
   commonTranslations,
   structuredExtractionPageTranslations,
 } from "@/lib/translations";
+import AppSidebarLayout from "@/components/app_sidebar";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx", ".jpg", ".jpeg", ".png"];
 const MAX_FILE_SIZE_MB = 10;
@@ -690,7 +691,7 @@ export default function StructuredExtractionPage() {
   }
 
   return (
-    <main className="app-shell min-h-screen overflow-x-hidden">
+    <AppSidebarLayout>
       <div className="relative isolate min-h-screen overflow-x-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 
@@ -1180,6 +1181,6 @@ export default function StructuredExtractionPage() {
           </section>
         </div>
       </div>
-    </main>
+    </AppSidebarLayout>
   );
 }

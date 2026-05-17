@@ -18,6 +18,7 @@ import {
   commonTranslations,
   explainPageTranslations,
 } from "@/lib/translations";
+import AppSidebarLayout from "@/components/app_sidebar";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
 const REJECTED_EXTENSIONS = [".png", ".jpg", ".jpeg"];
@@ -221,7 +222,7 @@ export default function ExplainPage() {
     }
   }
   return (
-    <main className="app-shel">
+    <AppSidebarLayout>
       <div className="relative isolate overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
 
@@ -551,6 +552,6 @@ export default function ExplainPage() {
           </section>
         </div>
       </div>
-    </main>
+    </AppSidebarLayout>
   );
 }
