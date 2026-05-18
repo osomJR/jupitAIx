@@ -223,30 +223,30 @@ export default function ExplainPage() {
   }
   return (
     <AppSidebarLayout>
-      <div className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
+      <div className="relative isolate min-h-screen overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
+        <div className="absolute inset-0 bg-[var(--app-bg)]" />
 
         <div className="relative mx-auto max-w-5xl px-6 py-12 md:px-8 md:py-16">
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="mb-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+            className="mb-8 inline-flex items-center gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 text-sm app-text-muted backdrop-blur transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
           >
             <ArrowLeft className="h-4 w-4" />
             {common.back}
           </button>
 
           <section className="mb-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-4 py-2 text-sm text-[var(--app-accent-text)] backdrop-blur">
               <Sparkles className="h-4 w-4" />
               {t.badge}
             </div>
 
             <div className="mt-6 max-w-3xl">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+              <h1 className="text-4xl font-semibold tracking-tight text-[var(--app-text)] sm:text-5xl">
                 {t.title}
               </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
+              <p className="mt-4 max-w-2xl text-base leading-7 app-text-muted md:text-lg">
                 {t.description}
               </p>
             </div>
@@ -255,12 +255,12 @@ export default function ExplainPage() {
           <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <form
               onSubmit={handleSubmit}
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl md:p-8"
+              className="relative overflow-hidden rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-6 backdrop-blur-xl md:p-8"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
+              <div className="absolute inset-0 app-card-overlay" />
 
               <div className="relative">
-                <div className="mb-6 inline-flex rounded-2xl border border-white/10 bg-white/5 p-1">
+                <div className="mb-6 inline-flex rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-1">
                   <button
                     type="button"
                     onClick={() => {
@@ -270,8 +270,8 @@ export default function ExplainPage() {
                     }}
                     className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                       mode === "file"
-                        ? "bg-white text-slate-900 shadow-sm"
-                        : "text-white/70 hover:bg-white/10 hover:text-white"
+                        ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] shadow-sm"
+                        : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                     }`}
                   >
                     {t.fileMode}
@@ -287,8 +287,8 @@ export default function ExplainPage() {
                     }}
                     className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                       mode === "text"
-                        ? "bg-white text-slate-900 shadow-sm"
-                        : "text-white/70 hover:bg-white/10 hover:text-white"
+                        ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] shadow-sm"
+                        : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                     }`}
                   >
                     {t.textMode}
@@ -300,21 +300,21 @@ export default function ExplainPage() {
                     <div
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
-                      className="rounded-3xl border border-dashed border-white/15 bg-white/5 p-8 text-center transition hover:border-white/25 hover:bg-white/10"
+                      className="rounded-3xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-8 text-center transition hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-strong)]"
                     >
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                         <Upload className="h-7 w-7 text-cyan-300" />
                       </div>
 
-                      <h2 className="text-lg font-semibold text-white">
+                      <h2 className="text-lg font-semibold text-[var(--app-text)]">
                         {t.uploadTitle}
                       </h2>
-                      <p className="mt-2 text-sm leading-6 text-white/65">
+                      <p className="mt-2 text-sm leading-6 app-text-muted">
                         {t.allowedFileInputs}
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-white/55">
+                      <p className="mt-2 text-sm leading-6 app-text-soft">
                         {t.outputExtensionWillBe}{" "}
-                        <span className="font-medium text-white">
+                        <span className="font-medium text-[var(--app-text)]">
                           {inputExtension || ".pdf / .docx"}
                         </span>
                       </p>
@@ -330,7 +330,7 @@ export default function ExplainPage() {
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="mt-5 rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                        className="mt-5 rounded-2xl bg-[var(--app-button-bg)] px-5 py-3 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
                       >
                         {common.chooseFile}
                       </button>
@@ -357,9 +357,9 @@ export default function ExplainPage() {
                     )}
                   </>
                 ) : (
-                  <div className="rounded-3xl border border-white/15 bg-white/5 p-5">
+                  <div className="rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)] p-5">
                     <label className="block">
-                      <span className="mb-3 block text-sm font-medium text-white/80">
+                      <span className="mb-3 block text-sm font-medium app-text-muted">
                         {t.pasteTextLabel}
                       </span>
                       <textarea
@@ -371,11 +371,11 @@ export default function ExplainPage() {
                         }}
                         placeholder={t.pasteTextPlaceholder}
                         rows={10}
-                        className="w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/30 focus:border-cyan-300/40"
+                        className="w-full rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] px-4 py-3 text-sm leading-6 text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-text-soft)] focus:border-[var(--app-accent-border)]"
                       />
                     </label>
 
-                    <p className="mt-3 text-sm leading-6 text-white/55">
+                    <p className="mt-3 text-sm leading-6 app-text-soft">
                       {t.inlineTextTreatedAs}
                     </p>
                   </div>
@@ -396,16 +396,16 @@ export default function ExplainPage() {
                     disabled={!canSubmit}
                     className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${
                       canSubmit
-                        ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
-                        : "cursor-not-allowed bg-white/10 text-white/40"
+                        ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
+                        : "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
                     }`}
                   >
                     {isSubmitting ? common.explaining : common.explain}
                   </button>
 
-                  <div className="text-sm text-white/55">
+                  <div className="text-sm app-text-soft">
                     {common.outputFormat}{" "}
-                    <span className="font-medium text-white/85">
+                    <span className="font-medium app-text-muted">
                       {outputExtension || "—"}
                     </span>
                   </div>
@@ -414,88 +414,88 @@ export default function ExplainPage() {
             </form>
 
             <aside className="space-y-6">
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
+              <div className="rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-6 backdrop-blur-xl">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <ShieldCheck className="h-5 w-5 text-cyan-300" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="text-lg font-semibold text-[var(--app-text)]">
                       {common.formatPolicy}
                     </h2>
-                    <p className="text-sm text-white/55">{t.policySubtitle}</p>
+                    <p className="text-sm app-text-soft">{t.policySubtitle}</p>
                   </div>
                 </div>
 
-                <div className="space-y-3 text-sm leading-6 text-white/70">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
+                <div className="space-y-3 text-sm leading-6 app-text-muted">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
+                    <p className="font-semibold text-[var(--app-text)]">
                       {t.allowedUploadsLabel}
                     </p>
-                    <p className="mt-1 text-white/65">.pdf, .docx</p>
+                    <p className="mt-1 app-text-muted">.pdf, .docx</p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
+                    <p className="font-semibold text-[var(--app-text)]">
                       {t.inlineInputLabel}
                     </p>
-                    <p className="mt-1 text-white/65">{t.inlineInputValue}</p>
+                    <p className="mt-1 app-text-muted">{t.inlineInputValue}</p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
+                    <p className="font-semibold text-[var(--app-text)]">
                       {t.rejectedAutomaticallyLabel}
                     </p>
-                    <p className="mt-1 text-white/65">
+                    <p className="mt-1 app-text-muted">
                       {t.rejectedAutomaticallyValue}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="font-semibold text-white">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
+                    <p className="font-semibold text-[var(--app-text)]">
                       {t.outputRuleLabel}
                     </p>
-                    <p className="mt-1 text-white/65">{t.outputRuleValue}</p>
+                    <p className="mt-1 app-text-muted">{t.outputRuleValue}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
+              <div className="rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-6 backdrop-blur-xl">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <FileText className="h-5 w-5 text-cyan-300" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="text-lg font-semibold text-[var(--app-text)]">
                       {t.explanationOutputTitle}
                     </h2>
-                    <p className="text-sm text-white/55">
+                    <p className="text-sm app-text-soft">
                       {common.previewArea}
                     </p>
                   </div>
                 </div>
 
                 {explanationResult && (
-                  <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
-                    <pre className="whitespace-pre-wrap break-words text-sm leading-7 text-white/80">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-4">
+                    <pre className="whitespace-pre-wrap break-words text-sm leading-7 app-text-muted">
                       {explanationResult}
                     </pre>
                   </div>
                 )}
 
                 {downloadInfo && (
-                  <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
-                    <div className="space-y-2 text-sm text-white/80">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-4">
+                    <div className="space-y-2 text-sm app-text-muted">
                       <p>
-                        <span className="font-medium text-white">File:</span>{" "}
+                        <span className="font-medium text-[var(--app-text)]">File:</span>{" "}
                         {downloadInfo.filename}
                       </p>
                       <p>
-                        <span className="font-medium text-white">Format:</span>{" "}
+                        <span className="font-medium text-[var(--app-text)]">Format:</span>{" "}
                         {downloadInfo.outputFormat}
                       </p>
                       <p>
-                        <span className="font-medium text-white">Size:</span>{" "}
+                        <span className="font-medium text-[var(--app-text)]">Size:</span>{" "}
                         {downloadInfo.fileSizeMb} MB
                       </p>
                     </div>
@@ -504,45 +504,45 @@ export default function ExplainPage() {
                       href={downloadInfo.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-5 inline-flex rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                      className="mt-5 inline-flex rounded-2xl bg-[var(--app-button-bg)] px-5 py-3 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
                     >
                       Download explained file
                     </a>
                   </div>
                 )}
                 {!explanationResult && !downloadInfo && (
-                  <div className="rounded-2xl border border-white/10 bg-[#081120] p-4">
-                    <p className="text-sm leading-6 text-white/45">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-4">
+                    <p className="text-sm leading-6 app-text-soft">
                       {t.previewEmpty}
                     </p>
                   </div>
                 )}
 
-                <div className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/75">
+                <div className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm app-text-muted">
                   <BookOpen className="h-4 w-4 text-cyan-300" />
                   {t.outputExtensionLabel}{" "}
-                  <span className="font-medium text-white">
+                  <span className="font-medium text-[var(--app-text)]">
                     {downloadInfo?.outputFormat || outputExtension || "—"}
                   </span>
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-6 backdrop-blur-xl">
-                <h2 className="text-lg font-semibold text-white">
+              <div className="rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-6 backdrop-blur-xl">
+                <h2 className="text-lg font-semibold text-[var(--app-text)]">
                   {t.policyTitle}
                 </h2>
-                <p className="mt-1 text-sm text-white/55">{t.policySubtitle}</p>
+                <p className="mt-1 text-sm app-text-soft">{t.policySubtitle}</p>
 
-                <div className="mt-4 space-y-3 text-sm leading-6 text-white/70">
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="mt-4 space-y-3 text-sm leading-6 app-text-muted">
+                  <div className="flex items-center gap-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
                     <FileText className="h-4 w-4 text-cyan-300" />
                     <span>.pdf / .docx</span>
                   </div>
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center gap-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
                     <AlignLeft className="h-4 w-4 text-cyan-300" />
                     <span>{t.inlineInputValue}</span>
                   </div>
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center gap-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
                     <XCircle className="h-4 w-4 text-cyan-300" />
                     <span>{REJECTED_EXTENSIONS.join(", ")}</span>
                   </div>

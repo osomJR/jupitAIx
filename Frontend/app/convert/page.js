@@ -371,8 +371,8 @@ export default function ConvertPage() {
 
   return (
     <AppSidebarLayout>
-      <div className="relative isolate min-h-screen overflow-x-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
+      <div className="relative isolate min-h-screen overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
+        <div className="absolute inset-0 bg-[var(--app-bg)]" />
 
         <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-5 md:px-6 lg:py-6">
           <header className="mb-4 shrink-0">
@@ -380,23 +380,23 @@ export default function ConvertPage() {
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+                className="inline-flex items-center gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 text-sm app-text-muted backdrop-blur transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {common.back}
               </button>
 
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-4 py-2 text-sm text-[var(--app-accent-text)] backdrop-blur">
                 <Sparkles className="h-4 w-4" />
                 {t.badge}
               </div>
             </div>
 
             <div className="mt-4">
-              <h1 className="max-w-full text-3xl font-semibold tracking-tight text-white sm:text-4xl lg:whitespace-nowrap lg:text-[2.65rem] lg:leading-tight xl:text-5xl">
+              <h1 className="max-w-full text-3xl font-semibold tracking-tight text-[var(--app-text)] sm:text-4xl lg:whitespace-nowrap lg:text-[2.65rem] lg:leading-tight xl:text-5xl">
                 {t.title}
               </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-white/70 md:text-base">
+              <p className="mt-2 max-w-3xl text-sm leading-6 app-text-muted md:text-base">
                 {t.description}
               </p>
             </div>
@@ -405,21 +405,21 @@ export default function ConvertPage() {
           <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
             <form
               onSubmit={handleSubmit}
-              className="relative min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5"
+              className="relative min-h-0 overflow-hidden rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-4 backdrop-blur-xl md:p-5"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
+              <div className="absolute inset-0 app-card-overlay" />
 
               <div className="relative flex h-full min-h-0 flex-col">
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className="rounded-2xl border border-dashed border-white/15 bg-white/5 p-4 text-center transition hover:border-white/25 hover:bg-white/10 md:p-5"
+                  className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-center transition hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-strong)] md:p-5"
                 >
-                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <Upload className="h-5 w-5 text-cyan-300" />
                   </div>
 
-                  <h2 className="text-base font-semibold text-white">
+                  <h2 className="text-base font-semibold text-[var(--app-text)]">
                     {t.uploadTitle}
                   </h2>
 
@@ -434,7 +434,7 @@ export default function ConvertPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="mt-3 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                    className="mt-3 rounded-2xl bg-[var(--app-button-bg)] px-4 py-2.5 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
                   >
                     {common.chooseFile}
                   </button>
@@ -463,17 +463,17 @@ export default function ConvertPage() {
                 {selectedFile && isValidFile && (
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <label className="block">
-                      <span className="mb-2 block text-sm font-medium text-white/80">
+                      <span className="mb-2 block text-sm font-medium app-text-muted">
                         {t.from}
                       </span>
-                      <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/85">
+                      <div className="flex items-center gap-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2.5 text-sm app-text-muted">
                         <FileType className="h-4 w-4 text-cyan-300" />
                         {inputExtension}
                       </div>
                     </label>
 
                     <label className="block">
-                      <span className="mb-2 block text-sm font-medium text-white/80">
+                      <span className="mb-2 block text-sm font-medium app-text-muted">
                         {t.convertTo}
                       </span>
                       <select
@@ -483,13 +483,13 @@ export default function ConvertPage() {
                           setError("");
                           resetResultState();
                         }}
-                        className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300/40 focus:bg-white/10"
+                        className="w-full rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none transition focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
                       >
                         {allowedOutputs.map((ext) => (
                           <option
                             key={ext}
                             value={ext}
-                            className="bg-slate-900 text-white"
+                            className="bg-[var(--app-panel)] text-[var(--app-text)]"
                           >
                             {ext}
                           </option>
@@ -500,10 +500,10 @@ export default function ConvertPage() {
                 )}
 
                 {selectedFile && isValidFile && (
-                  <div className="mt-3 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
+                  <div className="mt-3 rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] p-3">
                     <div className="flex items-start gap-3">
                       <Repeat className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
-                      <div className="text-sm leading-6 text-cyan-100">
+                      <div className="text-sm leading-6 text-[var(--app-accent-text)]">
                         {t.allowedOutputsFor}{" "}
                         <span className="font-semibold">{inputExtension}</span>:{" "}
                         {allowedOutputs.length > 0
@@ -530,8 +530,8 @@ export default function ConvertPage() {
                       disabled={!canSubmit}
                       className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
                         canSubmit
-                          ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
-                          : "cursor-not-allowed bg-white/10 text-white/40"
+                          ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
+                          : "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
                       }`}
                     >
                       {isSubmitting ? common.converting : common.convert}
@@ -541,7 +541,7 @@ export default function ConvertPage() {
                       <button
                         type="button"
                         onClick={handleDownload}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-cyan-300/30 bg-cyan-400/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/15"
+                        className="inline-flex items-center gap-2 rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-5 py-2.5 text-sm font-semibold text-[var(--app-accent-text)] transition hover:bg-[var(--app-accent-bg)]"
                       >
                         <Download className="h-4 w-4" />
                         {downloadLabel}
@@ -549,9 +549,9 @@ export default function ConvertPage() {
                     )}
                   </div>
 
-                  <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/55">
+                  <div className="mt-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm app-text-soft">
                     {t.conversionLabel}{" "}
-                    <span className="font-medium text-white/85">
+                    <span className="font-medium app-text-muted">
                       {inputExtension || "—"} → {targetExtension || "—"}
                     </span>
                   </div>
@@ -560,20 +560,20 @@ export default function ConvertPage() {
             </form>
 
             <aside className="min-h-0">
-              <div className="flex min-h-[270px] flex-col rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5 lg:max-h-[calc(100vh-11rem)]">
+              <div className="flex min-h-[270px] flex-col rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-4 backdrop-blur-xl md:p-5 lg:max-h-[calc(100vh-11rem)]">
                 <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-[var(--app-text)]">
                     {t.conversionOutput || "Conversion result"}
                   </h2>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/55">
+                  <span className="rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-1 text-xs app-text-soft">
                     {inputExtension || "—"} → {targetExtension || "—"}
                   </span>
                 </div>
 
-                <div className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-4 max-h-[420px] lg:max-h-[calc(100vh-16rem)]">
+                <div className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-4 max-h-[420px] lg:max-h-[calc(100vh-16rem)]">
                   {conversionResult ? (
                     <div className="flex h-full min-h-0 flex-col gap-3">
-                      <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 text-white/80 md:text-sm">
+                      <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 app-text-muted md:text-sm">
                         {conversionResult}
                       </pre>
 
@@ -591,7 +591,7 @@ export default function ConvertPage() {
                               <button
                                 type="button"
                                 onClick={handleDownload}
-                                className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                                className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-[var(--app-button-bg)] px-4 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
                               >
                                 <Download className="h-4 w-4" />
                                 {downloadLabel}
@@ -602,8 +602,8 @@ export default function ConvertPage() {
                       )}
                     </div>
                   ) : (
-                    <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.03] p-4 text-center">
-                      <p className="max-w-sm text-sm leading-6 text-white/45">
+                    <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-center">
+                      <p className="max-w-sm text-sm leading-6 app-text-soft">
                         {t.previewText}
                       </p>
                     </div>

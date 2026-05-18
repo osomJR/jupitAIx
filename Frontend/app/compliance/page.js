@@ -331,7 +331,7 @@ function SearchableMultiSelect({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-3">
-        <p className="text-sm font-medium text-white/80">{title}</p>
+        <p className="text-sm font-medium app-text-muted">{title}</p>
         {selectedValues.length > lockedValues.length && onClear && (
           <button
             type="button"
@@ -339,8 +339,8 @@ function SearchableMultiSelect({
             onClick={disabled ? undefined : onClear}
             className={`text-xs font-medium transition ${
               disabled
-                ? "cursor-not-allowed text-white/30"
-                : "text-cyan-200 hover:text-cyan-100"
+                ? "cursor-not-allowed app-text-soft"
+                : "text-[var(--app-accent-text)] hover:text-[var(--app-accent-text)]"
             }`}
           >
             {clearLabel}
@@ -349,16 +349,16 @@ function SearchableMultiSelect({
       </div>
 
       {helpText && (
-        <p className="text-xs leading-5 text-white/50">{helpText}</p>
+        <p className="text-xs leading-5 app-text-soft">{helpText}</p>
       )}
       {emptyText && (
-        <p className="mt-1 text-xs leading-5 text-cyan-100/70">{emptyText}</p>
+        <p className="mt-1 text-xs leading-5 text-[var(--app-accent-text)]">{emptyText}</p>
       )}
       {examplesText && (
-        <p className="mt-1 text-xs leading-5 text-white/40">{examplesText}</p>
+        <p className="mt-1 text-xs leading-5 app-text-soft">{examplesText}</p>
       )}
 
-      <div className="mt-3 flex min-h-10 flex-wrap gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
+      <div className="mt-3 flex min-h-10 flex-wrap gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2">
         {selectedValues.map((value) => {
           const isLocked = lockedValues.includes(value);
           return (
@@ -369,10 +369,10 @@ function SearchableMultiSelect({
               onClick={() => !disabled && !isLocked && onToggle(value)}
               className={`rounded-full border px-3 py-1 text-xs transition ${
                 isLocked
-                  ? "cursor-not-allowed border-cyan-300/30 bg-cyan-400/15 text-cyan-100"
+                  ? "cursor-not-allowed border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] text-[var(--app-accent-text)]"
                   : disabled
-                    ? "cursor-not-allowed border-white/10 bg-white/5 text-white/35"
-                    : "border-white/10 bg-white/10 text-white/75 hover:border-cyan-300/30 hover:text-cyan-100"
+                    ? "cursor-not-allowed border-[var(--app-border)] bg-[var(--app-surface)] app-text-soft"
+                    : "border-[var(--app-border)] bg-[var(--app-surface)] app-text-muted hover:border-[var(--app-accent-border)] hover:text-[var(--app-accent-text)]"
               }`}
             >
               {getLabel(value)}
@@ -382,7 +382,7 @@ function SearchableMultiSelect({
         })}
 
         {selectedValues.length === 0 && (
-          <span className="py-1 text-xs text-white/35">{emptyText}</span>
+          <span className="py-1 text-xs app-text-soft">{emptyText}</span>
         )}
       </div>
 
@@ -392,10 +392,10 @@ function SearchableMultiSelect({
         disabled={disabled}
         onChange={(event) => setQuery(event.target.value)}
         placeholder={searchPlaceholder}
-        className={`mt-3 w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/35 ${
+        className={`mt-3 w-full rounded-2xl border border-[var(--app-border)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-text-soft)] ${
           disabled
-            ? "cursor-not-allowed bg-white/5 text-white/35"
-            : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+            ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+            : "bg-[var(--app-surface)] focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
         }`}
       />
 
@@ -412,8 +412,8 @@ function SearchableMultiSelect({
               onClick={() => !disabled && onToggle(item)}
               className={`flex items-center justify-between gap-2 rounded-xl border px-3 py-2 text-left text-xs transition ${
                 checked
-                  ? "border-cyan-300/40 bg-cyan-300/15 text-cyan-50"
-                  : "border-white/10 bg-white/5 text-white/65 hover:bg-white/10"
+                  ? "border-[var(--app-accent-border)] bg-cyan-300/15 text-[var(--app-accent-text)]"
+                  : "border-[var(--app-border)] bg-[var(--app-surface)] app-text-muted hover:bg-[var(--app-surface-strong)]"
               } ${disabled || isLocked ? "cursor-not-allowed opacity-80" : ""}`}
             >
               <span>{getLabel(item)}</span>
@@ -853,8 +853,8 @@ export default function CompliancePage() {
 
   return (
     <AppSidebarLayout>
-      <div className="relative isolate min-h-screen overflow-x-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
+      <div className="relative isolate min-h-screen overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
+        <div className="absolute inset-0 bg-[var(--app-bg)]" />
 
         <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 md:px-5 lg:py-4">
           <header className="mb-3 shrink-0">
@@ -862,23 +862,23 @@ export default function CompliancePage() {
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+                className="inline-flex items-center gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 text-sm app-text-muted backdrop-blur transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {common.back}
               </button>
 
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-4 py-2 text-sm text-[var(--app-accent-text)] backdrop-blur">
                 <Sparkles className="h-4 w-4" />
                 {t.badge}
               </div>
             </div>
 
             <div className="mt-3">
-              <h1 className="max-w-full text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:whitespace-nowrap lg:text-[2.15rem] lg:leading-tight xl:text-[2.35rem]">
+              <h1 className="max-w-full text-2xl font-semibold tracking-tight text-[var(--app-text)] sm:text-3xl lg:whitespace-nowrap lg:text-[2.15rem] lg:leading-tight xl:text-[2.35rem]">
                 {t.title}
               </h1>
-              <p className="mt-1 max-w-4xl text-sm leading-5 text-white/70 md:text-base">
+              <p className="mt-1 max-w-4xl text-sm leading-5 app-text-muted md:text-base">
                 {t.description}
               </p>
             </div>
@@ -887,25 +887,25 @@ export default function CompliancePage() {
           <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,1.08fr)] lg:items-stretch">
             <form
               onSubmit={handlePreview}
-              className="relative min-h-0 overflow-y-auto rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-8.5rem)]"
+              className="relative min-h-0 overflow-y-auto rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-8.5rem)]"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
+              <div className="absolute inset-0 app-card-overlay" />
 
               <div className="relative flex h-full min-h-0 flex-col">
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className="rounded-2xl border border-dashed border-white/15 bg-white/5 p-4 text-center transition hover:border-white/25 hover:bg-white/10 md:p-5"
+                  className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-center transition hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-strong)] md:p-5"
                 >
-                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <Upload className="h-5 w-5 text-cyan-300" />
                   </div>
 
-                  <h2 className="text-base font-semibold text-white">
+                  <h2 className="text-base font-semibold text-[var(--app-text)]">
                     {t.uploadTitle}
                   </h2>
 
-                  <p className="mt-1 text-xs leading-5 text-white/50">
+                  <p className="mt-1 text-xs leading-5 app-text-soft">
                     {t.allowedFileInputs}
                   </p>
 
@@ -926,8 +926,8 @@ export default function CompliancePage() {
                     }
                     className={`mt-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition ${
                       isProcessing
-                        ? "cursor-not-allowed bg-white/10 text-white/35"
-                        : "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
+                        ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+                        : "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
                     }`}
                   >
                     {common.chooseFile}
@@ -955,7 +955,7 @@ export default function CompliancePage() {
 
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-white/80">
+                    <span className="mb-2 block text-sm font-medium app-text-muted">
                       {t.jurisdictionLabel}
                     </span>
                     <select
@@ -964,32 +964,32 @@ export default function CompliancePage() {
                       onChange={(event) =>
                         handleJurisdictionChange(event.target.value)
                       }
-                      className={`w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition ${
+                      className={`w-full rounded-2xl border border-[var(--app-border)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none transition ${
                         isProcessing
-                          ? "cursor-not-allowed bg-white/5 text-white/35"
-                          : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+                          ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+                          : "bg-[var(--app-surface)] focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
                       }`}
                     >
                       {Object.entries(COUNTRY_CONFIG).map(([value, config]) => (
                         <option
                           key={value}
                           value={value}
-                          className="bg-slate-900 text-white"
+                          className="bg-[var(--app-panel)] text-[var(--app-text)]"
                         >
                           {countryLabels[config.labelKey] || value}
                         </option>
                       ))}
                     </select>
-                    <p className="mt-1 text-xs leading-5 text-white/45">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.jurisdictionHelp}
                     </p>
-                    <p className="mt-1 text-xs leading-5 text-white/35">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.jurisdictionExamples}
                     </p>
                   </label>
 
                   <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-white/80">
+                    <span className="mb-2 block text-sm font-medium app-text-muted">
                       {t.reportVariantLabel}
                     </span>
                     <select
@@ -1000,33 +1000,33 @@ export default function CompliancePage() {
                         setError("");
                         resetResultState();
                       }}
-                      className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition focus:border-cyan-300/40 focus:bg-white/10"
+                      className="w-full rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none transition focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
                     >
                       {REPORT_VARIANTS.map((variant) => (
                         <option
                           key={variant}
                           value={variant}
-                          className="bg-slate-900 text-white"
+                          className="bg-[var(--app-panel)] text-[var(--app-text)]"
                         >
                           {t.reportVariantLabels?.[variant] || variant}
                         </option>
                       ))}
                     </select>
-                    <p className="mt-1 text-xs leading-5 text-white/45">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.reportVariantHelp}
                     </p>
                     {reportVariantDescription && (
-                      <p className="mt-1 rounded-xl border border-cyan-300/20 bg-cyan-400/10 px-3 py-2 text-xs leading-5 text-cyan-100/80">
+                      <p className="mt-1 rounded-xl border border-cyan-300/20 bg-[var(--app-accent-bg)] px-3 py-2 text-xs leading-5 text-[var(--app-accent-text)]">
                         {reportVariantDescription}
                       </p>
                     )}
-                    <p className="mt-1 text-xs leading-5 text-white/35">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.reportVariantExamples}
                     </p>
                   </label>
                 </div>
 
-                <div className="mt-3 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
+                <div className="mt-3 rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] p-3">
                   <div className="flex items-start gap-3">
                     <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
                     <div className="min-w-0 flex-1">
@@ -1051,7 +1051,7 @@ export default function CompliancePage() {
                   </div>
                 </div>
 
-                <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-3">
+                <div className="mt-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
                   <SearchableMultiSelect
                     title={t.regulatoryDomainsLabel}
                     disabled={isProcessing}
@@ -1086,8 +1086,8 @@ export default function CompliancePage() {
                       disabled={!canPreview}
                       className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
                         canPreview
-                          ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
-                          : "cursor-not-allowed bg-white/10 text-white/40"
+                          ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
+                          : "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
                       }`}
                     >
                       {isPreviewing ? "Previewing..." : "Preview compliance"}
@@ -1099,8 +1099,8 @@ export default function CompliancePage() {
                       onClick={handleSubmit}
                       className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
                         canGenerate
-                          ? "border border-cyan-300/30 bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/15"
-                          : "cursor-not-allowed border border-white/10 bg-white/5 text-white/35"
+                          ? "border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] text-[var(--app-accent-text)] hover:bg-[var(--app-accent-bg)]"
+                          : "cursor-not-allowed border border-[var(--app-border)] bg-[var(--app-surface)] app-text-soft"
                       }`}
                     >
                       {isSubmitting ? t.checking : "Generate downloadable file"}
@@ -1118,9 +1118,9 @@ export default function CompliancePage() {
                     )}
                   </div>
 
-                  <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/55">
+                  <div className="mt-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm app-text-soft">
                     {t.complianceLabel}{" "}
-                    <span className="font-medium text-white/85">
+                    <span className="font-medium app-text-muted">
                       {selectedCountryLabel}
                     </span>
                   </div>
@@ -1129,12 +1129,12 @@ export default function CompliancePage() {
             </form>
 
             <aside className="min-h-0 lg:h-full">
-              <div className="flex min-h-[360px] flex-col rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5 lg:min-h-[calc(100vh-8.5rem)] lg:max-h-[calc(100vh-8.5rem)]">
+              <div className="flex min-h-[360px] flex-col rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-4 backdrop-blur-xl md:p-5 lg:min-h-[calc(100vh-8.5rem)] lg:max-h-[calc(100vh-8.5rem)]">
                 <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-[var(--app-text)]">
                     {t.complianceOutput}
                   </h2>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/55">
+                  <span className="rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-1 text-xs app-text-soft">
                     {t.complianceLabel} {selectedCountryLabel}
                   </span>
                 </div>
@@ -1153,11 +1153,11 @@ export default function CompliancePage() {
                       <p className="font-semibold">{counts.warning}</p>
                       <p className="mt-1 text-[10px] opacity-80">{t.warning}</p>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 p-2 text-white/75">
+                    <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2 app-text-muted">
                       <p className="font-semibold">{counts.missing}</p>
                       <p className="mt-1 text-[10px] opacity-80">{t.missing}</p>
                     </div>
-                    <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-2 text-cyan-100">
+                    <div className="rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] p-2 text-[var(--app-accent-text)]">
                       <p className="font-semibold">{counts.review_required}</p>
                       <p className="mt-1 text-[10px] opacity-80">
                         {t.reviewRequiredShort}
@@ -1166,10 +1166,10 @@ export default function CompliancePage() {
                   </div>
                 )}
 
-                <div className="mt-3 min-h-[320px] flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-4 lg:max-h-none">
+                <div className="mt-3 min-h-[320px] flex-1 overflow-y-auto rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-4 lg:max-h-none">
                   {resultSummary ? (
                     <div className="flex h-full min-h-0 flex-col gap-3">
-                      <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 text-white/80 md:text-sm">
+                      <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 app-text-muted md:text-sm">
                         {resultSummary}
                       </pre>
 
@@ -1187,7 +1187,7 @@ export default function CompliancePage() {
                               <button
                                 type="button"
                                 onClick={handleDownload}
-                                className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                                className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-[var(--app-button-bg)] px-4 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
                               >
                                 <Download className="h-4 w-4" />
                                 {common.download}
@@ -1198,9 +1198,9 @@ export default function CompliancePage() {
                       )}
                     </div>
                   ) : (
-                    <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.03] p-4 text-center">
+                    <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-center">
                       <div>
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                           {reportVariant === "machine_readable_report" ? (
                             <FileJson className="h-5 w-5 text-cyan-300" />
                           ) : reportVariant === "annotated_source_output" ? (
@@ -1209,7 +1209,7 @@ export default function CompliancePage() {
                             <FileText className="h-5 w-5 text-cyan-300" />
                           )}
                         </div>
-                        <p className="max-w-sm text-sm leading-6 text-white/45">
+                        <p className="max-w-sm text-sm leading-6 app-text-soft">
                           {t.previewText}
                         </p>
                       </div>
@@ -1217,9 +1217,9 @@ export default function CompliancePage() {
                   )}
                 </div>
 
-                <div className="mt-3 grid gap-2 text-xs text-white/45 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                    <p className="font-medium text-white/65">{t.outputTitle}</p>
+                <div className="mt-3 grid gap-2 text-xs app-text-soft sm:grid-cols-3">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+                    <p className="font-medium app-text-muted">{t.outputTitle}</p>
                     <p className="mt-1">
                       {reportVariant === "machine_readable_report"
                         ? ".json"
@@ -1227,13 +1227,13 @@ export default function CompliancePage() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                    <p className="font-medium text-white/65">{t.reviewTitle}</p>
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+                    <p className="font-medium app-text-muted">{t.reviewTitle}</p>
                     <p className="mt-1">{t.reviewValue}</p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                    <p className="font-medium text-white/65">{t.scopeTitle}</p>
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+                    <p className="font-medium app-text-muted">{t.scopeTitle}</p>
                     <p className="mt-1">{t.scopeValue}</p>
                   </div>
                 </div>

@@ -29,6 +29,119 @@ function getSystemTheme() {
     : "light";
 }
 
+const THEME_GLOBAL_STYLES = `:root,
+html.dark {
+  color-scheme: dark;
+  --app-bg: #000000;
+  --app-panel: #000000;
+  --app-surface: #000000;
+  --app-surface-strong: #000000;
+  --app-text: #ffffff;
+  --app-text-muted: rgba(255, 255, 255, 0.78);
+  --app-text-soft: rgba(255, 255, 255, 0.52);
+  --app-border: rgba(255, 255, 255, 0.16);
+  --app-border-strong: rgba(255, 255, 255, 0.32);
+  --app-button-bg: #ffffff;
+  --app-button-text: #000000;
+  --app-accent-bg: rgba(34, 211, 238, 0.13);
+  --app-accent-border: rgba(34, 211, 238, 0.38);
+  --app-accent-text: #a5f3fc;
+  --app-selection-bg: #ffffff;
+  --app-selection-text: #000000;
+}
+
+html.light {
+  color-scheme: light;
+  --app-bg: #ffffff;
+  --app-panel: #ffffff;
+  --app-surface: #ffffff;
+  --app-surface-strong: #ffffff;
+  --app-text: #000000;
+  --app-text-muted: rgba(0, 0, 0, 0.72);
+  --app-text-soft: rgba(0, 0, 0, 0.50);
+  --app-border: rgba(0, 0, 0, 0.16);
+  --app-border-strong: rgba(0, 0, 0, 0.30);
+  --app-button-bg: #000000;
+  --app-button-text: #ffffff;
+  --app-accent-bg: rgba(8, 145, 178, 0.10);
+  --app-accent-border: rgba(8, 145, 178, 0.32);
+  --app-accent-text: #075985;
+  --app-selection-bg: #000000;
+  --app-selection-text: #ffffff;
+}
+
+html,
+body {
+  background: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.app-shell,
+.app-page,
+[data-app-shell="true"] {
+  background: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+.app-surface,
+.app-surface-strong {
+  background: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+}
+
+.app-surface-strong {
+  background: var(--app-surface-strong) !important;
+}
+
+.app-text {
+  color: var(--app-text) !important;
+}
+
+.app-text-muted {
+  color: var(--app-text-muted) !important;
+}
+
+.app-text-soft {
+  color: var(--app-text-soft) !important;
+}
+
+.app-hero-overlay,
+.app-card-overlay {
+  background: transparent !important;
+  pointer-events: none;
+}
+
+[class*="bg-[radial-gradient"],
+[class*="linear-gradient(to_bottom"] {
+  background: transparent !important;
+}
+
+input,
+textarea,
+select {
+  background-color: var(--app-panel) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--app-text-soft) !important;
+}
+
+::selection {
+  background: var(--app-selection-bg);
+  color: var(--app-selection-text);
+}
+
+* {
+  scrollbar-color: var(--app-border-strong) var(--app-bg);
+}`;
+
 function applyThemeToDocument(theme) {
   if (typeof document === "undefined") return "dark";
 
@@ -36,6 +149,7 @@ function applyThemeToDocument(theme) {
   const root = document.documentElement;
 
   root.dataset.theme = resolved;
+  root.style.colorScheme = resolved;
   root.classList.remove("light", "dark");
   root.classList.add(resolved);
 
@@ -150,7 +264,10 @@ export function ThemeProvider({ children }) {
   );
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>
+      <style>{THEME_GLOBAL_STYLES}</style>
+      {children}
+    </ThemeContext.Provider>
   );
 }
 

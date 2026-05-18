@@ -328,7 +328,7 @@ export default function HomePage() {
           onClick={() => setLanguage("en")}
           className={`rounded-xl px-3 py-1.5 text-left text-sm font-medium transition ${
             language === "en"
-              ? "bg-white text-slate-900 shadow-sm"
+              ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] shadow-sm"
               : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
           }`}
         >
@@ -340,7 +340,7 @@ export default function HomePage() {
           onClick={() => setLanguage("fr")}
           className={`rounded-xl px-3 py-1.5 text-left text-sm font-medium transition ${
             language === "fr"
-              ? "bg-white text-slate-900 shadow-sm"
+              ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] shadow-sm"
               : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
           }`}
         >
@@ -352,14 +352,14 @@ export default function HomePage() {
 
 
   return (
-    <main className="app-shell min-h-screen">
+    <main className="app-shell min-h-screen bg-[var(--app-bg)] text-[var(--app-text)]">
       <aside
         className={`fixed left-0 top-0 z-50 flex h-dvh flex-col overflow-visible border-r app-surface backdrop-blur-xl transition-all duration-300 ${
           sidebarOpen ? "w-72" : "w-16"
         }`}
       >
         <div
-          className={`flex min-h-12 items-center border-b border-white/10 ${
+          className={`flex min-h-12 items-center border-b border-[var(--app-border)] ${
             sidebarOpen ? "justify-between px-4" : "justify-center px-2"
           }`}
         >
@@ -398,7 +398,7 @@ export default function HomePage() {
             <div className="space-y-2">
               {languageSwitcher}
 
-              <div className="border-t border-white/10 pt-1.5">
+              <div className="border-t border-[var(--app-border)] pt-1.5">
                 {isSignedIn ? (
                   <ProfileMenu
                     user={user}
@@ -442,7 +442,7 @@ export default function HomePage() {
               type="button"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open account menu"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500 text-[11px] font-semibold text-white shadow-lg shadow-black/20"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500 text-[11px] font-semibold text-[var(--app-text)] shadow-lg shadow-black/20"
             >
               {avatarText}
             </button>
@@ -486,7 +486,7 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 py-12 md:px-8 md:py-16">
           <section className="mb-12 md:mb-14">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-4 py-2 text-sm text-[var(--app-accent-text)] backdrop-blur">
               <Sparkles className="h-4 w-4" />
               {t.badge}
             </div>

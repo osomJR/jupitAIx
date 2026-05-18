@@ -697,30 +697,30 @@ export default function DataMaskPage() {
   return (
     <AppSidebarLayout>
       <div className="relative isolate min-h-screen overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
+        <div className="absolute inset-0 bg-[var(--app-bg)]" />
 
         <div className="relative mx-auto max-w-[1600px] px-3 py-3 md:px-5 md:py-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm app-text-muted backdrop-blur transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
             >
               <ArrowLeft className="h-4 w-4" />
               {common.back}
             </button>
 
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-xs font-medium text-cyan-200 backdrop-blur sm:text-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-3 py-1.5 text-xs font-medium text-[var(--app-accent-text)] backdrop-blur sm:text-sm">
               <Sparkles className="h-4 w-4" />
               {t.badge}
             </div>
           </div>
 
           <section className="mb-4 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight text-[var(--app-text)] sm:text-3xl">
               {t.title}
             </h1>
-            <p className="mt-2 max-w-2xl text-xs leading-5 text-white/70 md:text-sm">
+            <p className="mt-2 max-w-2xl text-xs leading-5 app-text-muted md:text-sm">
               {t.description}
             </p>
           </section>
@@ -728,28 +728,28 @@ export default function DataMaskPage() {
           <section className="grid gap-4 lg:grid-cols-[minmax(380px,0.9fr)_minmax(520px,1.1fr)]">
             <form
               onSubmit={handleProcessAndReview}
-              className="relative rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto"
+              className="relative rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-3 backdrop-blur-xl md:p-4 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
+              <div className="absolute inset-0 app-card-overlay" />
 
               <div className="relative">
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className={`rounded-2xl border border-dashed border-white/15 bg-white/5 p-3 text-center transition ${
+                  className={`rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-3 text-center transition ${
                     isBusy
                       ? "cursor-not-allowed opacity-60"
-                      : "hover:border-white/25 hover:bg-white/10"
+                      : "hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-strong)]"
                   }`}
                 >
-                  <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/10">
+                  <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <Upload className="h-5 w-5 text-cyan-300" />
                   </div>
 
-                  <h2 className="text-base font-semibold text-white">
+                  <h2 className="text-base font-semibold text-[var(--app-text)]">
                     {t.uploadTitle}
                   </h2>
-                  <p className="mt-1 text-xs leading-5 text-white/65">
+                  <p className="mt-1 text-xs leading-5 app-text-muted">
                     {t.allowedFileInputs}
                   </p>
 
@@ -770,8 +770,8 @@ export default function DataMaskPage() {
                     disabled={isBusy}
                     className={`mt-3 rounded-xl px-4 py-2 text-sm font-semibold transition ${
                       isBusy
-                        ? "cursor-not-allowed bg-white/10 text-white/40"
-                        : "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
+                        ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+                        : "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
                     }`}
                   >
                     {common.chooseFile}
@@ -798,8 +798,8 @@ export default function DataMaskPage() {
                 )}
 
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                    <label className="block text-sm font-medium text-white/85">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                    <label className="block text-sm font-medium app-text-muted">
                       {t.docTypeLabel}
                     </label>
                     <select
@@ -811,13 +811,13 @@ export default function DataMaskPage() {
                         resetResultState();
                       }}
                       disabled={isBusy}
-                      className="mt-2 w-full rounded-xl border border-white/10 bg-[#081120] px-3 py-2 text-sm text-white outline-none transition disabled:cursor-not-allowed disabled:opacity-50 focus:border-cyan-300/40"
+                      className="mt-2 w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-panel)] px-3 py-2 text-sm text-[var(--app-text)] outline-none transition disabled:cursor-not-allowed disabled:opacity-50 focus:border-[var(--app-accent-border)]"
                     >
                       {DOCUMENT_TYPES.map((item) => (
                         <option
                           key={item.value}
                           value={item.value}
-                          className="bg-[#081120]"
+                          className="bg-[var(--app-panel)]"
                         >
                           {item.label}
                         </option>
@@ -825,8 +825,8 @@ export default function DataMaskPage() {
                     </select>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                    <label className="block text-sm font-medium text-white/85">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                    <label className="block text-sm font-medium app-text-muted">
                       {t.exclusionsLabel}
                     </label>
                     <textarea
@@ -840,14 +840,14 @@ export default function DataMaskPage() {
                       placeholder={t.exclusionsPlaceholder}
                       rows={2}
                       disabled={isBusy}
-                      className="mt-2 w-full rounded-xl border border-white/10 bg-[#081120] px-3 py-2 text-sm leading-5 text-white outline-none transition placeholder:text-white/30 disabled:cursor-not-allowed disabled:opacity-50 focus:border-cyan-300/40"
+                      className="mt-2 w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-panel)] px-3 py-2 text-sm leading-5 text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-text-soft)] disabled:cursor-not-allowed disabled:opacity-50 focus:border-[var(--app-accent-border)]"
                     />
                   </div>
                 </div>
 
-                <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-2.5">
+                <div className="mt-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-sm font-medium text-white/85">
+                    <p className="text-sm font-medium app-text-muted">
                       {t.sensitiveTargetsLabel}
                     </p>
 
@@ -861,7 +861,7 @@ export default function DataMaskPage() {
                           resetResultState();
                         }}
                         disabled={isBusy}
-                        className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-white/80 transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-white/10 hover:text-white"
+                        className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] px-2.5 py-1.5 text-xs app-text-muted transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                       >
                         {t.selectAll}
                       </button>
@@ -875,7 +875,7 @@ export default function DataMaskPage() {
                           resetResultState();
                         }}
                         disabled={isBusy}
-                        className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-white/80 transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-white/10 hover:text-white"
+                        className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] px-2.5 py-1.5 text-xs app-text-muted transition disabled:cursor-not-allowed disabled:opacity-50 hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                       >
                         {t.clearAll}
                       </button>
@@ -892,8 +892,8 @@ export default function DataMaskPage() {
                             isBusy ? "cursor-not-allowed opacity-60" : "cursor-pointer"
                           } ${
                             checked
-                              ? "border-cyan-300/30 bg-cyan-400/10 text-white"
-                              : "border-white/10 bg-white/5 text-white/75 hover:bg-white/10"
+                              ? "border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] text-[var(--app-text)]"
+                              : "border-[var(--app-border)] bg-[var(--app-surface)] app-text-muted hover:bg-[var(--app-surface-strong)]"
                           }`}
                         >
                           <input
@@ -901,7 +901,7 @@ export default function DataMaskPage() {
                             checked={checked}
                             onChange={() => toggleTarget(item)}
                             disabled={isBusy}
-                            className="h-4 w-4 rounded border-white/20 bg-transparent disabled:cursor-not-allowed"
+                            className="h-4 w-4 rounded border-[var(--app-border)] bg-transparent disabled:cursor-not-allowed"
                           />
                           <span>{SENSITIVE_LABELS[item] || item}</span>
                         </label>
@@ -919,7 +919,7 @@ export default function DataMaskPage() {
                   </div>
                 )}
 
-                <div className="sticky bottom-0 z-10 -mx-3 mt-3 flex flex-wrap items-center gap-3 border-t border-white/10 bg-[#081120]/95 px-3 py-3 backdrop-blur md:-mx-4 md:px-4">
+                <div className="sticky bottom-0 z-10 -mx-3 mt-3 flex flex-wrap items-center gap-3 border-t border-[var(--app-border)] bg-[var(--app-panel)] px-3 py-3 backdrop-blur md:-mx-4 md:px-4">
                   <button
                     type="submit"
                     disabled={
@@ -937,8 +937,8 @@ export default function DataMaskPage() {
                       isValidFile &&
                       documentType &&
                       targetData.length > 0
-                        ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
-                        : "cursor-not-allowed bg-white/10 text-white/40"
+                        ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
+                        : "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
                     }`}
                   >
                     {isReviewing ? t.reviewing : t.processAndReview}
@@ -951,8 +951,8 @@ export default function DataMaskPage() {
                       disabled={isFinalizing}
                       className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
                         !isFinalizing
-                          ? "bg-cyan-300 text-slate-900 hover:scale-[1.02]"
-                          : "cursor-not-allowed bg-cyan-300/30 text-slate-900/50"
+                          ? "bg-cyan-300 text-[var(--app-button-text)] hover:scale-[1.02]"
+                          : "cursor-not-allowed bg-cyan-300/30 app-text-soft"
                       }`}
                     >
                       {isFinalizing ? t.finalizing : t.finalizeAction}
@@ -963,19 +963,19 @@ export default function DataMaskPage() {
             </form>
 
             <div className="lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)]">
-              <div className="rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+              <div className="rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
                 <div className="mb-3 flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/10">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <EyeClosed className="h-5 w-5 text-cyan-300" />
                   </div>
                   <div>
-                    <h2 className="text-base font-semibold text-white">
+                    <h2 className="text-base font-semibold text-[var(--app-text)]">
                       {t.resultTitle}
                     </h2>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[#081120] p-2.5">
+                <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-2.5">
                   {downloadInfo?.downloadUrl && stage === "done" && (
                     <div className="mb-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-2.5">
                       <div className="flex items-start gap-3">
@@ -994,7 +994,7 @@ export default function DataMaskPage() {
                         <button
                           type="button"
                           onClick={handleDownload}
-                          className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
+                          className="inline-flex items-center gap-2 rounded-xl bg-[var(--app-button-bg)] px-3 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02]"
                         >
                           <Download className="h-4 w-4" />
                           {common.download}
@@ -1006,10 +1006,10 @@ export default function DataMaskPage() {
                   {processedPreviewUrl &&
                     [".pdf", ".docx"].includes(inputExtension) && (
                       <div className="mb-3">
-                        <p className="mb-2 text-sm font-medium text-white/80">
+                        <p className="mb-2 text-sm font-medium app-text-muted">
                           {t.processedPreviewTitle}
                         </p>
-                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white">
+                        <div className="overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)]">
                           <iframe
                             src={processedPreviewUrl}
                             title="Processed preview"
@@ -1022,10 +1022,10 @@ export default function DataMaskPage() {
                   {processedPreviewUrl &&
                     [".jpg", ".jpeg", ".png"].includes(inputExtension) && (
                       <div className="mb-3">
-                        <p className="mb-2 text-sm font-medium text-white/80">
+                        <p className="mb-2 text-sm font-medium app-text-muted">
                           {t.processedPreviewTitle}
                         </p>
-                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white p-2">
+                        <div className="overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-2">
                           <img
                             src={processedPreviewUrl}
                             alt="Processed preview"
@@ -1045,11 +1045,11 @@ export default function DataMaskPage() {
 
                   {stage === "review" && (
                     <div className="mb-3 space-y-3">
-                      <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
-                        <p className="font-medium text-cyan-100">
+                      <div className="rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] p-3">
+                        <p className="font-medium text-[var(--app-accent-text)]">
                           {t.reviewTitle}
                         </p>
-                        <p className="mt-1 text-sm text-cyan-100/80">
+                        <p className="mt-1 text-sm text-[var(--app-accent-text)]">
                           {t.reviewHint}
                         </p>
                       </div>
@@ -1062,7 +1062,7 @@ export default function DataMaskPage() {
                               new Set(reviewCandidates.map(candidateId)),
                             )
                           }
-                          className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                          className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-xs app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                         >
                           {t.approveAll}
                         </button>
@@ -1070,26 +1070,26 @@ export default function DataMaskPage() {
                         <button
                           type="button"
                           onClick={() => setApprovedCandidateIds(new Set())}
-                          className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                          className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-xs app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                         >
                           {t.clearApproved}
                         </button>
                       </div>
 
                       <div className="grid gap-2 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                          <p className="text-sm font-medium text-white/85">
+                        <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                          <p className="text-sm font-medium app-text-muted">
                             {t.approvedCountLabel}
                           </p>
-                          <p className="mt-1 text-sm text-white/65">
+                          <p className="mt-1 text-sm app-text-muted">
                             {approvedCount}
                           </p>
                         </div>
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                          <p className="text-sm font-medium text-white/85">
+                        <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                          <p className="text-sm font-medium app-text-muted">
                             {t.deselectedCountLabel}
                           </p>
-                          <p className="mt-1 text-sm text-white/65">
+                          <p className="mt-1 text-sm app-text-muted">
                             {deselectedCount}
                           </p>
                         </div>
@@ -1106,8 +1106,8 @@ export default function DataMaskPage() {
                                 key={candidateId(candidate)}
                                 className={`block rounded-xl border p-3 transition ${
                                   checked
-                                    ? "border-cyan-300/30 bg-cyan-400/10"
-                                    : "border-white/10 bg-white/5"
+                                    ? "border-[var(--app-accent-border)] bg-[var(--app-accent-bg)]"
+                                    : "border-[var(--app-border)] bg-[var(--app-surface)]"
                                 }`}
                               >
                                 <div className="flex items-start gap-3">
@@ -1120,17 +1120,17 @@ export default function DataMaskPage() {
 
                                   <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                      <span className="rounded-full border border-white/10 bg-white/10 px-2 py-1 text-xs text-white/80">
+                                      <span className="rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-2 py-1 text-xs app-text-muted">
                                         {SENSITIVE_LABELS[candidate.label] ||
                                           candidate.label}
                                       </span>
-                                      <span className="text-xs text-white/50">
+                                      <span className="text-xs app-text-soft">
                                         {t.occurrencesLabel}:{" "}
                                         {candidate.occurrences ?? 1}
                                       </span>
                                     </div>
 
-                                    <p className="mt-1.5 break-words text-sm leading-5 text-white/85">
+                                    <p className="mt-1.5 break-words text-sm leading-5 app-text-muted">
                                       {candidate.quote}
                                     </p>
                                   </div>
@@ -1148,11 +1148,11 @@ export default function DataMaskPage() {
                   )}
 
                   {resultSummary ? (
-                    <pre className="max-h-[180px] overflow-y-auto rounded-xl bg-white/5 p-3 whitespace-pre-wrap break-words text-xs leading-5 text-white/80">
+                    <pre className="max-h-[180px] overflow-y-auto rounded-xl bg-[var(--app-surface)] p-3 whitespace-pre-wrap break-words text-xs leading-5 app-text-muted">
                       {resultSummary}
                     </pre>
                   ) : (
-                    <p className="text-sm leading-5 text-white/45">
+                    <p className="text-sm leading-5 app-text-soft">
                       {t.previewEmpty}
                     </p>
                   )}

@@ -349,18 +349,18 @@ function SearchableMultiSelect({
 
   return (
     <div>
-      <p className="text-sm font-medium text-cyan-100">{title}</p>
+      <p className="text-sm font-medium text-[var(--app-accent-text)]">{title}</p>
       {helpText && (
-        <p className="mt-1 text-xs leading-5 text-cyan-100/70">{helpText}</p>
+        <p className="mt-1 text-xs leading-5 text-[var(--app-accent-text)]">{helpText}</p>
       )}
       {emptyText && (
-        <p className="mt-1 text-xs leading-5 text-white/45">{emptyText}</p>
+        <p className="mt-1 text-xs leading-5 app-text-soft">{emptyText}</p>
       )}
       {examplesText && (
-        <p className="mt-1 text-xs leading-5 text-white/35">{examplesText}</p>
+        <p className="mt-1 text-xs leading-5 app-text-soft">{examplesText}</p>
       )}
 
-      <div className="mt-3 flex min-h-10 flex-wrap gap-2 rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
+      <div className="mt-3 flex min-h-10 flex-wrap gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2">
         {selectedValues.map((value) => (
           <button
             key={value}
@@ -369,8 +369,8 @@ function SearchableMultiSelect({
             onClick={() => !disabled && onToggle(value)}
             className={`rounded-full border px-3 py-1 text-xs transition ${
               disabled
-                ? "cursor-not-allowed border-white/10 bg-white/5 text-white/35"
-                : "border-cyan-300/30 bg-cyan-400/15 text-cyan-50 hover:bg-cyan-400/20"
+                ? "cursor-not-allowed border-[var(--app-border)] bg-[var(--app-surface)] app-text-soft"
+                : "border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] text-[var(--app-accent-text)] hover:bg-cyan-400/20"
             }`}
           >
             {getLabel(value)} ×
@@ -384,10 +384,10 @@ function SearchableMultiSelect({
         disabled={disabled}
         onChange={(event) => setQuery(event.target.value)}
         placeholder={searchPlaceholder}
-        className={`mt-3 w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition placeholder:text-white/35 ${
+        className={`mt-3 w-full rounded-2xl border border-[var(--app-border)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-text-soft)] ${
           disabled
-            ? "cursor-not-allowed bg-white/5 text-white/35"
-            : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+            ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+            : "bg-[var(--app-surface)] focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
         }`}
       />
 
@@ -403,10 +403,10 @@ function SearchableMultiSelect({
               onClick={() => !disabled && onToggle(item)}
               className={`flex items-center justify-between gap-2 rounded-xl border px-3 py-2 text-left text-xs transition ${
                 disabled
-                  ? "cursor-not-allowed border-white/10 bg-white/5 text-white/35 opacity-80"
+                  ? "cursor-not-allowed border-[var(--app-border)] bg-[var(--app-surface)] app-text-soft opacity-80"
                   : checked
-                    ? "border-cyan-300/40 bg-cyan-300/15 text-cyan-50"
-                    : "border-white/10 bg-white/5 text-white/65 hover:bg-white/10"
+                    ? "border-[var(--app-accent-border)] bg-cyan-300/15 text-[var(--app-accent-text)]"
+                    : "border-[var(--app-border)] bg-[var(--app-surface)] app-text-muted hover:bg-[var(--app-surface-strong)]"
               }`}
             >
               <span>{getLabel(item)}</span>
@@ -692,8 +692,8 @@ export default function StructuredExtractionPage() {
 
   return (
     <AppSidebarLayout>
-      <div className="relative isolate min-h-screen overflow-x-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
+      <div className="relative isolate min-h-screen overflow-x-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
+        <div className="absolute inset-0 bg-[var(--app-bg)]" />
 
         <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 md:px-5 lg:py-4">
           <header className="mb-3 shrink-0">
@@ -701,23 +701,23 @@ export default function StructuredExtractionPage() {
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+                className="inline-flex items-center gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 text-sm app-text-muted backdrop-blur transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {common.back}
               </button>
 
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-4 py-2 text-sm text-[var(--app-accent-text)] backdrop-blur">
                 <Sparkles className="h-4 w-4" />
                 {t.badge}
               </div>
             </div>
 
             <div className="mt-3">
-              <h1 className="max-w-full text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:whitespace-nowrap lg:text-[2.15rem] lg:leading-tight xl:text-[2.35rem]">
+              <h1 className="max-w-full text-2xl font-semibold tracking-tight text-[var(--app-text)] sm:text-3xl lg:whitespace-nowrap lg:text-[2.15rem] lg:leading-tight xl:text-[2.35rem]">
                 {t.title}
               </h1>
-              <p className="mt-1 max-w-4xl text-sm leading-5 text-white/70 md:text-base">
+              <p className="mt-1 max-w-4xl text-sm leading-5 app-text-muted md:text-base">
                 {t.description}
               </p>
             </div>
@@ -726,25 +726,25 @@ export default function StructuredExtractionPage() {
           <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,1.08fr)] lg:items-stretch">
             <form
               onSubmit={handleSubmit}
-              className="relative min-h-0 overflow-y-auto rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-8.5rem)]"
+              className="relative min-h-0 overflow-y-auto rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-3 backdrop-blur-xl md:p-4 lg:max-h-[calc(100vh-8.5rem)]"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
+              <div className="absolute inset-0 app-card-overlay" />
 
               <div className="relative flex h-full min-h-0 flex-col">
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className="rounded-2xl border border-dashed border-white/15 bg-white/5 p-4 text-center transition hover:border-white/25 hover:bg-white/10 md:p-5"
+                  className="rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-center transition hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-strong)] md:p-5"
                 >
-                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <Upload className="h-5 w-5 text-cyan-300" />
                   </div>
 
-                  <h2 className="text-base font-semibold text-white">
+                  <h2 className="text-base font-semibold text-[var(--app-text)]">
                     {t.uploadTitle}
                   </h2>
 
-                  <p className="mt-1 text-xs leading-5 text-white/50">
+                  <p className="mt-1 text-xs leading-5 app-text-soft">
                     {t.allowedFileInputs}
                   </p>
 
@@ -765,8 +765,8 @@ export default function StructuredExtractionPage() {
                     }
                     className={`mt-3 rounded-2xl px-4 py-2.5 text-sm font-semibold transition ${
                       isProcessing
-                        ? "cursor-not-allowed bg-white/10 text-white/35"
-                        : "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
+                        ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+                        : "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
                     }`}
                   >
                     {common.chooseFile}
@@ -795,7 +795,7 @@ export default function StructuredExtractionPage() {
 
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-white/80">
+                    <span className="mb-2 block text-sm font-medium app-text-muted">
                       {t.outputFormatLabel}
                     </span>
                     <select
@@ -807,32 +807,32 @@ export default function StructuredExtractionPage() {
                         setError("");
                         resetResultState();
                       }}
-                      className={`w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition ${
+                      className={`w-full rounded-2xl border border-[var(--app-border)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none transition ${
                         isProcessing
-                          ? "cursor-not-allowed bg-white/5 text-white/35"
-                          : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+                          ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+                          : "bg-[var(--app-surface)] focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
                       }`}
                     >
                       {OUTPUT_FORMATS.map((format) => (
                         <option
                           key={format}
                           value={format}
-                          className="bg-slate-900 text-white"
+                          className="bg-[var(--app-panel)] text-[var(--app-text)]"
                         >
                           {t.outputFormatLabels[format] || `.${format}`}
                         </option>
                       ))}
                     </select>
-                    <p className="mt-1 text-xs leading-5 text-white/45">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.outputFormatHelp}
                     </p>
-                    <p className="mt-1 text-xs leading-5 text-white/35">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.outputFormatExamples}
                     </p>
                   </label>
 
                   <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-white/80">
+                    <span className="mb-2 block text-sm font-medium app-text-muted">
                       {t.resultShapeLabel}
                     </span>
                     <select
@@ -844,37 +844,37 @@ export default function StructuredExtractionPage() {
                         setError("");
                         resetResultState();
                       }}
-                      className={`w-full rounded-2xl border border-white/10 px-4 py-2.5 text-sm text-white outline-none transition ${
+                      className={`w-full rounded-2xl border border-[var(--app-border)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none transition ${
                         isProcessing
-                          ? "cursor-not-allowed bg-white/5 text-white/35"
-                          : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+                          ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+                          : "bg-[var(--app-surface)] focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
                       }`}
                     >
                       {RESULT_SHAPES.map((shape) => (
                         <option
                           key={shape}
                           value={shape}
-                          className="bg-slate-900 text-white"
+                          className="bg-[var(--app-panel)] text-[var(--app-text)]"
                         >
                           {t.resultShapeLabels[shape] || shape}
                         </option>
                       ))}
                     </select>
-                    <p className="mt-1 text-xs leading-5 text-white/45">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.resultShapeHelp}
                     </p>
                     {resultShapeDescription && (
-                      <p className="mt-1 rounded-xl border border-cyan-300/20 bg-cyan-400/10 px-3 py-2 text-xs leading-5 text-cyan-100/80">
+                      <p className="mt-1 rounded-xl border border-cyan-300/20 bg-[var(--app-accent-bg)] px-3 py-2 text-xs leading-5 text-[var(--app-accent-text)]">
                         {resultShapeDescription}
                       </p>
                     )}
-                    <p className="mt-1 text-xs leading-5 text-white/35">
+                    <p className="mt-1 text-xs leading-5 app-text-soft">
                       {t.resultShapeExamples}
                     </p>
                   </label>
                 </div>
 
-                <div className="mt-3 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
+                <div className="mt-3 rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] p-3">
                   <div className="flex items-start gap-3">
                     <SlidersHorizontal className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
                     <div className="min-w-0 flex-1">
@@ -898,7 +898,7 @@ export default function StructuredExtractionPage() {
 
                 <label className="mt-3 block">
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <span className="text-sm font-medium text-white/80">
+                    <span className="text-sm font-medium app-text-muted">
                       {t.selectedFieldsLabel}
                     </span>
 
@@ -909,18 +909,18 @@ export default function StructuredExtractionPage() {
                         onClick={() => !isProcessing && clearSelectedFields()}
                         className={`text-xs font-medium transition ${
                           isProcessing
-                            ? "cursor-not-allowed text-white/30"
-                            : "text-cyan-200 hover:text-cyan-100"
+                            ? "cursor-not-allowed app-text-soft"
+                            : "text-[var(--app-accent-text)] hover:text-[var(--app-accent-text)]"
                         }`}
                       >
                         {t.clearFields}
                       </button>
                     )}
                   </div>
-                  <p className="mb-1 text-xs leading-5 text-white/45">
+                  <p className="mb-1 text-xs leading-5 app-text-soft">
                     {t.selectedFieldsHelp}
                   </p>
-                  <p className="mb-3 text-xs leading-5 text-white/35">
+                  <p className="mb-3 text-xs leading-5 app-text-soft">
                     {t.selectedFieldsExamples}
                   </p>
 
@@ -935,22 +935,22 @@ export default function StructuredExtractionPage() {
                     }}
                     placeholder={t.selectedFieldsPlaceholder}
                     rows={3}
-                    className={`w-full resize-none rounded-2xl border border-white/10 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-white/35 ${
+                    className={`w-full resize-none rounded-2xl border border-[var(--app-border)] px-4 py-3 text-sm leading-6 text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-text-soft)] ${
                       isProcessing
-                        ? "cursor-not-allowed bg-white/5 text-white/35"
-                        : "bg-white/5 focus:border-cyan-300/40 focus:bg-white/10"
+                        ? "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
+                        : "bg-[var(--app-surface)] focus:border-[var(--app-accent-border)] focus:bg-[var(--app-surface-strong)]"
                     }`}
                   />
                 </label>
 
                 <div className="mt-3">
-                  <p className="mb-1 text-xs font-medium text-white/55">
+                  <p className="mb-1 text-xs font-medium app-text-soft">
                     {t.suggestedFieldsLabel}
                   </p>
-                  <p className="mb-1 text-xs leading-5 text-white/40">
+                  <p className="mb-1 text-xs leading-5 app-text-soft">
                     {t.suggestedFieldsHelp}
                   </p>
-                  <p className="mb-2 text-xs leading-5 text-white/35">
+                  <p className="mb-2 text-xs leading-5 app-text-soft">
                     {t.suggestedFieldsExamples}
                   </p>
                   <div className="flex max-h-20 flex-wrap gap-2 overflow-y-auto pr-1">
@@ -964,8 +964,8 @@ export default function StructuredExtractionPage() {
                         }
                         className={`rounded-full border px-3 py-1 text-xs transition ${
                           isProcessing
-                            ? "cursor-not-allowed border-white/10 bg-white/5 text-white/35"
-                            : "border-white/10 bg-white/5 text-white/65 hover:border-cyan-300/30 hover:bg-cyan-400/10 hover:text-cyan-100"
+                            ? "cursor-not-allowed border-[var(--app-border)] bg-[var(--app-surface)] app-text-soft"
+                            : "border-[var(--app-border)] bg-[var(--app-surface)] app-text-muted hover:border-[var(--app-accent-border)] hover:bg-[var(--app-accent-bg)] hover:text-[var(--app-accent-text)]"
                         }`}
                       >
                         {field}
@@ -990,8 +990,8 @@ export default function StructuredExtractionPage() {
                       disabled={!canSubmit}
                       className={`rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${
                         canSubmit
-                          ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
-                          : "cursor-not-allowed bg-white/10 text-white/40"
+                          ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
+                          : "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
                       }`}
                     >
                       {isSubmitting ? t.extracting : t.extractAction}
@@ -1001,7 +1001,7 @@ export default function StructuredExtractionPage() {
                       <button
                         type="button"
                         onClick={handleDownload}
-                        className="inline-flex items-center gap-2 rounded-2xl border border-cyan-300/30 bg-cyan-400/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-400/15"
+                        className="inline-flex items-center gap-2 rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-5 py-2.5 text-sm font-semibold text-[var(--app-accent-text)] transition hover:bg-[var(--app-accent-bg)]"
                       >
                         <Download className="h-4 w-4" />
                         {common.download}
@@ -1009,9 +1009,9 @@ export default function StructuredExtractionPage() {
                     )}
                   </div>
 
-                  <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/55">
+                  <div className="mt-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm app-text-soft">
                     {t.extractionLabel}{" "}
-                    <span className="font-medium text-white/85">
+                    <span className="font-medium app-text-muted">
                       .{outputFormat}
                     </span>
                   </div>
@@ -1020,42 +1020,42 @@ export default function StructuredExtractionPage() {
             </form>
 
             <aside className="min-h-0 lg:h-full">
-              <div className="flex min-h-[360px] flex-col rounded-3xl border border-white/10 bg-white/8 p-4 backdrop-blur-xl md:p-5 lg:min-h-[calc(100vh-8.5rem)] lg:max-h-[calc(100vh-8.5rem)]">
+              <div className="flex min-h-[360px] flex-col rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-4 backdrop-blur-xl md:p-5 lg:min-h-[calc(100vh-8.5rem)] lg:max-h-[calc(100vh-8.5rem)]">
                 <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-[var(--app-text)]">
                     {t.extractionOutput}
                   </h2>
-                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/55">
+                  <span className="rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-1 text-xs app-text-soft">
                     .{outputFormat}
                   </span>
                 </div>
 
-                <div className="mt-3 min-h-[320px] flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-4 lg:max-h-none">
+                <div className="mt-3 min-h-[320px] flex-1 overflow-y-auto rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-4 lg:max-h-none">
                   {resultSummary ? (
                     <div className="flex h-full min-h-0 flex-col gap-3">
-                      <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 text-white/80 md:text-sm">
+                      <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 app-text-muted md:text-sm">
                         {resultSummary}
                       </pre>
 
                       {previewPayload && (
-                        <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-3">
+                        <div className="rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] p-3">
                           <div className="mb-3 flex items-center justify-between gap-3">
                             <div>
-                              <p className="text-sm font-semibold text-cyan-100">
+                              <p className="text-sm font-semibold text-[var(--app-accent-text)]">
                                 Generated preview
                               </p>
-                              <p className="mt-1 text-xs text-cyan-100/70">
+                              <p className="mt-1 text-xs text-[var(--app-accent-text)]">
                                 Review the extracted data before downloading the
                                 file.
                               </p>
                             </div>
-                            <FileJson className="h-5 w-5 shrink-0 text-cyan-200" />
+                            <FileJson className="h-5 w-5 shrink-0 text-[var(--app-accent-text)]" />
                           </div>
 
                           {previewRows.length > 0 && (
-                            <div className="mb-3 overflow-x-auto rounded-xl border border-white/10 bg-black/20">
-                              <table className="min-w-full text-left text-xs text-white/75">
-                                <thead className="border-b border-white/10 text-white/90">
+                            <div className="mb-3 overflow-x-auto rounded-xl border border-[var(--app-border)] bg-black/20">
+                              <table className="min-w-full text-left text-xs app-text-muted">
+                                <thead className="border-b border-[var(--app-border)] text-[var(--app-text)]">
                                   <tr>
                                     {Object.keys(previewRows[0])
                                       .slice(0, 8)
@@ -1075,7 +1075,7 @@ export default function StructuredExtractionPage() {
                                     .map((row, rowIndex) => (
                                       <tr
                                         key={rowIndex}
-                                        className="border-b border-white/5"
+                                        className="border-b border-[var(--app-border)]"
                                       >
                                         {Object.keys(previewRows[0])
                                           .slice(0, 8)
@@ -1094,11 +1094,11 @@ export default function StructuredExtractionPage() {
                             </div>
                           )}
 
-                          <details className="rounded-xl border border-white/10 bg-black/20 p-3">
-                            <summary className="cursor-pointer text-xs font-medium text-cyan-100">
+                          <details className="rounded-xl border border-[var(--app-border)] bg-black/20 p-3">
+                            <summary className="cursor-pointer text-xs font-medium text-[var(--app-accent-text)]">
                               View structured JSON
                             </summary>
-                            <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-words text-xs leading-5 text-white/70">
+                            <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap break-words text-xs leading-5 app-text-muted">
                               {JSON.stringify(previewPayload, null, 2)}
                             </pre>
                           </details>
@@ -1126,7 +1126,7 @@ export default function StructuredExtractionPage() {
                               <button
                                 type="button"
                                 onClick={handleDownload}
-                                className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] hover:shadow-xl"
+                                className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-[var(--app-button-bg)] px-4 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
                               >
                                 <Download className="h-4 w-4" />
                                 {common.download}
@@ -1137,9 +1137,9 @@ export default function StructuredExtractionPage() {
                       )}
                     </div>
                   ) : (
-                    <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.03] p-4 text-center">
+                    <div className="flex h-full min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-center">
                       <div>
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                           {outputFormat === "json" ? (
                             <FileJson className="h-5 w-5 text-cyan-300" />
                           ) : outputFormat === "csv" ? (
@@ -1148,7 +1148,7 @@ export default function StructuredExtractionPage() {
                             <Database className="h-5 w-5 text-cyan-300" />
                           )}
                         </div>
-                        <p className="max-w-sm text-sm leading-6 text-white/45">
+                        <p className="max-w-sm text-sm leading-6 app-text-soft">
                           {t.previewText}
                         </p>
                       </div>
@@ -1156,21 +1156,21 @@ export default function StructuredExtractionPage() {
                   )}
                 </div>
 
-                <div className="mt-3 grid gap-2 text-xs text-white/45 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                    <p className="font-medium text-white/65">
+                <div className="mt-3 grid gap-2 text-xs app-text-soft sm:grid-cols-3">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+                    <p className="font-medium app-text-muted">
                       {t.outputFormatsTitle}
                     </p>
                     <p className="mt-1">.json · .csv · .xlsx</p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                    <p className="font-medium text-white/65">{t.reviewTitle}</p>
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+                    <p className="font-medium app-text-muted">{t.reviewTitle}</p>
                     <p className="mt-1">{t.reviewValue}</p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                    <p className="font-medium text-white/65">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-3">
+                    <p className="font-medium app-text-muted">
                       {t.knowledgeTitle}
                     </p>
                     <p className="mt-1">{t.knowledgeValue}</p>

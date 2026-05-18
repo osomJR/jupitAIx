@@ -674,31 +674,31 @@ setStage("done");
 
   return (
     <AppSidebarLayout>
-      <div className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.22),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%),linear-gradient(to_bottom,#081120,#0a1426,#07111f)]" />
+      <div className="relative isolate min-h-screen overflow-hidden bg-[var(--app-bg)] text-[var(--app-text)]">
+        <div className="absolute inset-0 bg-[var(--app-bg)]" />
 
         <div className="relative mx-auto flex h-screen max-w-7xl flex-col px-4 py-4 md:px-5 md:py-5">
           <div className="mb-3 flex shrink-0 flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white/80 backdrop-blur transition hover:bg-white/15 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm app-text-muted backdrop-blur transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
             >
               <ArrowLeft className="h-4 w-4" />
               {common.back}
             </button>
 
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-xs font-medium text-cyan-200 backdrop-blur sm:text-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-3 py-1.5 text-xs font-medium text-[var(--app-accent-text)] backdrop-blur sm:text-sm">
               <Sparkles className="h-4 w-4" />
               {t.badge}
             </div>
           </div>
 
           <section className="mb-4 shrink-0 max-w-3xl">
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            <h1 className="text-2xl font-semibold tracking-tight text-[var(--app-text)] sm:text-3xl">
               {t.title}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-5 text-white/70">
+            <p className="mt-2 max-w-2xl text-sm leading-5 app-text-muted">
               {t.description}
             </p>
           </section>
@@ -706,24 +706,24 @@ setStage("done");
           <section className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[0.95fr_1.05fr]">
             <form
               onSubmit={handleProcessAndReview}
-              className="relative min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4"
+              className="relative min-h-0 overflow-hidden rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-3 backdrop-blur-xl md:p-4"
             >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.14),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.12),transparent_25%)]" />
+              <div className="absolute inset-0 app-card-overlay" />
 
               <div className="relative h-full overflow-y-auto pr-1">
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
-                  className={`rounded-3xl border border-dashed border-white/15 bg-white/5 p-4 text-center transition ${isProcessing ? "opacity-60" : "hover:border-white/25 hover:bg-white/10"}`}
+                  className={`rounded-3xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-center transition ${isProcessing ? "opacity-60" : "hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-strong)]"}`}
                 >
-                  <div className="mx-auto mb-2 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                  <div className="mx-auto mb-2 flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <Upload className="h-6 w-6 text-cyan-300" />
                   </div>
 
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-[var(--app-text)]">
                     {t.uploadTitle}
                   </h2>
-                  <p className="mt-1 text-sm leading-5 text-white/65">
+                  <p className="mt-1 text-sm leading-5 app-text-muted">
                     {t.allowedFileInputs}
                   </p>
 
@@ -741,7 +741,7 @@ setStage("done");
                     onClick={() =>
                       !isProcessing && fileInputRef.current?.click()
                     }
-                    className={`mt-3 rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${isProcessing ? "cursor-not-allowed bg-white/20 text-white/45" : "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"}`}
+                    className={`mt-3 rounded-2xl px-5 py-2.5 text-sm font-semibold transition ${isProcessing ? "cursor-not-allowed bg-[var(--app-surface-strong)] app-text-soft" : "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"}`}
                   >
                     {common.chooseFile}
                   </button>
@@ -767,8 +767,8 @@ setStage("done");
                 )}
 
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                    <label className="block text-sm font-medium text-white/85">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                    <label className="block text-sm font-medium app-text-muted">
                       {t.docTypeLabel}
                     </label>
                     <select
@@ -779,13 +779,13 @@ setStage("done");
                         setError("");
                         resetResultState();
                       }}
-                      className={`mt-2 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-300/40 ${isProcessing ? "cursor-not-allowed opacity-60" : ""}`}
+                      className={`mt-2 w-full rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] px-4 py-2.5 text-sm text-[var(--app-text)] outline-none focus:border-[var(--app-accent-border)] ${isProcessing ? "cursor-not-allowed opacity-60" : ""}`}
                     >
                       {DOCUMENT_TYPES.map((item) => (
                         <option
                           key={item.value}
                           value={item.value}
-                          className="bg-[#081120]"
+                          className="bg-[var(--app-panel)]"
                         >
                           {item.label}
                         </option>
@@ -793,8 +793,8 @@ setStage("done");
                     </select>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                    <label className="block text-sm font-medium text-white/85">
+                  <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                    <label className="block text-sm font-medium app-text-muted">
                       {t.exclusionsLabel}
                     </label>
                     <textarea
@@ -807,14 +807,14 @@ setStage("done");
                       }}
                       placeholder={t.exclusionsPlaceholder}
                       rows={2}
-                      className={`mt-2 w-full rounded-2xl border border-white/10 bg-[#081120] px-4 py-2.5 text-sm leading-5 text-white outline-none transition placeholder:text-white/30 focus:border-cyan-300/40 ${isProcessing ? "cursor-not-allowed opacity-60" : ""}`}
+                      className={`mt-2 w-full rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] px-4 py-2.5 text-sm leading-5 text-[var(--app-text)] outline-none transition placeholder:text-[var(--app-text-soft)] focus:border-[var(--app-accent-border)] ${isProcessing ? "cursor-not-allowed opacity-60" : ""}`}
                     />
                   </div>
                 </div>
 
-                <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-2.5">
+                <div className="mt-3 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                    <p className="text-sm font-medium text-white/85">
+                    <p className="text-sm font-medium app-text-muted">
                       {t.sensitiveTargetsLabel}
                     </p>
 
@@ -828,7 +828,7 @@ setStage("done");
                           setError("");
                           resetResultState();
                         }}
-                        className={`rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition ${isProcessing ? "cursor-not-allowed opacity-50" : "hover:bg-white/10 hover:text-white"}`}
+                        className={`rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-1.5 text-xs app-text-muted transition ${isProcessing ? "cursor-not-allowed opacity-50" : "hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"}`}
                       >
                         {t.selectAll}
                       </button>
@@ -842,7 +842,7 @@ setStage("done");
                           setError("");
                           resetResultState();
                         }}
-                        className={`rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/80 transition ${isProcessing ? "cursor-not-allowed opacity-50" : "hover:bg-white/10 hover:text-white"}`}
+                        className={`rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-1.5 text-xs app-text-muted transition ${isProcessing ? "cursor-not-allowed opacity-50" : "hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"}`}
                       >
                         {t.clearAll}
                       </button>
@@ -857,8 +857,8 @@ setStage("done");
                           key={item}
                           className={`flex items-center gap-3 rounded-2xl border px-3 py-1.5 text-sm transition ${isProcessing ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${
                             checked
-                              ? "border-cyan-300/30 bg-cyan-400/10 text-white"
-                              : "border-white/10 bg-white/5 text-white/75 hover:bg-white/10"
+                              ? "border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] text-[var(--app-text)]"
+                              : "border-[var(--app-border)] bg-[var(--app-surface)] app-text-muted hover:bg-[var(--app-surface-strong)]"
                           }`}
                         >
                           <input
@@ -866,7 +866,7 @@ setStage("done");
                             checked={checked}
                             disabled={isProcessing}
                             onChange={() => toggleTarget(item)}
-                            className="h-4 w-4 rounded border-white/20 bg-transparent"
+                            className="h-4 w-4 rounded border-[var(--app-border)] bg-transparent"
                           />
                           <span>{SENSITIVE_LABELS[item] || item}</span>
                         </label>
@@ -902,8 +902,8 @@ setStage("done");
                       isValidFile &&
                       documentType &&
                       targetData.length > 0
-                        ? "bg-white text-slate-900 hover:scale-[1.02] hover:shadow-xl"
-                        : "cursor-not-allowed bg-white/10 text-white/40"
+                        ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] hover:scale-[1.02] hover:shadow-xl"
+                        : "cursor-not-allowed bg-[var(--app-surface)] app-text-soft"
                     }`}
                   >
                     {isReviewing ? t.reviewing : t.processAndReview}
@@ -916,8 +916,8 @@ setStage("done");
                       disabled={isFinalizing}
                       className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${
                         !isFinalizing
-                          ? "bg-cyan-300 text-slate-900 hover:scale-[1.02]"
-                          : "cursor-not-allowed bg-cyan-300/30 text-slate-900/50"
+                          ? "bg-cyan-300 text-[var(--app-button-text)] hover:scale-[1.02]"
+                          : "cursor-not-allowed bg-cyan-300/30 app-text-soft"
                       }`}
                     >
                       {isFinalizing ? t.finalizing : t.finalizeAction}
@@ -928,19 +928,19 @@ setStage("done");
             </form>
 
             <div className="min-h-0 space-y-4 overflow-hidden">
-              <div className="flex h-full min-h-0 flex-col rounded-3xl border border-white/10 bg-white/8 p-3 backdrop-blur-xl md:p-4">
+              <div className="flex h-full min-h-0 flex-col rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-3 backdrop-blur-xl md:p-4">
                 <div className="mb-3 flex shrink-0 items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/10">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)]">
                     <EyeOff className="h-5 w-5 text-cyan-300" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="text-lg font-semibold text-[var(--app-text)]">
                       {t.resultTitle}
                     </h2>
                   </div>
                 </div>
 
-                <div className="min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-[#081120] p-3">
+                <div className="min-h-0 flex-1 overflow-y-auto rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-3">
                   {stage === "done" && downloadInfo?.downloadUrl && (
                     <div className="mb-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3">
                       <div className="flex items-start gap-3">
@@ -959,7 +959,7 @@ setStage("done");
                         <button
                           type="button"
                           onClick={handleDownload}
-                          className="inline-flex items-center gap-2 rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
+                          className="inline-flex items-center gap-2 rounded-2xl bg-[var(--app-button-bg)] px-4 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02]"
                         >
                           <Download className="h-4 w-4" />
                           {common.download}
@@ -971,10 +971,10 @@ setStage("done");
                   {processedPreviewUrl &&
                     [".pdf", ".docx"].includes(inputExtension) && (
                       <div className="mb-4">
-                        <p className="mb-2 text-sm font-medium text-white/80">
+                        <p className="mb-2 text-sm font-medium app-text-muted">
                           {t.processedPreviewTitle}
                         </p>
-                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white">
+                        <div className="overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)]">
                           <iframe
                             src={processedPreviewUrl}
                             title="Processed preview"
@@ -987,10 +987,10 @@ setStage("done");
                   {processedPreviewUrl &&
                     [".jpg", ".jpeg", ".png"].includes(inputExtension) && (
                       <div className="mb-4">
-                        <p className="mb-2 text-sm font-medium text-white/80">
+                        <p className="mb-2 text-sm font-medium app-text-muted">
                           {t.processedPreviewTitle}
                         </p>
-                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white p-2">
+                        <div className="overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-panel)] p-2">
                           <image
                             src={processedPreviewUrl}
                             alt="Processed preview"
@@ -1010,11 +1010,11 @@ setStage("done");
 
                   {stage === "review" && (
                     <div className="mb-4 space-y-4">
-                      <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-4">
-                        <p className="font-medium text-cyan-100">
+                      <div className="rounded-2xl border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] p-4">
+                        <p className="font-medium text-[var(--app-accent-text)]">
                           {t.reviewTitle}
                         </p>
-                        <p className="mt-1 text-sm text-cyan-100/80">
+                        <p className="mt-1 text-sm text-[var(--app-accent-text)]">
                           {t.reviewHint}
                         </p>
                       </div>
@@ -1027,7 +1027,7 @@ setStage("done");
                               new Set(reviewCandidates.map(candidateId)),
                             )
                           }
-                          className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                          className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-xs app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                         >
                           {t.approveAll}
                         </button>
@@ -1035,26 +1035,26 @@ setStage("done");
                         <button
                           type="button"
                           onClick={() => setApprovedCandidateIds(new Set())}
-                          className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 transition hover:bg-white/10 hover:text-white"
+                          className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-xs app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
                         >
                           {t.clearApproved}
                         </button>
                       </div>
 
                       <div className="grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                          <p className="text-sm font-medium text-white/85">
+                        <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                          <p className="text-sm font-medium app-text-muted">
                             {t.approvedCountLabel}
                           </p>
-                          <p className="mt-1 text-sm text-white/65">
+                          <p className="mt-1 text-sm app-text-muted">
                             {approvedCount}
                           </p>
                         </div>
-                        <div className="rounded-2xl border border-white/10 bg-white/5 p-2.5">
-                          <p className="text-sm font-medium text-white/85">
+                        <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-2.5">
+                          <p className="text-sm font-medium app-text-muted">
                             {t.deselectedCountLabel}
                           </p>
-                          <p className="mt-1 text-sm text-white/65">
+                          <p className="mt-1 text-sm app-text-muted">
                             {deselectedCount}
                           </p>
                         </div>
@@ -1071,8 +1071,8 @@ setStage("done");
                                 key={candidateId(candidate)}
                                 className={`block rounded-2xl border p-3 transition ${
                                   checked
-                                    ? "border-cyan-300/30 bg-cyan-400/10"
-                                    : "border-white/10 bg-white/5"
+                                    ? "border-[var(--app-accent-border)] bg-[var(--app-accent-bg)]"
+                                    : "border-[var(--app-border)] bg-[var(--app-surface)]"
                                 }`}
                               >
                                 <div className="flex items-start gap-3">
@@ -1085,17 +1085,17 @@ setStage("done");
 
                                   <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                      <span className="rounded-full border border-white/10 bg-white/10 px-2 py-1 text-xs text-white/80">
+                                      <span className="rounded-full border border-[var(--app-border)] bg-[var(--app-surface)] px-2 py-1 text-xs app-text-muted">
                                         {SENSITIVE_LABELS[candidate.label] ||
                                           candidate.label}
                                       </span>
-                                      <span className="text-xs text-white/50">
+                                      <span className="text-xs app-text-soft">
                                         {t.occurrencesLabel}:{" "}
                                         {candidate.occurrences ?? 1}
                                       </span>
                                     </div>
 
-                                    <p className="mt-1 break-words text-sm leading-5 text-white/85">
+                                    <p className="mt-1 break-words text-sm leading-5 app-text-muted">
                                       {candidate.quote}
                                     </p>
                                   </div>
@@ -1113,11 +1113,11 @@ setStage("done");
                   )}
 
                   {resultSummary ? (
-                    <pre className="whitespace-pre-wrap break-words text-sm leading-6 text-white/80">
+                    <pre className="whitespace-pre-wrap break-words text-sm leading-6 app-text-muted">
                       {resultSummary}
                     </pre>
                   ) : (
-                    <p className="text-sm leading-6 text-white/45">
+                    <p className="text-sm leading-6 app-text-soft">
                       {t.previewEmpty}
                     </p>
                   )}
