@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from backend.auth0_dependencies import AuthenticatedUser, get_current_user
 from backend.database import get_db
 from backend.settings import ensure_user_settings, update_appearance
+from backend.subscriptions import get_user_entitlement
 
 
 router = APIRouter(prefix="/account", tags=["account-v1"])
@@ -31,6 +32,8 @@ def get_account_me(
         with get_db() as conn:
             settings = ensure_user_settings(conn, current_user.user_id)
 
+        entitlement = get_user_entitlement(current_user.user_id)
+
         return {
             "user": {
                 "id": current_user.user_id,
@@ -40,6 +43,16 @@ def get_account_me(
             },
             "settings": {
                 "appearance": settings["appearance"],
+            },
+            "entitlement": {
+                "plan": entitlement.plan,
+                "account_count": entitlement.account_count,
+                "status": entitlement.status,
+                "is_paid": entitlement.is_paid,
+                "source": entitlement.source,
+                "organization_id": entitlement.organization_id,
+                "organization_name": entitlement.organization_name,
+                "organization_role": entitlement.organization_role,
             },
         }
     except ValueError as exc:
@@ -55,7 +68,7 @@ def get_account_me(
             status_code=500,
             detail={
                 "error": "account_load_failed",
-                "message": "Could not load account settings.",
+                "message": "Could not load account details.",
             },
         ) from exc
 
@@ -78,6 +91,16 @@ def patch_account_settings(
             "success": True,
             "settings": {
                 "appearance": settings["appearance"],
+            },
+            "entitlement": {
+                "plan": entitlement.plan,
+                "account_count": entitlement.account_count,
+                "status": entitlement.status,
+                "is_paid": entitlement.is_paid,
+                "source": entitlement.source,
+                "organization_id": entitlement.organization_id,
+                "organization_name": entitlement.organization_name,
+                "organization_role": entitlement.organization_role,
             },
         }
     except ValueError as exc:

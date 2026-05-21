@@ -19,6 +19,7 @@ export default function ProfileMenu({
   lightLabel = "Light",
   darkLabel = "Dark",
   systemLabel = "System Default",
+  backLabel = "back",
   menuPlacement = "bottom",
   menuAlign = "right",
   fullWidth = false,
@@ -52,6 +53,9 @@ export default function ProfileMenu({
 
   const menuAlignClass = menuAlign === "left" ? "left-0" : "right-0";
 
+  const hoverItemClass =
+    "hover:bg-neutral-100 hover:text-[var(--app-text)] hover:shadow-sm dark:hover:bg-[#2d2d33]";
+
   return (
     <div className={`relative ${fullWidth ? "w-full" : ""}`} ref={containerRef}>
       <button
@@ -60,7 +64,7 @@ export default function ProfileMenu({
           setOpen((current) => !current);
           if (open) setShowSettings(false);
         }}
-        className={`flex items-center gap-3 rounded-2xl border app-surface px-3 py-2 text-sm app-text transition hover:bg-[var(--app-surface-strong)] ${
+        className={`flex items-center gap-3 rounded-2xl border app-surface px-3 py-2 text-sm app-text transition ${hoverItemClass} ${
           fullWidth ? "w-full justify-between" : ""
         }`}
       >
@@ -90,7 +94,7 @@ export default function ProfileMenu({
         >
           {!showSettings ? (
             <div className="space-y-1">
-              <div className="flex items-center gap-3 rounded-2xl px-3 py-3">
+              <div className={`flex items-center gap-3 rounded-2xl px-3 py-3 transition ${hoverItemClass}`}>
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--app-button-bg)] text-sm font-semibold text-[var(--app-button-text)]">
                   {initial}
                 </div>
@@ -112,7 +116,7 @@ export default function ProfileMenu({
               <button
                 type="button"
                 onClick={() => setShowSettings(true)}
-                className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm app-text transition hover:bg-[var(--app-surface)]"
+                className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm app-text transition ${hoverItemClass}`}
               >
                 <Settings className="h-4 w-4 app-text-muted" />
                 <span>{settingsLabel}</span>
@@ -120,7 +124,7 @@ export default function ProfileMenu({
 
               <a
                 href="/auth/logout"
-                className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm app-text transition hover:bg-[var(--app-surface)]"
+                className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm app-text transition ${hoverItemClass}`}
               >
                 <LogOut className="h-4 w-4 app-text-muted" />
                 <span>{logoutLabel}</span>
@@ -131,9 +135,9 @@ export default function ProfileMenu({
               <button
                 type="button"
                 onClick={() => setShowSettings(false)}
-                className="rounded-2xl px-3 py-2 text-sm app-text-muted transition hover:bg-[var(--app-surface)] hover:text-[var(--app-text)]"
+                className={`rounded-2xl px-3 py-2 text-sm app-text-muted transition ${hoverItemClass}`}
               >
-                ← {settingsLabel}
+                ← {backLabel}
               </button>
 
               <div className="rounded-2xl border app-surface p-4">
@@ -149,7 +153,7 @@ export default function ProfileMenu({
                     className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm transition ${
                       theme === "light"
                         ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)]"
-                        : "app-surface app-text hover:bg-[var(--app-surface-strong)]"
+                        : `app-surface app-text ${hoverItemClass}`
                     }`}
                   >
                     <Sun className="h-4 w-4" />
@@ -163,7 +167,7 @@ export default function ProfileMenu({
                     className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm transition ${
                       theme === "dark"
                         ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)]"
-                        : "app-surface app-text hover:bg-[var(--app-surface-strong)]"
+                        : `app-surface app-text ${hoverItemClass}`
                     }`}
                   >
                     <Moon className="h-4 w-4" />
@@ -177,7 +181,7 @@ export default function ProfileMenu({
                     className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm transition ${
                       theme === "system"
                         ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)]"
-                        : "app-surface app-text hover:bg-[var(--app-surface-strong)]"
+                        : `app-surface app-text ${hoverItemClass}`
                     }`}
                   >
                     <Monitor className="h-4 w-4" />

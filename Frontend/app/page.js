@@ -51,6 +51,15 @@ const sidebarActionKeys = [
 
 const sidebarActionKeySet = new Set(sidebarActionKeys);
 
+const dashboardActionKeys = [
+  "convert",
+  "compliance",
+  "extraction",
+  "redact",
+  "mask",
+  "transcribe",
+];
+
 export default function HomePage() {
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
@@ -106,27 +115,23 @@ export default function HomePage() {
     [language],
   );
 
-  const enabledActions = useMemo(
-    () =>
-      t.enabledActions
-        .filter((action) => !sidebarActionKeySet.has(action.key))
-        .map((action) => ({
+  const dashboardActions = useMemo(() => {
+    const lockedActionKeys = new Set(t.lockedActions.map((action) => action.key));
+    const actionsByKey = new Map(
+      [...t.enabledActions, ...t.lockedActions].map((action) => [
+        action.key,
+        {
           ...action,
           icon: actionIcons[action.key],
-        })),
-    [t],
-  );
+          requiresAuth: lockedActionKeys.has(action.key),
+        },
+      ]),
+    );
 
-  const lockedActions = useMemo(
-    () =>
-      t.lockedActions
-        .filter((action) => !sidebarActionKeySet.has(action.key))
-        .map((action) => ({
-          ...action,
-          icon: actionIcons[action.key],
-        })),
-    [t],
-  );
+    return dashboardActionKeys
+      .map((key) => actionsByKey.get(key))
+      .filter(Boolean);
+  }, [t]);
 
   const sidebarActions = useMemo(() => {
     const actionsByKey = new Map(
@@ -174,6 +179,12 @@ export default function HomePage() {
       .toUpperCase() || "A";
 
   const requiresSignInLabel = t.requiresSignIn;
+
+  const sidebarInteractiveClass =
+    "app-text hover:bg-neutral-100 hover:text-[var(--app-text)] hover:shadow-sm dark:hover:bg-[#2d2d33]";
+
+  const languageInactiveClass =
+    "app-text hover:bg-neutral-100 hover:text-[var(--app-text)] hover:shadow-sm dark:hover:bg-[#2d2d33]";
 
   function handleSidebarActionClick(action) {
     if (action.requiresAuth && !isSignedIn) {
@@ -223,7 +234,7 @@ export default function HomePage() {
               } ${
                 requiresSignIn
                   ? "cursor-not-allowed opacity-60"
-                  : "app-text hover:bg-[var(--app-surface-strong)]"
+                  : sidebarInteractiveClass
               }`}
             >
               <span className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border app-surface-strong">
@@ -289,7 +300,7 @@ export default function HomePage() {
               } ${
                 isDisabled
                   ? "cursor-not-allowed opacity-60"
-                  : "app-text hover:bg-[var(--app-surface-strong)]"
+                  : sidebarInteractiveClass
               }`}
             >
               <span className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border app-surface-strong">
@@ -329,7 +340,7 @@ export default function HomePage() {
           className={`rounded-xl px-3 py-1.5 text-left text-sm font-medium transition ${
             language === "en"
               ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] shadow-sm"
-              : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
+              : languageInactiveClass
           }`}
         >
           {t.english}
@@ -341,7 +352,7 @@ export default function HomePage() {
           className={`rounded-xl px-3 py-1.5 text-left text-sm font-medium transition ${
             language === "fr"
               ? "bg-[var(--app-button-bg)] text-[var(--app-button-text)] shadow-sm"
-              : "app-text-muted hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
+              : languageInactiveClass
           }`}
         >
           {t.french}
@@ -364,14 +375,14 @@ export default function HomePage() {
           }`}
         >
           {sidebarOpen ? (
-            <span className="text-sm font-semibold app-text">Menu</span>
+            <span className="text-base font-semibold app-text">{t.appName}</span>
           ) : null}
 
           <button
             type="button"
             onClick={() => setSidebarOpen((current) => !current)}
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-xl app-text-muted transition ${sidebarInteractiveClass}`}
           >
             {sidebarOpen ? (
               <X className="h-5 w-5" />
@@ -408,6 +419,7 @@ export default function HomePage() {
                     lightLabel={t.light}
                     darkLabel={t.dark}
                     systemLabel={t.systemDefault}
+                    backLabel={t.back}
                     menuPlacement="top"
                     menuAlign="left"
                     fullWidth
@@ -427,7 +439,7 @@ export default function HomePage() {
 
                         <a
                           href="/auth/login?screen_hint=signup&prompt=login&returnTo=/"
-                          className="rounded-xl border app-surface px-3 py-2 text-center text-sm font-semibold app-text transition hover:bg-[var(--app-surface-strong)]"
+                          className="rounded-xl border app-surface px-3 py-2 text-center text-sm font-semibold app-text transition hover:scale-[1.02] hover:bg-[var(--app-button-bg)] hover:text-[var(--app-button-text)] hover:shadow-xl"
                         >
                           {t.signUp}
                         </a>
@@ -442,7 +454,7 @@ export default function HomePage() {
               type="button"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open account menu"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500 text-[11px] font-semibold text-[var(--app-text)] shadow-lg shadow-black/20"
+              className={`flex h-10 w-10 items-center justify-center rounded-xl border app-surface-strong text-[11px] font-semibold app-text transition ${sidebarInteractiveClass}`}
             >
               {avatarText}
             </button>
@@ -451,7 +463,7 @@ export default function HomePage() {
               type="button"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open sidebar"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl app-text-muted transition ${sidebarInteractiveClass}`}
             >
               <Menu className="h-5 w-5" />
             </button>
@@ -480,101 +492,28 @@ export default function HomePage() {
               lightLabel={t.light}
               darkLabel={t.dark}
               systemLabel={t.systemDefault}
+              backLabel={t.back}
             />
           </div>
         ) : null}
 
-        <div className="relative mx-auto max-w-7xl px-6 py-12 md:px-8 md:py-16">
-          <section className="mb-12 md:mb-14">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-accent-border)] bg-[var(--app-accent-bg)] px-4 py-2 text-sm text-[var(--app-accent-text)] backdrop-blur">
-              <Sparkles className="h-4 w-4" />
-              {t.badge}
-            </div>
-
-            <div className="mt-6 max-w-3xl">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
-                {t.heroTitleStart}{" "}
-                <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-violet-400 bg-clip-text text-transparent">
-                  {t.heroTitleHighlight}
-                </span>
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-7 app-text-muted md:text-lg">
-                {t.heroDescription}
-              </p>
-            </div>
-          </section>
-
+        <div className="relative mx-auto max-w-7xl px-6 pb-12 pt-28 md:px-8 md:pb-16 md:pt-32">
           <section>
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold app-text md:text-2xl">
-                  {t.availableNowTitle}
-                </h2>
-                <p className="mt-1 text-sm app-text-soft">
-                  {t.availableNowDescription}
-                </p>
-              </div>
-            </div>
-
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {enabledActions.map((action) => (
-                <ActionCard
-                  key={`${language}-${action.route}`}
-                  action={action}
-                  onClick={() => router.push(action.route)}
-                />
-              ))}
-            </div>
-          </section>
+              {dashboardActions.map((action) => {
+                const requiresSignIn = action.requiresAuth && !isSignedIn;
 
-          <section className="my-12 md:my-14">
-            <div className="relative overflow-hidden rounded-3xl border app-surface-strong p-6 backdrop-blur-xl md:p-8">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(34,211,238,0.18),transparent_25%),radial-gradient(circle_at_right,rgba(168,85,247,0.14),transparent_25%)]" />
-              <div className="relative max-w-2xl">
-                <p className="mb-2 text-sm font-semibold normal-case tracking-[0.02em] text-cyan-300/90">
-                  {t.unlockMoreEyebrow}
-                </p>
-
-                <h3 className="text-2xl font-semibold tracking-tight app-text md:text-3xl">
-                  {isSignedIn ? t.unlockedSignedInTitle : t.unlockMoreTitle}
-                </h3>
-
-                <p className="mt-3 text-sm leading-6 app-text-muted md:text-base">
-                  {isSignedIn
-                    ? t.unlockedSignedInDescription
-                    : t.unlockMoreDescription}
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold app-text md:text-2xl">
-                  {t.advancedFeaturesTitle}
-                </h2>
-                <p className="mt-1 text-sm app-text-soft">
-                  {authChecked
-                    ? isSignedIn
-                      ? t.advancedFeaturesSignedInDescription
-                      : t.advancedFeaturesDescription
-                    : t.checkingAccountStatus}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {lockedActions.map((action) => (
-                <ActionCard
-                  key={`${language}-${action.route}`}
-                  action={action}
-                  locked={!isSignedIn}
-                  onClick={
-                    isSignedIn ? () => router.push(action.route) : undefined
-                  }
-                />
-              ))}
+                return (
+                  <ActionCard
+                    key={`${language}-${action.route}`}
+                    action={action}
+                    locked={requiresSignIn}
+                    onClick={
+                      requiresSignIn ? undefined : () => router.push(action.route)
+                    }
+                  />
+                );
+              })}
             </div>
           </section>
         </div>

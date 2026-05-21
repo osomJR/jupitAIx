@@ -146,6 +146,12 @@ export default function AppSidebarLayout({ children }) {
 
   const requiresSignInLabel = t.requiresSignIn;
 
+  const sidebarInteractiveClass =
+    "app-text hover:bg-neutral-100 hover:text-[var(--app-text)] hover:shadow-sm dark:hover:bg-[#2d2d33]";
+
+  const sidebarInactiveLanguageClass =
+    "app-text hover:bg-neutral-100 hover:text-[var(--app-text)] hover:shadow-sm dark:hover:bg-[#2d2d33]";
+
   function handleSidebarActionClick(action) {
     if (action.requiresAuth && !isSignedIn) {
       return;
@@ -194,7 +200,7 @@ export default function AppSidebarLayout({ children }) {
               } ${
                 requiresSignIn
                   ? "cursor-not-allowed opacity-60"
-                  : "app-text hover:bg-[var(--app-surface-strong)]"
+                  : sidebarInteractiveClass
               }`}
             >
               <span className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border app-surface-strong">
@@ -260,7 +266,7 @@ export default function AppSidebarLayout({ children }) {
               } ${
                 isDisabled
                   ? "cursor-not-allowed opacity-60"
-                  : "app-text hover:bg-[var(--app-surface-strong)]"
+                  : sidebarInteractiveClass
               }`}
             >
               <span className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border app-surface-strong">
@@ -299,14 +305,14 @@ export default function AppSidebarLayout({ children }) {
           }`}
         >
           {sidebarOpen ? (
-            <span className="text-sm font-semibold app-text">Menu</span>
+            <span className="text-base font-semibold app-text">{t.appName}</span>
           ) : null}
 
           <button
             type="button"
             onClick={() => setSidebarOpen((current) => !current)}
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-xl app-text-muted transition ${sidebarInteractiveClass}`}
           >
             {sidebarOpen ? (
               <X className="h-5 w-5" />
@@ -340,6 +346,7 @@ export default function AppSidebarLayout({ children }) {
                   lightLabel={t.light}
                   darkLabel={t.dark}
                   systemLabel={t.systemDefault}
+                  backLabel={t.back}
                   menuPlacement="top"
                   menuAlign="left"
                   fullWidth
@@ -359,7 +366,7 @@ export default function AppSidebarLayout({ children }) {
 
                       <a
                         href="/auth/login?screen_hint=signup&prompt=login&returnTo=/"
-                        className="rounded-xl border app-surface px-3 py-2 text-center text-sm font-semibold app-text transition hover:bg-[var(--app-surface-strong)]"
+                        className="rounded-xl border app-surface px-3 py-2 text-center text-sm font-semibold app-text transition hover:scale-[1.02] hover:bg-[var(--app-button-bg)] hover:text-[var(--app-button-text)] hover:shadow-xl"
                       >
                         {t.signUp}
                       </a>
@@ -373,7 +380,7 @@ export default function AppSidebarLayout({ children }) {
               type="button"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open account menu"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500 text-[11px] font-semibold text-white shadow-lg shadow-black/20"
+              className={`flex h-10 w-10 items-center justify-center rounded-xl border app-surface-strong text-[11px] font-semibold app-text transition ${sidebarInteractiveClass}`}
             >
               {avatarText}
             </button>
@@ -382,7 +389,7 @@ export default function AppSidebarLayout({ children }) {
               type="button"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open sidebar"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-xl app-text-muted transition ${sidebarInteractiveClass}`}
             >
               <Menu className="h-5 w-5" />
             </button>

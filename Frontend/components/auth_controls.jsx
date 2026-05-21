@@ -14,6 +14,7 @@ export default function AuthControls({
   lightLabel = "Light",
   darkLabel = "Dark",
   systemLabel = "System Default",
+  backLabel = "back",
 }) {
   if (!authChecked) {
     return <div className="text-sm app-text-soft">{loadingLabel}</div>;
@@ -31,7 +32,7 @@ export default function AuthControls({
 
         <a
           href="/auth/login?screen_hint=signup&prompt=login&returnTo=/"
-          className="rounded-2xl border app-surface px-5 py-3 text-sm font-semibold app-text transition hover:bg-[var(--app-surface-strong)]"
+          className="rounded-2xl border app-surface px-5 py-3 text-sm font-semibold app-text transition hover:scale-[1.02] hover:bg-[var(--app-button-bg)] hover:text-[var(--app-button-text)] hover:shadow-xl"
         >
           {signUpLabel}
         </a>
@@ -48,6 +49,7 @@ export default function AuthControls({
       lightLabel={lightLabel}
       darkLabel={darkLabel}
       systemLabel={systemLabel}
+      backLabel={backLabel}
     />
   );
 }

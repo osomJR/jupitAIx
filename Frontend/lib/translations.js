@@ -48,39 +48,22 @@ export const commonTranslations = {
 export const actionCardTranslations = {
   en: {
     open: "Open",
-    accountRequired: "Account required",
+    accountRequired: "Requires sign in",
   },
   fr: {
     open: "Ouvrir",
-    accountRequired: "Compte requis",
+    accountRequired: "Connexion requise",
   },
 };
 
 export const homePageTranslations = {
   en: {
-    badge: "Fast AI tools for everyday work",
-    heroTitleStart: "Create, refine, and understand content",
-    heroTitleHighlight: "in seconds",
-    heroDescription:
-      "Use powerful AI actions to convert, summarize, correct, translate, and explain content beautifully. Sign in to unlock even more advanced tools.",
-    availableNowTitle: "Available now",
-    availableNowDescription: "These features are ready for anonymous users.",
-    unlockMoreEyebrow: "Unlock more",
-    unlockMoreTitle: "Sign in or create an account to access advanced features",
-    unlockMoreDescription:
-      "Get access to premium AI capabilities like transcription and automatic question generation, designed for deeper workflows and more serious productivity.",
+    back: "back",
     signIn: "Sign In",
     signUp: "Sign Up",
     loading: "Loading...",
     signedInAs: "Signed in as",
     logout: "Logout",
-    advancedFeaturesTitle: "Advanced features",
-    advancedFeaturesDescription: "Available after sign in.",
-    unlockedSignedInTitle: "Advanced features unlocked",
-    unlockedSignedInDescription:
-      "You can now access transcription, question generation, and other protected tools.",
-    advancedFeaturesSignedInDescription: "Available now.",
-    checkingAccountStatus: "Checking account status...",
     languageLabel: "Language",
     english: "English",
     french: "Français",
@@ -89,6 +72,7 @@ export const homePageTranslations = {
     light: "Light",
     dark: "Dark",
     systemDefault: "System Default",
+    appName: "ReDOCX",
     aiFeaturesTitle: "Explore",
     aiFeaturesCompactTitle: "AI",
     manageTitle: "Manage",
@@ -184,31 +168,12 @@ export const homePageTranslations = {
     ],
   },
   fr: {
-    badge: "Des outils IA rapides pour le travail quotidien",
-    heroTitleStart: "Créez, améliorez et comprenez le contenu",
-    heroTitleHighlight: "en quelques secondes",
-    heroDescription:
-      "Utilisez de puissantes actions IA pour convertir, résumer, corriger, traduire et expliquer le contenu avec élégance. Connectez-vous pour débloquer encore plus d’outils avancés.",
-    availableNowTitle: "Disponible maintenant",
-    availableNowDescription:
-      "Ces fonctionnalités sont prêtes pour les utilisateurs anonymes.",
-    unlockMoreEyebrow: "Débloquez plus",
-    unlockMoreTitle:
-      "Connectez-vous ou créez un compte pour accéder aux fonctionnalités avancées",
-    unlockMoreDescription:
-      "Accédez à des capacités IA premium comme la transcription et la génération automatique de questions, conçues pour des flux de travail plus poussés et une productivité plus sérieuse.",
+    back: "retour",
     signIn: "Se connecter",
     signUp: "S’inscrire",
     loading: "Chargement...",
     signedInAs: "Connecté en tant que",
     logout: "Se déconnecter",
-    advancedFeaturesTitle: "Fonctionnalités avancées",
-    advancedFeaturesDescription: "Disponibles après connexion.",
-    unlockedSignedInTitle: "Fonctionnalités avancées débloquées",
-    unlockedSignedInDescription:
-      "Vous pouvez maintenant accéder à la transcription, à la génération de questions et à d’autres outils protégés.",
-    advancedFeaturesSignedInDescription: "Disponible maintenant.",
-    checkingAccountStatus: "Vérification du statut du compte...",
     languageLabel: "Langue",
     english: "English",
     french: "Français",
@@ -217,6 +182,7 @@ export const homePageTranslations = {
     light: "Clair",
     dark: "Sombre",
     systemDefault: "Par défaut du système",
+    appName: "ReDOCX",
     aiFeaturesTitle: "Explorer",
     aiFeaturesCompactTitle: "IA",
     manageTitle: "Gérer",
