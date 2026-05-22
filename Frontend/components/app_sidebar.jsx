@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language_provider";
+import { useAccount } from "@/components/account_provider";
 import ProfileMenu from "@/components/profile_menu";
 import {
   BookOpen,
@@ -50,49 +51,8 @@ const sidebarActionKeys = [
 export default function AppSidebarLayout({ children }) {
   const router = useRouter();
   const { language } = useLanguage();
-  const [user, setUser] = useState(null);
-  const [authChecked, setAuthChecked] = useState(false);
+  const { user, authChecked } = useAccount();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadProfile() {
-      try {
-        const res = await fetch("/auth/profile", {
-          method: "GET",
-          credentials: "include",
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          if (!cancelled) {
-            setUser(null);
-            setAuthChecked(true);
-          }
-          return;
-        }
-
-        const data = await res.json();
-
-        if (!cancelled) {
-          setUser(data);
-          setAuthChecked(true);
-        }
-      } catch {
-        if (!cancelled) {
-          setUser(null);
-          setAuthChecked(true);
-        }
-      }
-    }
-
-    loadProfile();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const isSignedIn = !!user;
 

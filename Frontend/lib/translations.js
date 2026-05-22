@@ -92,6 +92,7 @@ export const homePageTranslations = {
       {
         key: "projectsTeam",
         name: "Projects & Team",
+        route: "/team",
       },
     ],
     enabledActions: [
@@ -202,6 +203,7 @@ export const homePageTranslations = {
       {
         key: "projectsTeam",
         name: "Projets & équipe",
+        route: "/team",
       },
     ],
     enabledActions: [

@@ -10,6 +10,26 @@ import {
   Sun,
 } from "lucide-react";
 import { useTheme } from "@/components/theme_provider";
+import { useAccount } from "@/components/account_provider";
+
+function formatPlanLabel(plan) {
+  if (!plan) return "Free";
+
+  return String(plan)
+    .split("_")
+    .join(" ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function formatRoleLabel(role) {
+  if (!role) return "";
+
+  return String(role)
+    .split("_")
+    .join(" ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 
 export default function ProfileMenu({
   user,
@@ -28,6 +48,7 @@ export default function ProfileMenu({
   const [showSettings, setShowSettings] = useState(false);
   const containerRef = useRef(null);
   const { theme, setTheme, loading } = useTheme();
+  const { entitlement } = useAccount();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -47,6 +68,14 @@ export default function ProfileMenu({
   const displayName = user?.name || user?.nickname || user?.email || "Account";
   const displayEmail = user?.email || "";
   const initial = displayName.trim().charAt(0).toUpperCase() || "A";
+
+  const planLabel = formatPlanLabel(entitlement?.plan);
+  const organizationName = entitlement?.organization_name || "";
+  const organizationRole = formatRoleLabel(entitlement?.organization_role);
+  const planDescription = organizationName
+    ? `${planLabel} · ${organizationName}`
+    : `${planLabel} plan`;
+  const showRole = Boolean(organizationRole && organizationName);
 
   const menuPlacementClass =
     menuPlacement === "top" ? "bottom-full mb-3" : "top-full mt-3";
@@ -82,6 +111,9 @@ export default function ProfileMenu({
                 {displayEmail}
               </span>
             ) : null}
+            <span className="mt-1 block max-w-[10rem] truncate rounded-full border border-[var(--app-border)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] app-text-soft">
+              {planDescription}
+            </span>
           </span>
         </span>
 
@@ -106,6 +138,14 @@ export default function ProfileMenu({
                   {displayEmail ? (
                     <div className="truncate text-xs app-text-muted">
                       {displayEmail}
+                    </div>
+                  ) : null}
+                  <div className="mt-2 inline-flex max-w-full items-center rounded-full border border-[var(--app-border)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] app-text-soft">
+                    <span className="truncate">{planDescription}</span>
+                  </div>
+                  {showRole ? (
+                    <div className="mt-1 text-[11px] app-text-soft">
+                      {organizationRole}
                     </div>
                   ) : null}
                 </div>

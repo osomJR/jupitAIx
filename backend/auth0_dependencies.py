@@ -318,10 +318,35 @@ class Auth0DependencyProvider:
 
     @staticmethod
     def _extract_scopes(payload: dict[str, Any]) -> Set[str]:
-        scope_value = payload.get("scope", "")
-        if not isinstance(scope_value, str):
-            return set()
-        return {scope.strip() for scope in scope_value.split() if scope.strip()}
+        """
+        Extract authorization grants from Auth0 access-token claims.
+
+        Auth0 may expose API permissions in either:
+        - scope: a space-delimited string, e.g. "openid profile email write:items"
+        - permissions: an RBAC list, e.g. ["write:items"]
+
+        The app treats both as scopes so require_scopes(...) works with either
+        Auth0 token shape.
+        """
+        scopes: set[str] = set()
+
+        raw_scope = payload.get("scope")
+        if isinstance(raw_scope, str):
+            scopes.update(
+                scope.strip()
+                for scope in raw_scope.split()
+                if scope.strip()
+            )
+
+        raw_permissions = payload.get("permissions")
+        if isinstance(raw_permissions, list):
+            scopes.update(
+                permission.strip()
+                for permission in raw_permissions
+                if isinstance(permission, str) and permission.strip()
+            )
+
+        return scopes
 
     @staticmethod
     def _normalize_token(token: str) -> str:

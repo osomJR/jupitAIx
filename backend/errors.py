@@ -664,10 +664,7 @@ def to_http_exception(exc: Exception) -> APIError:
         details=normalized.details,
     )
 
-
-# ---------------------------------------------------------------------------
 # FastAPI integration
-# ---------------------------------------------------------------------------
 
 def _log_normalized_error(request: Request, normalized: NormalizedError, exc: Exception) -> None:
     level = logging.WARNING
@@ -713,6 +710,7 @@ def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(Exception)
     async def _handle_unexpected_error(request: Request, exc: Exception) -> JSONResponse:
         return await _json_error_response(request, exc)
+
 
 
 __all__ = [

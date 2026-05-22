@@ -2,11 +2,14 @@
 
 import { LanguageProvider } from "@/components/language_provider";
 import { ThemeProvider } from "@/components/theme_provider";
+import { AccountProvider } from "@/components/account_provider";
 
 export default function Providers({ children, initialLanguage }) {
   return (
     <LanguageProvider initialLanguage={initialLanguage}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <AccountProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </AccountProvider>
     </LanguageProvider>
   );
 }

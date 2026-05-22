@@ -20,13 +20,14 @@ Notes:
   to the authenticated Auth0 subject from current_user.user_id.
 """
 
+from datetime import datetime
 from typing import Any, Literal
 import re
 
 from fastapi import APIRouter, Depends, HTTPException, Path
 from pydantic import BaseModel, field_validator
 
-from backend.auth0_dependencies import AuthenticatedUser, get_current_user
+from backend.auth0_dependencies import AuthenticatedUser, get_current_user, require_scopes
 from backend.database import get_db
 
 
@@ -86,6 +87,54 @@ class UpdateMemberRequest(BaseModel):
         if value is None:
             return None
         return normalize_member_status(value)
+
+
+class UpdateOrganizationSubscriptionRequest(BaseModel):
+    plan: Literal["business", "enterprise"]
+    max_accounts: int
+    status: Literal["active", "inactive", "cancelled", "past_due"] = "active"
+    provider: str | None = None
+    provider_customer_id: str | None = None
+    provider_subscription_id: str | None = None
+    current_period_start: datetime | None = None
+    current_period_end: datetime | None = None
+
+    @field_validator("plan")
+    @classmethod
+    def validate_plan(cls, value: str) -> str:
+        normalized = (value or "").strip().lower()
+        if normalized not in {"business", "enterprise"}:
+            raise ValueError("plan must be one of: business, enterprise.")
+        return normalized
+
+    @field_validator("max_accounts")
+    @classmethod
+    def validate_max_accounts(cls, value: int) -> int:
+        if not isinstance(value, int) or value < 2:
+            raise ValueError("max_accounts must be an integer greater than or equal to 2.")
+        return value
+
+    @field_validator("status")
+    @classmethod
+    def validate_subscription_status(cls, value: str) -> str:
+        normalized = (value or "").strip().lower()
+        if normalized not in {"active", "inactive", "cancelled", "past_due"}:
+            raise ValueError("status must be one of: active, inactive, cancelled, past_due.")
+        return normalized
+
+    @field_validator("provider", "provider_customer_id", "provider_subscription_id")
+    @classmethod
+    def normalize_optional_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip()
+        return normalized or None
+
+    def validate_plan_account_range(self) -> None:
+        if self.plan == "business" and not (2 <= self.max_accounts <= 19):
+            raise ValueError("business subscriptions require max_accounts between 2 and 19.")
+        if self.plan == "enterprise" and self.max_accounts < 20:
+            raise ValueError("enterprise subscriptions require max_accounts greater than or equal to 20.")
 
 
 def normalize_email(value: str) -> str:
@@ -1029,6 +1078,131 @@ def remove_member(
             detail={
                 "error": "member_remove_failed",
                 "message": "Could not remove organization member.",
+            },
+        ) from exc
+
+
+@router.put("/{organization_id}/subscription")
+@router.patch("/{organization_id}/subscription")
+def upsert_organization_subscription(
+    payload: UpdateOrganizationSubscriptionRequest,
+    organization_id: int = Path(..., ge=1),
+    current_user: AuthenticatedUser = Depends(
+        require_scopes("write:organization_subscriptions")
+    ),
+):
+    """
+    Create or update an organization subscription.
+
+    This is a platform-admin endpoint, not an organization-owner endpoint.
+    The caller must have the Auth0 API permission/scope:
+    write:organization_subscriptions
+    """
+
+    try:
+        payload.validate_plan_account_range()
+
+        with get_db() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT id
+                    FROM organizations
+                    WHERE id = %s
+                    """,
+                    (organization_id,),
+                )
+                if cur.fetchone() is None:
+                    raise HTTPException(
+                        status_code=404,
+                        detail={
+                            "error": "organization_not_found",
+                            "message": "Organization was not found.",
+                        },
+                    )
+
+                cur.execute(
+                    """
+                    INSERT INTO organization_subscriptions (
+                        organization_id,
+                        plan,
+                        max_accounts,
+                        status,
+                        provider,
+                        provider_customer_id,
+                        provider_subscription_id,
+                        current_period_start,
+                        current_period_end
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (organization_id) DO UPDATE SET
+                        plan = EXCLUDED.plan,
+                        max_accounts = EXCLUDED.max_accounts,
+                        status = EXCLUDED.status,
+                        provider = EXCLUDED.provider,
+                        provider_customer_id = EXCLUDED.provider_customer_id,
+                        provider_subscription_id = EXCLUDED.provider_subscription_id,
+                        current_period_start = EXCLUDED.current_period_start,
+                        current_period_end = EXCLUDED.current_period_end,
+                        updated_at = NOW()
+                    RETURNING
+                        id,
+                        organization_id,
+                        plan,
+                        max_accounts,
+                        status,
+                        provider,
+                        provider_customer_id,
+                        provider_subscription_id,
+                        current_period_start,
+                        current_period_end,
+                        (
+                            SELECT COUNT(*)
+                            FROM organization_members om
+                            WHERE om.organization_id = organization_subscriptions.organization_id
+                              AND om.status = 'active'
+                        ) AS active_members,
+                        created_at,
+                        updated_at
+                    """,
+                    (
+                        organization_id,
+                        payload.plan,
+                        payload.max_accounts,
+                        payload.status,
+                        payload.provider,
+                        payload.provider_customer_id,
+                        payload.provider_subscription_id,
+                        payload.current_period_start,
+                        payload.current_period_end,
+                    ),
+                )
+                subscription = cur.fetchone()
+
+                if subscription is None:
+                    raise RuntimeError("Failed to upsert organization subscription.")
+
+        return {
+            "success": True,
+            "subscription": row_to_subscription(subscription),
+        }
+
+    except HTTPException:
+        raise
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error": "invalid_subscription",
+                "message": str(exc),
+            },
+        ) from exc
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "subscription_update_failed",
+                "message": "Could not update organization subscription.",
             },
         ) from exc
 

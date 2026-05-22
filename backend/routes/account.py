@@ -87,6 +87,8 @@ def patch_account_settings(
                 payload.appearance,
             )
 
+        entitlement = get_user_entitlement(current_user.user_id)
+
         return {
             "success": True,
             "settings": {
