@@ -391,6 +391,191 @@ def active_owner_count(conn, organization_id: int) -> int:
     return int(row[0] if row else 0)
 
 
+def get_active_subscription_limit(conn, organization_id: int) -> int | None:
+    """
+    Return the organization's active subscription seat limit.
+
+    A missing or inactive organization subscription does not create an active
+    seat limit here. Paid entitlement is still enforced elsewhere by the
+    subscription resolver.
+    """
+
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT max_accounts
+            FROM organization_subscriptions
+            WHERE organization_id = %s
+              AND status = 'active'
+            """,
+            (organization_id,),
+        )
+        row = cur.fetchone()
+
+    if row is None or row[0] is None:
+        return None
+
+    return int(row[0])
+
+
+def active_member_count(conn, organization_id: int) -> int:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT COUNT(*)
+            FROM organization_members
+            WHERE organization_id = %s
+              AND status = 'active'
+            """,
+            (organization_id,),
+        )
+        row = cur.fetchone()
+
+    return int(row[0] if row else 0)
+
+
+def reserved_member_count(
+    conn,
+    organization_id: int,
+    *,
+    exclude_user_id: str | None = None,
+) -> int:
+    """
+    Count seats reserved by active members plus pending invitations.
+
+    Pending invitations reserve seats so an organization cannot invite past its
+    subscribed account count and then exceed the limit when invitees accept.
+    """
+
+    with conn.cursor() as cur:
+        if exclude_user_id:
+            cur.execute(
+                """
+                SELECT COUNT(*)
+                FROM organization_members
+                WHERE organization_id = %s
+                  AND status IN ('active', 'invited')
+                  AND user_id <> %s
+                """,
+                (organization_id, exclude_user_id),
+            )
+        else:
+            cur.execute(
+                """
+                SELECT COUNT(*)
+                FROM organization_members
+                WHERE organization_id = %s
+                  AND status IN ('active', 'invited')
+                """,
+                (organization_id,),
+            )
+
+        row = cur.fetchone()
+
+    return int(row[0] if row else 0)
+
+
+def assert_invite_seat_available(
+    conn,
+    organization_id: int,
+    *,
+    invited_user_id: str,
+) -> None:
+    max_accounts = get_active_subscription_limit(conn, organization_id)
+
+    if max_accounts is None:
+        return
+
+    reserved_accounts = reserved_member_count(
+        conn,
+        organization_id,
+        exclude_user_id=invited_user_id,
+    )
+
+    if reserved_accounts >= max_accounts:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "error": "seat_limit_reached",
+                "message": (
+                    "This organization has reached its subscribed seat limit. "
+                    "Remove a member/invitation or increase max_accounts before inviting another member."
+                ),
+                "max_accounts": max_accounts,
+                "reserved_accounts": reserved_accounts,
+            },
+        )
+
+
+def assert_acceptance_seat_available(
+    conn,
+    organization_id: int,
+    *,
+    accepting_user_id: str,
+) -> None:
+    max_accounts = get_active_subscription_limit(conn, organization_id)
+
+    if max_accounts is None:
+        return
+
+    # Only active members consume accepted seats here. Invited placeholders do
+    # not block acceptance because accepting converts one invited row into one
+    # active row for the same person. Exclude the accepting user defensively so
+    # a stale duplicate row cannot block an idempotent acceptance.
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT COUNT(*)
+            FROM organization_members
+            WHERE organization_id = %s
+              AND status = 'active'
+              AND user_id <> %s
+            """,
+            (organization_id, accepting_user_id),
+        )
+        row = cur.fetchone()
+
+    active_accounts = int(row[0] if row else 0)
+
+    if active_accounts >= max_accounts:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "error": "seat_limit_reached",
+                "message": (
+                    "This organization has reached its subscribed seat limit. "
+                    "Remove a member or increase max_accounts before accepting another invitation."
+                ),
+                "max_accounts": max_accounts,
+                "active_accounts": active_accounts,
+            },
+        )
+
+
+def assert_subscription_can_cover_active_members(
+    conn,
+    organization_id: int,
+    *,
+    max_accounts: int,
+) -> int:
+    active_accounts = active_member_count(conn, organization_id)
+
+    if max_accounts < active_accounts:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "error": "max_accounts_below_active_members",
+                "message": (
+                    "max_accounts cannot be lower than the current number of active organization members."
+                ),
+                "max_accounts": max_accounts,
+                "active_members": active_accounts,
+            },
+        )
+
+    return active_accounts
+
+
 def assert_can_modify_member(
     *,
     actor_membership: dict[str, Any],
@@ -733,6 +918,12 @@ def invite_member_by_email(
                         },
                     )
 
+                assert_invite_seat_available(
+                    conn,
+                    organization_id,
+                    invited_user_id=invited_user_id,
+                )
+
                 cur.execute(
                     """
                     INSERT INTO organization_members (
@@ -809,6 +1000,32 @@ def accept_email_invitation(
     try:
         with get_db() as conn:
             with conn.cursor() as cur:
+                # Idempotency guard:
+                # If the invite was already accepted, the pending invitation row may no
+                # longer exist. In that case, return the active membership instead of
+                # failing with invitation_not_found. This protects the UI from double
+                # clicks, retries, and React/browser duplicate submissions.
+                cur.execute(
+                    """
+                    SELECT id, organization_id, user_id, role, status,
+                           invited_by_user_id, invited_at, joined_at,
+                           created_at, updated_at
+                    FROM organization_members
+                    WHERE organization_id = %s
+                      AND user_id = %s
+                      AND status = 'active'
+                    """,
+                    (organization_id, current_user.user_id),
+                )
+                already_active_member = cur.fetchone()
+
+                if already_active_member is not None:
+                    return {
+                        "success": True,
+                        "member": row_to_member(already_active_member),
+                        "already_accepted": True,
+                    }
+
                 cur.execute(
                     """
                     SELECT id, role
@@ -831,6 +1048,12 @@ def accept_email_invitation(
                     )
 
                 invite_role = invite[1]
+
+                assert_acceptance_seat_available(
+                    conn,
+                    organization_id,
+                    accepting_user_id=current_user.user_id,
+                )
 
                 cur.execute(
                     """
@@ -896,6 +1119,7 @@ def accept_email_invitation(
         return {
             "success": True,
             "member": row_to_member(accepted_member),
+            "already_accepted": False,
         }
 
     except HTTPException:
@@ -908,7 +1132,6 @@ def accept_email_invitation(
                 "message": "Could not accept organization invitation.",
             },
         ) from exc
-
 
 @router.patch("/{organization_id}/members/{member_user_id}")
 def update_member(
@@ -1120,6 +1343,12 @@ def upsert_organization_subscription(
                             "message": "Organization was not found.",
                         },
                     )
+
+                assert_subscription_can_cover_active_members(
+                    conn,
+                    organization_id,
+                    max_accounts=payload.max_accounts,
+                )
 
                 cur.execute(
                     """

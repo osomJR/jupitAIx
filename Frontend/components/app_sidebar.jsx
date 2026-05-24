@@ -12,6 +12,7 @@ import {
   FileBraces,
   HelpCircle,
   KeyRound,
+  CreditCard,
   Languages,
   LayoutDashboard,
   Menu,
@@ -38,6 +39,7 @@ const actionIcons = {
   dashboard: LayoutDashboard,
   apiKeys: KeyRound,
   projectsTeam: UsersRound,
+  billing: CreditCard,
 };
 
 const sidebarActionKeys = [

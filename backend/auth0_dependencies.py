@@ -31,6 +31,7 @@ from requests import RequestException
 
 DEFAULT_JWKS_CACHE_TTL_SECONDS = int(os.getenv("AUTH0_JWKS_CACHE_TTL_SECONDS", "600"))
 DEFAULT_REQUEST_TIMEOUT_SECONDS = float(os.getenv("AUTH0_TIMEOUT_SECONDS", "5"))
+DEFAULT_USERINFO_CACHE_TTL_SECONDS = int(os.getenv("AUTH0_USERINFO_CACHE_TTL_SECONDS", "300"))
 
 
 @dataclass(frozen=True)
@@ -91,6 +92,10 @@ class Auth0DependencyProvider:
             maxsize=2,
             ttl=self._normalize_cache_ttl(self.config.jwks_cache_ttl_seconds),
         )
+        self._userinfo_cache = TTLCache(
+            maxsize=1024,
+            ttl=self._normalize_cache_ttl(DEFAULT_USERINFO_CACHE_TTL_SECONDS),
+        )
         self._bearer = HTTPBearer(auto_error=False)
 
     @property
@@ -128,6 +133,8 @@ class Auth0DependencyProvider:
                     "message": "Token is invalid or expired.",
                 },
             ) from exc
+
+        payload = self._merge_userinfo_claims(payload, token)
 
         user_id = self._extract_subject(payload)
         self._validate_authorized_party(payload)
@@ -286,6 +293,68 @@ class Auth0DependencyProvider:
                 "message": "Unknown signing key (kid).",
             },
         )
+
+    def _fetch_userinfo(self, token: str, payload: dict[str, Any]) -> dict[str, Any] | None:
+        """
+        Fetch Auth0 /userinfo profile claims using the existing access token.
+
+        This is intentionally best-effort. Authentication should not fail just
+        because /userinfo is temporarily unavailable; the backend will keep
+        using the verified JWT claims it already has.
+        """
+        subject = payload.get("sub")
+        cache_key = subject.strip() if isinstance(subject, str) and subject.strip() else token
+
+        cached = self._userinfo_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
+        try:
+            response = requests.get(
+                f"https://{self._domain}/userinfo",
+                headers={"Authorization": f"Bearer {token}"},
+                timeout=self._request_timeout_seconds,
+            )
+            response.raise_for_status()
+            userinfo = response.json()
+        except (RequestException, ValueError):
+            return None
+
+        if not isinstance(userinfo, dict):
+            return None
+
+        self._userinfo_cache[cache_key] = userinfo
+        return userinfo
+
+    def _merge_userinfo_claims(
+        self,
+        payload: dict[str, Any],
+        token: str,
+    ) -> dict[str, Any]:
+        """
+        Merge common profile fields from Auth0 /userinfo when they are missing
+        from the access token JWT.
+
+        This keeps the existing Auth0 login/signup setup intact while allowing
+        app features such as email invitations to work with tokens that only
+        expose email through /userinfo.
+        """
+        profile_fields = ("email", "email_verified", "name", "nickname", "picture")
+
+        if all(payload.get(field) is not None for field in ("email", "name", "picture")):
+            return payload
+
+        userinfo = self._fetch_userinfo(token, payload)
+        if not userinfo:
+            return payload
+
+        merged = dict(payload)
+
+        for field in profile_fields:
+            if merged.get(field) is None and userinfo.get(field) is not None:
+                merged[field] = userinfo[field]
+
+        return merged
 
     def _extract_subject(self, payload: dict[str, Any]) -> str:
         subject = payload.get("sub")

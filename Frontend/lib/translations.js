@@ -49,10 +49,12 @@ export const actionCardTranslations = {
   en: {
     open: "Open",
     accountRequired: "Requires sign in",
+    soon: "Soon",
   },
   fr: {
     open: "Ouvrir",
     accountRequired: "Connexion requise",
+    soon: "Bientôt",
   },
 };
 
@@ -73,6 +75,7 @@ export const homePageTranslations = {
     dark: "Dark",
     systemDefault: "System Default",
     appName: "ReDOCX",
+    dashboardGreeting: "Hello, how can I help you?",
     aiFeaturesTitle: "Explore",
     aiFeaturesCompactTitle: "AI",
     manageTitle: "Manage",
@@ -93,6 +96,10 @@ export const homePageTranslations = {
         key: "projectsTeam",
         name: "Projects & Team",
         route: "/team",
+      },
+      {
+        key: "billing",
+        name: "Billing",
       },
     ],
     enabledActions: [
@@ -161,6 +168,18 @@ export const homePageTranslations = {
         description: "Check documents against compliance rules",
       },
       {
+        key: "eSignature",
+        name: "E-Signature",
+        comingSoon: true,
+        description: "Soon",
+      },
+      {
+        key: "pdfTools",
+        name: "PDF Tools",
+        comingSoon: true,
+        description: "Soon",
+      },
+      {
         key: "extraction",
         name: "Structured Extraction",
         route: "/extraction",
@@ -184,6 +203,7 @@ export const homePageTranslations = {
     dark: "Sombre",
     systemDefault: "Par défaut du système",
     appName: "ReDOCX",
+    dashboardGreeting: "Bonjour, comment puis-je vous aider ?",
     aiFeaturesTitle: "Explorer",
     aiFeaturesCompactTitle: "IA",
     manageTitle: "Gérer",
@@ -204,6 +224,10 @@ export const homePageTranslations = {
         key: "projectsTeam",
         name: "Projets & équipe",
         route: "/team",
+      },
+      {
+        key: "billing",
+        name: "Facturation",
       },
     ],
     enabledActions: [
@@ -274,6 +298,18 @@ export const homePageTranslations = {
         name: "Conformité",
         route: "/compliance",
         description: "Vérifiez les documents selon les règles de conformité",
+      },
+      {
+        key: "eSignature",
+        name: "Signature électronique",
+        comingSoon: true,
+        description: "Bientôt",
+      },
+      {
+        key: "pdfTools",
+        name: "Outils PDF",
+        comingSoon: true,
+        description: "Bientôt",
       },
       {
         key: "extraction",
@@ -1679,5 +1715,72 @@ export const compliancePageTranslations = {
       registration: "Enregistrement",
       sector_regulator_requirements: "Règles des régulateurs sectoriels",
     },
+  },
+};
+
+export const teamPageTranslations = {
+  en: {
+    title: "Projects & Team",
+    subtitle: "Manage your organization, subscription seats, members, and invitations.",
+    loading: "Loading team...",
+    noTeam: "No team workspace found.",
+    refresh: "Refresh",
+    organization: "Organization",
+    plan: "Plan",
+    seats: "Seats",
+    seatsUsed: "Seats used",
+    seatLimitReached: "Seat limit reached",
+    upgradeRequired: "Upgrade required",
+    upgradeRequiredDescription:
+      "Your team has used all available seats. Remove a member or upgrade the subscription before inviting another member.",
+    role: "Your role",
+    members: "Members",
+    invitations: "Pending invitations",
+    invitationsForYou: "Invitations for you",
+    invitationsForYouDescription:
+      "Accept an invitation to join a Business or Enterprise workspace.",
+    acceptInvitation: "Accept invitation",
+    accepting: "Accepting...",
+    acceptedInvitation: "Invitation accepted.",
+    invite: "Invite member",
+    email: "Email address",
+    member: "Member",
+    admin: "Admin",
+    send: "Send invite",
+    remove: "Remove",
+    none: "None",
+    ownerNote: "Owners cannot be removed here. Assign another owner first.",
+  },
+  fr: {
+    title: "Projets & équipe",
+    subtitle: "Gérez votre organisation, les sièges d’abonnement, les membres et les invitations.",
+    loading: "Chargement de l’équipe...",
+    noTeam: "Aucun espace d’équipe trouvé.",
+    refresh: "Actualiser",
+    organization: "Organisation",
+    plan: "Forfait",
+    seats: "Sièges",
+    seatsUsed: "Sièges utilisés",
+    seatLimitReached: "Limite de sièges atteinte",
+    upgradeRequired: "Mise à niveau requise",
+    upgradeRequiredDescription:
+      "Votre équipe a utilisé tous les sièges disponibles. Retirez un membre ou augmentez l’abonnement avant d’inviter un autre membre.",
+    role: "Votre rôle",
+    members: "Membres",
+    invitations: "Invitations en attente",
+    invitationsForYou: "Invitations pour vous",
+    invitationsForYouDescription:
+      "Acceptez une invitation pour rejoindre un espace Business ou Enterprise.",
+    acceptInvitation: "Accepter l’invitation",
+    accepting: "Acceptation...",
+    acceptedInvitation: "Invitation acceptée.",
+    invite: "Inviter un membre",
+    email: "Adresse e-mail",
+    member: "Membre",
+    admin: "Admin",
+    send: "Envoyer l’invitation",
+    remove: "Retirer",
+    none: "Aucun",
+    ownerNote: "Les propriétaires ne peuvent pas être retirés ici. Attribuez d’abord un autre propriétaire.",
   },
 };

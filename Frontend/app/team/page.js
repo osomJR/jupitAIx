@@ -4,63 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, RefreshCw, Send, Trash2, UsersRound } from "lucide-react";
 import { useAccount } from "@/components/account_provider";
 import { useLanguage } from "@/components/language_provider";
+import { teamPageTranslations } from "@/lib/translations";
 
-const copy = {
-  en: {
-    title: "Projects & Team",
-    subtitle: "Manage your organization, subscription seats, members, and invitations.",
-    loading: "Loading team...",
-    noTeam: "No team workspace found.",
-    refresh: "Refresh",
-    organization: "Organization",
-    plan: "Plan",
-    seats: "Seats",
-    role: "Your role",
-    members: "Members",
-    invitations: "Pending invitations",
-    invitationsForYou: "Invitations for you",
-    invitationsForYouDescription:
-      "Accept an invitation to join a Business or Enterprise workspace.",
-    acceptInvitation: "Accept invitation",
-    accepting: "Accepting...",
-    acceptedInvitation: "Invitation accepted.",
-    invite: "Invite member",
-    email: "Email address",
-    member: "Member",
-    admin: "Admin",
-    send: "Send invite",
-    remove: "Remove",
-    none: "None",
-    ownerNote: "Owners cannot be removed here. Assign another owner first.",
-  },
-  fr: {
-    title: "Projets & équipe",
-    subtitle: "Gérez votre organisation, les sièges d’abonnement, les membres et les invitations.",
-    loading: "Chargement de l’équipe...",
-    noTeam: "Aucun espace d’équipe trouvé.",
-    refresh: "Actualiser",
-    organization: "Organisation",
-    plan: "Forfait",
-    seats: "Sièges",
-    role: "Votre rôle",
-    members: "Membres",
-    invitations: "Invitations en attente",
-    invitationsForYou: "Invitations pour vous",
-    invitationsForYouDescription:
-      "Acceptez une invitation pour rejoindre un espace Business ou Enterprise.",
-    acceptInvitation: "Accepter l’invitation",
-    accepting: "Acceptation...",
-    acceptedInvitation: "Invitation acceptée.",
-    invite: "Inviter un membre",
-    email: "Adresse e-mail",
-    member: "Membre",
-    admin: "Admin",
-    send: "Envoyer l’invitation",
-    remove: "Retirer",
-    none: "Aucun",
-    ownerNote: "Les propriétaires ne peuvent pas être retirés ici. Attribuez d’abord un autre propriétaire.",
-  },
-};
+
 
 function titleCase(value) {
   if (!value) return "—";
@@ -87,7 +33,7 @@ async function readJson(response) {
 export default function TeamPage() {
   const { language } = useLanguage();
   const { entitlement, reload: reloadAccount } = useAccount();
-  const t = copy[language] || copy.en;
+  const t = teamPageTranslations[language] || teamPageTranslations.en;
 
   const [loading, setLoading] = useState(true);
   const [organizations, setOrganizations] = useState([]);
@@ -116,6 +62,11 @@ export default function TeamPage() {
   );
 
   const canManage = ["owner", "admin"].includes(selectedOrganization?.member?.role);
+  const seatsUsed = subscription?.active_members ?? members.length;
+  const maxSeats = subscription?.max_accounts ?? null;
+  const hasSeatLimit = typeof maxSeats === "number";
+  const seatsAreFull = hasSeatLimit && seatsUsed >= maxSeats;
+  const canInvite = canManage && !seatsAreFull;
 
   async function api(path, options = {}) {
     const response = await fetch(path, {
@@ -210,6 +161,11 @@ export default function TeamPage() {
     event.preventDefault();
 
     if (!selectedOrganization?.id || !email.trim()) {
+      return;
+    }
+
+    if (seatsAreFull) {
+      setMessage(t.upgradeRequiredDescription);
       return;
     }
 
@@ -412,9 +368,13 @@ export default function TeamPage() {
                   {t.seats}
                 </div>
                 <div className="mt-2 text-lg font-semibold app-text">
-                  {subscription?.active_members ?? members.length} /{" "}
-                  {subscription?.max_accounts ?? "—"}
+                  {seatsUsed} / {maxSeats ?? "—"}
                 </div>
+                {seatsAreFull ? (
+                  <div className="mt-2 inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-[11px] font-semibold text-amber-200">
+                    {t.upgradeRequired}
+                  </div>
+                ) : null}
               </div>
               <div className="rounded-3xl border app-surface-strong p-5">
                 <div className="text-xs uppercase tracking-[0.12em] app-text-soft">
@@ -496,19 +456,25 @@ export default function TeamPage() {
                   className="rounded-3xl border app-surface-strong p-5"
                 >
                   <h2 className="text-xl font-semibold app-text">{t.invite}</h2>
+                  {seatsAreFull ? (
+                    <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
+                      <div className="font-semibold">{t.seatLimitReached}</div>
+                      <div className="mt-1 text-xs">{t.upgradeRequiredDescription}</div>
+                    </div>
+                  ) : null}
                   <div className="mt-4 space-y-3">
                     <input
                       type="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
                       placeholder={t.email}
-                      disabled={!canManage || busy === "invite"}
+                      disabled={!canInvite || busy === "invite"}
                       className="w-full rounded-2xl border px-4 py-3 text-sm"
                     />
                     <select
                       value={role}
                       onChange={(event) => setRole(event.target.value)}
-                      disabled={!canManage || busy === "invite"}
+                      disabled={!canInvite || busy === "invite"}
                       className="w-full rounded-2xl border px-4 py-3 text-sm"
                     >
                       <option value="member">{t.member}</option>
@@ -516,11 +482,11 @@ export default function TeamPage() {
                     </select>
                     <button
                       type="submit"
-                      disabled={!canManage || !email.trim() || busy === "invite"}
+                      disabled={!canInvite || !email.trim() || busy === "invite"}
                       className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--app-button-bg)] px-4 py-3 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <Send className="h-4 w-4" />
-                      {t.send}
+                      {seatsAreFull ? t.upgradeRequired : t.send}
                     </button>
                   </div>
                 </form>

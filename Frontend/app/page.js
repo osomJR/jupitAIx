@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import AuthControls from "@/components/auth_controls";
 import {
   FileText,
+  Files,
   Sparkles,
   Languages,
   BookOpen,
@@ -18,8 +19,10 @@ import {
   EyeClosed,
   ShieldCheck,
   FileBraces,
+  Signature,
   LayoutDashboard,
   KeyRound,
+  CreditCard,
   UsersRound,
   Menu,
   X,
@@ -36,10 +39,13 @@ const actionIcons = {
   redact: EyeOff,
   mask: EyeClosed,
   compliance: ShieldCheck,
+  eSignature: Signature,
+  pdfTools: Files,
   extraction: FileBraces,
   dashboard: LayoutDashboard,
   apiKeys: KeyRound,
   projectsTeam: UsersRound,
+  billing: CreditCard,
 };
 
 const sidebarActionKeys = [
@@ -55,6 +61,8 @@ const sidebarActionKeySet = new Set(sidebarActionKeys);
 const dashboardActionKeys = [
   "convert",
   "compliance",
+  "eSignature",
+  "pdfTools",
   "extraction",
   "redact",
   "mask",
@@ -458,18 +466,24 @@ export default function HomePage() {
         ) : null}
 
         <div className="relative mx-auto max-w-7xl px-6 pb-12 pt-28 md:px-8 md:pb-16 md:pt-32">
-          <section>
+          <section className="space-y-8">
+            <h1 className="mx-auto max-w-3xl text-center text-3xl font-semibold tracking-tight app-text sm:text-4xl">
+              {t.dashboardGreeting}
+            </h1>
+
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {dashboardActions.map((action) => {
                 const requiresSignIn = action.requiresAuth && !isSignedIn;
+                const isUnavailable = action.comingSoon || !action.route;
+                const isLocked = requiresSignIn || isUnavailable;
 
                 return (
                   <ActionCard
-                    key={`${language}-${action.route}`}
+                    key={`${language}-${action.key}`}
                     action={action}
-                    locked={requiresSignIn}
+                    locked={isLocked}
                     onClick={
-                      requiresSignIn ? undefined : () => router.push(action.route)
+                      isLocked ? undefined : () => router.push(action.route)
                     }
                   />
                 );
