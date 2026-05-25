@@ -281,6 +281,93 @@ function candidateId(candidate) {
   );
 }
 
+const DIGIT_REQUIRED_LABELS = new Set([
+  "account_number",
+  "card_number",
+  "credit_card_number",
+  "phone_number",
+  "national_id",
+  "tax_id",
+  "passport_number",
+  "passport",
+  "date_of_birth",
+  "age",
+]);
+
+function normalizeCandidateLabel(candidate) {
+  return String(candidate?.label || "").trim().toLowerCase();
+}
+
+function candidateQuote(candidate) {
+  return String(candidate?.quote || "").trim();
+}
+
+function countDigits(value = "") {
+  return (String(value).match(/\d/g) || []).length;
+}
+
+function isLikelyStructuredIdentifier(candidate) {
+  const label = normalizeCandidateLabel(candidate);
+  const quote = candidateQuote(candidate);
+  const digits = countDigits(quote);
+
+  if (!quote) return false;
+
+  // User-entered redactions are intentional, even when they are plain words.
+  if (label === "custom_redaction") return true;
+
+  // These labels can legitimately be alphabetic text.
+  if (
+    [
+      "name",
+      "person_name",
+      "contact_address",
+      "street_address",
+      "signature",
+    ].includes(label)
+  ) {
+    return true;
+  }
+
+  if (label === "email_address") {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(quote);
+  }
+
+  if (label === "phone_number") {
+    return digits >= 7;
+  }
+
+  if (label === "card_number" || label === "credit_card_number") {
+    return digits >= 13;
+  }
+
+  if (label === "account_number") {
+    return digits >= 6;
+  }
+
+  if (["national_id", "tax_id", "passport_number", "passport"].includes(label)) {
+    return digits >= 4;
+  }
+
+  if (label === "date_of_birth") {
+    return digits >= 4;
+  }
+
+  if (label === "age") {
+    return digits >= 1 && digits <= 3;
+  }
+
+  // Unknown labels stay reviewable/approved instead of silently losing data.
+  // The strict digit checks above handle the common Account/Phone false positives.
+  return !DIGIT_REQUIRED_LABELS.has(label) || digits > 0;
+}
+
+function buildDefaultApprovedCandidateIds(candidates = []) {
+  return new Set(
+    candidates.filter(isLikelyStructuredIdentifier).map(candidateId),
+  );
+}
+
 function parseReviewExclusionsFromDeselected(
   reviewCandidates,
   approvedCandidateIds,
@@ -510,7 +597,7 @@ export default function RedactPage() {
         : [];
 
       setReviewCandidates(candidates);
-      setApprovedCandidateIds(new Set(candidates.map(candidateId)));
+      setApprovedCandidateIds(buildDefaultApprovedCandidateIds(candidates));
 
       // Do not expose provisional file as a downloadable output.
       // It is only used for inline review preview.
@@ -613,16 +700,14 @@ export default function RedactPage() {
       const previewUrl = extractPreviewUrl(responseData, backendBase);
 
       setDownloadInfo(resolvedDownload);
-
-setProcessedPreviewUrl(
-  resolveProcessedPreviewUrl({
-    inputExtension,
-    downloadUrl: resolvedDownload.downloadUrl,
-    previewUrl,
-  }),
-);
-
-setStage("done");
+      setProcessedPreviewUrl(
+        resolveProcessedPreviewUrl({
+          inputExtension,
+          downloadUrl: resolvedDownload.downloadUrl,
+          previewUrl,
+        }),
+      );
+      setStage("done");
 
       const backendMessage = extractResponseMessage(responseData);
       const summaryLines = [
@@ -1024,7 +1109,7 @@ setStage("done");
                           type="button"
                           onClick={() =>
                             setApprovedCandidateIds(
-                              new Set(reviewCandidates.map(candidateId)),
+                              buildDefaultApprovedCandidateIds(reviewCandidates),
                             )
                           }
                           className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-xs app-text-muted transition hover:bg-[var(--app-surface-strong)] hover:text-[var(--app-text)]"

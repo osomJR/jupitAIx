@@ -327,6 +327,16 @@ def _mask_email(value: str) -> str:
     return f"{local[:1]}{'X' * max(1, len(local) - 1)}@{'X' * max(1, len(domain))}"
 
 
+def _mask_preserving_layout(value: str, *, mask_char: str = "X") -> str:
+    """Mask visible letters/digits while preserving spacing and punctuation.
+
+    This keeps PDF layout stable while avoiding partially readable results
+    such as "NigeriX". For example, "Lagos, Nigeria" becomes
+    "XXXXX, XXXXXXX".
+    """
+    return "".join(mask_char if char.isalnum() else char for char in value)
+
+
 def mask_value_by_target(label: str, quote: str) -> str:
     label = (label or "").lower()
     if label == _CUSTOM_MASK_LABEL:
@@ -346,9 +356,8 @@ def mask_value_by_target(label: str, quote: str) -> str:
         "passport",
     }:
         return _mask_digits(_mask_alpha(quote, keep_first=1), keep_last=2)
-    if label in {SensitiveDataType.contact_address.value, "street_address"}:
-        stripped = quote.strip()
-        return stripped[:6] + ("X" * max(0, len(stripped) - 6)) if len(stripped) > 6 else "X" * len(stripped)
+    if label in {SensitiveDataType.contact_address.value, "street_address", "location"}:
+        return _mask_preserving_layout(quote)
     if label == SensitiveDataType.date_of_birth.value:
         chars = list(quote)
         digits = [i for i, char in enumerate(chars) if char.isdigit()]
@@ -614,13 +623,74 @@ def _pdf_rects_for_findings(
     return unique
 
 
+def _pdf_rect_key(rect: fitz.Rect) -> tuple[float, float, float, float]:
+    return (round(rect.x0, 3), round(rect.y0, 3), round(rect.x1, 3), round(rect.y1, 3))
+
+
+def _tight_pdf_text_rect(rect: fitz.Rect) -> fitz.Rect:
+    """Return a safer redaction rectangle for text-only masking.
+
+    PyMuPDF redaction fill rectangles can visually erase nearby separator
+    lines when the rectangle is too tall. A slightly tighter vertical rectangle
+    still intersects the text glyphs, so the original text is removed, but it
+    is less likely to cover horizontal rules or adjacent line art.
+    """
+    tightened = fitz.Rect(rect)
+    if tightened.height <= 2:
+        return tightened
+
+    inset_y = min(1.0, max(0.25, tightened.height * 0.12))
+    if tightened.y0 + inset_y < tightened.y1 - inset_y:
+        tightened.y0 += inset_y
+        tightened.y1 -= inset_y
+
+    return tightened
+
+
+def _fit_pdf_mask_font_size(masked: str, rect: fitz.Rect) -> float:
+    """Choose a font size that fits the masked value inside the original span."""
+    font_size = max(4.0, min(10.0, rect.height * 0.78))
+
+    if not masked or rect.width <= 0:
+        return font_size
+
+    try:
+        text_width = fitz.get_text_length(masked, fontname="helv", fontsize=font_size)
+    except Exception:
+        return font_size
+
+    if text_width > rect.width and text_width > 0:
+        font_size = max(3.5, font_size * (rect.width / text_width) * 0.96)
+
+    return font_size
+
+
+def _pdf_mask_insert_point(rect: fitz.Rect) -> fitz.Point:
+    return fitz.Point(rect.x0, rect.y1 - max(0.5, rect.height * 0.15))
+
+
+def _insert_pdf_mask_text(page: fitz.Page, specs: Sequence[tuple[fitz.Rect, fitz.Rect, str]]) -> None:
+    for _redaction_rect, original_rect, masked in specs:
+        if not masked:
+            continue
+
+        page.insert_text(
+            _pdf_mask_insert_point(original_rect),
+            masked,
+            fontname="helv",
+            fontsize=_fit_pdf_mask_font_size(masked, original_rect),
+            color=(0, 0, 0),
+            overlay=True,
+        )
+
+
 def _masked_rect_specs(
     findings: Sequence[TextFinding],
     words: Sequence[PDFWord],
     *,
     original_text: str,
-) -> list[tuple[fitz.Rect, str]]:
-    specs: list[tuple[fitz.Rect, str]] = []
+) -> list[tuple[fitz.Rect, fitz.Rect, str]]:
+    specs: list[tuple[fitz.Rect, fitz.Rect, str]] = []
     merged = merge_overlapping_findings(findings, original_text=original_text)
 
     for finding in merged:
@@ -628,15 +698,35 @@ def _masked_rect_specs(
         if not matched:
             continue
 
-        lines = {(w.block_no, w.line_no) for w in matched}
-        if len(lines) != 1:
-            continue
+        masked_full = _same_length_mask_value(finding.label, finding.quote)
 
-        rect = matched[0].rect
-        for word in matched[1:]:
-            rect = rect | word.rect
+        by_line: dict[tuple[int, int], list[PDFWord]] = {}
+        for word in matched:
+            by_line.setdefault((word.block_no, word.line_no), []).append(word)
 
-        specs.append((rect, mask_value_by_target(finding.label, finding.quote)))
+        for line_words in by_line.values():
+            ordered_line_words = sorted(line_words, key=lambda item: item.word_no)
+
+            rect = ordered_line_words[0].rect
+            for word in ordered_line_words[1:]:
+                rect = rect | word.rect
+
+            line_start = max(finding.start, min(word.start for word in ordered_line_words))
+            line_end = min(finding.end, max(word.end for word in ordered_line_words))
+            if line_end <= line_start:
+                continue
+
+            rel_start = line_start - finding.start
+            rel_end = line_end - finding.start
+            masked_segment = masked_full[rel_start:rel_end]
+            if not masked_segment.strip():
+                continue
+
+            specs.append((
+                _tight_pdf_text_rect(rect),
+                rect,
+                masked_segment,
+            ))
 
     return specs
 
@@ -733,25 +823,20 @@ def _mask_pdf(
                 specs = _masked_rect_specs(findings, words, original_text=page_text)
                 used_rects: set[tuple[float, float, float, float]] = set()
 
-                for rect, masked in specs:
-                    key = (round(rect.x0, 3), round(rect.y0, 3), round(rect.x1, 3), round(rect.y1, 3))
-                    used_rects.add(key)
+                for redaction_rect, original_rect, _masked in specs:
+                    used_rects.add(_pdf_rect_key(original_rect))
                     page.add_redact_annot(
-                        rect,
-                        text=masked,
-                        fontname="helv",
-                        fontsize=8,
+                        redaction_rect,
                         fill=(1, 1, 1),
-                        text_color=(0, 0, 0),
                         cross_out=False,
                     )
 
                 for rect in _pdf_rects_for_findings(findings, words, original_text=page_text):
-                    key = (round(rect.x0, 3), round(rect.y0, 3), round(rect.x1, 3), round(rect.y1, 3))
-                    if key not in used_rects:
-                        page.add_redact_annot(rect, fill=(1, 1, 1), cross_out=False)
+                    if _pdf_rect_key(rect) not in used_rects:
+                        page.add_redact_annot(_tight_pdf_text_rect(rect), fill=(1, 1, 1), cross_out=False)
 
                 _apply_page_redactions(page, image_mode="none")
+                _insert_pdf_mask_text(page, specs)
             else:
                 pix = page.get_pixmap(matrix=fitz.Matrix(render_scale, render_scale))
                 image = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)

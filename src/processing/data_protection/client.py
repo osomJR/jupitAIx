@@ -224,6 +224,36 @@ def _normalized_exclusions(values: Sequence[str]) -> set[str]:
     return {_normalize_text_for_compare(v) for v in values if v and v.strip()}
 
 
+def _digit_count(value: str) -> int:
+    return len(re.findall(r"\d", value or ""))
+
+
+def _is_valid_structured_local_quote(target: SensitiveDataType, quote: str) -> bool:
+    """Reject context-only false positives such as "Account Management".
+
+    Local rules use nearby words like Account, ID, and TIN as context. The
+    captured value still needs identifier-like structure; plain alphabetic
+    business terms must not become findings just because they follow those
+    labels.
+    """
+    digits = _digit_count(quote)
+
+    if target == SensitiveDataType.account_number:
+        return digits >= 6
+
+    if target in {
+        SensitiveDataType.national_id,
+        SensitiveDataType.tax_id,
+        SensitiveDataType.passport_number,
+    }:
+        return digits >= 4
+
+    if target in {SensitiveDataType.date_of_birth, SensitiveDataType.age}:
+        return digits > 0
+
+    return True
+
+
 def _dedupe_findings(findings: Iterable[TextFinding]) -> list[TextFinding]:
     ordered = sorted(findings, key=lambda item: (item.start, -(item.end - item.start), item.label, item.source))
     result: list[TextFinding] = []
@@ -269,6 +299,198 @@ def merge_overlapping_findings(
     return merged
 
 
+# Country-agnostic location fallback for contact_address.
+#
+# Google Sensitive Data Protection's STREET_ADDRESS infoType gives precise
+# street-address coverage. We intentionally do not request the broad LOCATION
+# infoType for contact_address because it can classify institutions, section
+# headings, and countries as locations. This local fallback covers common
+# resume/CV and profile formats such as "Lagos, Nigeria", "Paris, France",
+# or "San Francisco, United States" while requiring a known country after a
+# comma to avoid redacting ordinary capitalized words.
+_COMMON_COUNTRY_ALIASES = (
+    "United States",
+    "United States of America",
+    "USA",
+    "US",
+    "U.S.",
+    "U.S.A.",
+    "United Kingdom",
+    "UK",
+    "U.K.",
+    "Great Britain",
+    "Russia",
+    "South Korea",
+    "North Korea",
+    "Iran",
+    "Syria",
+    "Vietnam",
+    "Laos",
+    "Moldova",
+    "Tanzania",
+    "Venezuela",
+    "Bolivia",
+    "Brunei",
+    "Czech Republic",
+    "UAE",
+    "United Arab Emirates",
+)
+
+# pycountry is optional in this module, so keep a built-in country list for
+# deployments where that package is not installed. This prevents contact
+# addresses such as "Lagos, Nigeria" from being missed silently.
+_FALLBACK_COUNTRY_NAMES = (
+    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+    "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas",
+    "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize",
+    "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil",
+    "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia",
+    "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China",
+    "Colombia", "Comoros", "Congo", "Costa Rica", "Cote d'Ivoire", "Croatia",
+    "Cuba", "Cyprus", "Czechia", "Czech Republic", "Denmark", "Djibouti",
+    "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador",
+    "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji",
+    "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana",
+    "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+    "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran",
+    "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan",
+    "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia",
+    "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
+    "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali",
+    "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia",
+    "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique",
+    "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand",
+    "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+    "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay",
+    "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
+    "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
+    "Saint Vincent and the Grenadines", "Samoa", "San Marino",
+    "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles",
+    "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+    "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka",
+    "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan",
+    "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
+    "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+    "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom",
+    "United States", "United States of America", "Uruguay", "Uzbekistan",
+    "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia",
+    "Zimbabwe",
+)
+
+
+def _country_names_for_location_regex() -> tuple[str, ...]:
+    names: set[str] = {
+        name
+        for name in (*_COMMON_COUNTRY_ALIASES, *_FALLBACK_COUNTRY_NAMES)
+        if name.strip()
+    }
+
+    try:
+        import pycountry  # type: ignore
+    except Exception:
+        pycountry = None  # type: ignore[assignment]
+
+    if pycountry is not None:
+        for country in pycountry.countries:
+            for attr in ("name", "official_name", "common_name"):
+                value = getattr(country, attr, None)
+                if isinstance(value, str) and value.strip():
+                    names.add(value.strip())
+
+    # Keep only names that are useful in natural-language documents. Very short
+    # aliases like "IN" are intentionally excluded because they create noisy
+    # matches in normal English text.
+    aliases = {name for name in _COMMON_COUNTRY_ALIASES if name.strip()}
+    return tuple(
+        sorted(
+            {
+                name
+                for name in names
+                if len(name.replace(".", "").strip()) >= 3 or name in aliases
+            },
+            key=len,
+            reverse=True,
+        )
+    )
+
+
+_COUNTRY_NAME_PATTERN = "|".join(
+    re.escape(name) for name in _country_names_for_location_regex()
+)
+_LOCATION_WORD_RE = r"[A-Z][a-zÀ-ÖØ-öø-ÿ'’.-]+[A-Za-zÀ-ÖØ-öø-ÿ'’.-]*"
+_LOCATION_PART_RE = (
+    rf"(?!(?i:(?:{_COUNTRY_NAME_PATTERN}))\s*,)"
+    rf"{_LOCATION_WORD_RE}(?:\s+{_LOCATION_WORD_RE}){{0,3}}"
+)
+_GLOBAL_CITY_REGION_COUNTRY_RE = re.compile(
+    rf"(?<![A-Za-zÀ-ÖØ-öø-ÿ'’.-]\s)(?<!\w)("
+    rf"{_LOCATION_PART_RE}"
+    rf"(?:\s*,\s*{_LOCATION_PART_RE}){{0,1}}"
+    rf"\s*,\s*(?i:(?:{_COUNTRY_NAME_PATTERN}))"
+    rf")(?!\w)"
+)
+
+# Extra conservative suffix matchers for resume/CV layouts where PDF text
+# extraction collapses right-aligned columns into a single space, e.g.
+# "Computer Engineering Ogun, Nigeria". The broad matcher above purposely
+# avoids starting immediately after another word; these recover the actual
+# location suffix without redacting the preceding qualification/job text.
+_LOCATION_PREFIX_WORD_RE = (
+    r"Abu|Addis|Akwa|Buenos|Cape|Cross|Dar|Fort|Ho|Kuala|Las|Los|New|"
+    r"Port|Rio|Saint|San|Santa|Sao|São|St\."
+)
+_GLOBAL_PREFIXED_PLACE_COUNTRY_RE = re.compile(
+    rf"(?<!\w)("
+    rf"(?!(?i:(?:{_COUNTRY_NAME_PATTERN}))\s*,)"
+    rf"(?:{_LOCATION_PREFIX_WORD_RE})\s+{_LOCATION_WORD_RE}"
+    rf"\s*,\s*(?i:(?:{_COUNTRY_NAME_PATTERN}))"
+    rf")(?!\w)"
+)
+_GLOBAL_SINGLE_PLACE_COUNTRY_RE = re.compile(
+    rf"(?<!\w)("
+    rf"(?!(?i:(?:{_COUNTRY_NAME_PATTERN}))\s*,){_LOCATION_WORD_RE}"
+    rf"\s*,\s*(?i:(?:{_COUNTRY_NAME_PATTERN}))"
+    rf")(?!\w)"
+)
+_LOCATION_FALLBACK_RULES = (
+    _GLOBAL_CITY_REGION_COUNTRY_RE,
+    _GLOBAL_PREFIXED_PLACE_COUNTRY_RE,
+    _GLOBAL_SINGLE_PLACE_COUNTRY_RE,
+)
+
+
+def _looks_like_country_name(value: str) -> bool:
+    normalized = _normalize_text_for_compare(value)
+    return any(
+        normalized == _normalize_text_for_compare(country)
+        for country in _country_names_for_location_regex()
+    )
+
+
+def _is_valid_city_region_country_quote(quote: str) -> bool:
+    parts = [part.strip() for part in quote.split(",") if part.strip()]
+    if len(parts) < 2:
+        return False
+
+    # The last component must be a known country. Earlier components should be
+    # city/state/region names, not another country or an organization phrase
+    # containing a country, e.g. "MTN Nigeria, Lagos, Nigeria".
+    if not _looks_like_country_name(parts[-1]):
+        return False
+
+    for part in parts[:-1]:
+        normalized_part = _normalize_text_for_compare(part)
+        if _looks_like_country_name(part):
+            return False
+        if any(
+            f" { _normalize_text_for_compare(country) }" in f" {normalized_part} "
+            for country in _country_names_for_location_regex()
+        ):
+            return False
+
+    return True
+
+
 _GOOGLE_INFOTYPES: dict[SensitiveDataType, list[str]] = {
     SensitiveDataType.name: ["PERSON_NAME"],
     SensitiveDataType.email_address: ["EMAIL_ADDRESS"],
@@ -276,6 +498,16 @@ _GOOGLE_INFOTYPES: dict[SensitiveDataType, list[str]] = {
     SensitiveDataType.card_number: ["CREDIT_CARD_NUMBER"],
     SensitiveDataType.contact_address: ["STREET_ADDRESS"],
     SensitiveDataType.passport_number: ["PASSPORT"],
+}
+
+_GOOGLE_INFOTYPE_LABELS: dict[str, str] = {
+    "PERSON_NAME": SensitiveDataType.name.value,
+    "EMAIL_ADDRESS": SensitiveDataType.email_address.value,
+    "PHONE_NUMBER": SensitiveDataType.phone_number.value,
+    "CREDIT_CARD_NUMBER": SensitiveDataType.card_number.value,
+    "STREET_ADDRESS": SensitiveDataType.contact_address.value,
+    # LOCATION is deliberately not requested for contact_address because it is too broad.
+    "PASSPORT": SensitiveDataType.passport_number.value,
 }
 
 _LOCAL_REGEX_RULES: dict[SensitiveDataType, list[re.Pattern[str]]] = {
@@ -305,7 +537,10 @@ _LOCAL_REGEX_RULES: dict[SensitiveDataType, list[re.Pattern[str]]] = {
         re.compile(r"(?i)\b(\d{1,3})\s+years?\s+old\b"),
     ],
     SensitiveDataType.contact_address: [
-        re.compile(r"(?i)\b(?:address|contact\s+address)\s*[:#-]?\s*(.+)")
+        re.compile(r"(?i)\b(?:address|contact\s+address)\s*[:#-]?\s*(.+)"),
+        _GLOBAL_CITY_REGION_COUNTRY_RE,
+        _GLOBAL_PREFIXED_PLACE_COUNTRY_RE,
+        _GLOBAL_SINGLE_PLACE_COUNTRY_RE,
     ],
     SensitiveDataType.signature: [
         re.compile(r"(?i)\b(?:signature|signed\s+by|signatory)\b[:#-]?\s*([A-Za-z][^\n\r]*)?")
@@ -347,6 +582,10 @@ def _local_regex_findings(
                     quote = match.group(1)
                 quote = quote.strip()
                 if not quote:
+                    continue
+                if any(pattern is rule for rule in _LOCATION_FALLBACK_RULES) and not _is_valid_city_region_country_quote(quote):
+                    continue
+                if not _is_valid_structured_local_quote(target, quote):
                     continue
                 if _normalize_text_for_compare(quote) in exclusions:
                     continue
@@ -421,13 +660,14 @@ def _google_text_findings(
             if idx < 0:
                 continue
             span = (idx, idx + len(quote))
-        info_type = getattr(getattr(finding, "info_type", None), "name", "sensitive_data")
+        info_type = str(getattr(getattr(finding, "info_type", None), "name", "sensitive_data"))
+        label = _GOOGLE_INFOTYPE_LABELS.get(info_type.upper(), info_type.lower())
         findings.append(
             TextFinding(
                 start=span[0],
                 end=span[1],
                 quote=quote,
-                label=str(info_type).lower(),
+                label=label,
                 source="google_sdp",
             )
         )
