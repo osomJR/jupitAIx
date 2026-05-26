@@ -34,6 +34,7 @@ import shutil
 
 DEFAULT_RETENTION_HOURS = int(os.getenv("ARTIFACT_RETENTION_HOURS", "24"))
 DEFAULT_DOWNLOAD_BASE_URL = os.getenv("ARTIFACT_DOWNLOAD_BASE_URL")
+DEFAULT_ARTIFACT_STORAGE_DIR = os.getenv("ARTIFACT_STORAGE_DIR", "artifacts")
 
 
 @dataclass(frozen=True)
@@ -72,12 +73,17 @@ class LocalArtifactStorage:
 
     def __init__(
         self,
-        base_dir: str = "artifacts",
+        base_dir: str | None = None,
         *,
         retention_hours: int = DEFAULT_RETENTION_HOURS,
         download_base_url: Optional[str] = None,
     ) -> None:
-        self.base_dir = Path(base_dir)
+        resolved_base_dir = base_dir or os.getenv(
+            "ARTIFACT_STORAGE_DIR",
+            DEFAULT_ARTIFACT_STORAGE_DIR,
+        )
+
+        self.base_dir = Path(resolved_base_dir).expanduser().resolve()
         self.base_dir.mkdir(parents=True, exist_ok=True)
 
         if retention_hours < 1:
@@ -113,6 +119,9 @@ class LocalArtifactStorage:
 
         storage_key = self._build_storage_key(normalized_artifact_name)
         destination = self.base_dir / storage_key
+        print("ARTIFACT PERSIST BASE DIR:", self.base_dir)
+        print("ARTIFACT PERSIST STORAGE KEY:", storage_key)
+        print("ARTIFACT PERSIST DESTINATION:", destination)
         destination.parent.mkdir(parents=True, exist_ok=True)
 
         shutil.copy2(source_path, destination)

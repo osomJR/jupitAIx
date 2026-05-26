@@ -828,6 +828,19 @@ class BaseFileResult(BaseModel):
 class DocumentFileResult(BaseFileResult):
     output_format: DocumentFileOutputFormat
 
+class TranscriptionResult(InlineTextResult):
+    pdf_artifact: DocumentFileResult
+
+    @model_validator(mode="after")
+    def validate_pdf_artifact(self):
+        if self.output_format != InlineOutputFormat.txt:
+            raise ValueError("Transcription inline output must remain txt.")
+
+        if self.pdf_artifact.output_format != DocumentFileOutputFormat.pdf:
+            raise ValueError("Transcription downloadable artifact must be pdf only.")
+
+        return self
+
 
 class StructuredExtractionFileResult(BaseFileResult):
     output_format: StructuredDataOutputFormat
@@ -961,6 +974,7 @@ class ComplianceMachineReadableReport(BaseModel):
 
 
 AnalyzerResult = Union[
+    TranscriptionResult,
     InlineTextResult,
     DocumentFileResult,
     StructuredExtractionFileResult,
@@ -1000,8 +1014,8 @@ class AnalyzerResponse(BaseModel):
             if not isinstance(self.result, DocumentFileResult):
                 raise ValueError("convert must return a document file result.")
         elif self.action == FeatureType.transcribe:
-            if not isinstance(self.result, InlineTextResult):
-                raise ValueError("transcribe must return inline txt only (strict contract rule).")
+            if not isinstance(self.result, TranscriptionResult):
+                raise ValueError("transcribe must return inline txt plus a downloadable pdf transcript.")
         elif self.action in {
             FeatureType.summarize,
             FeatureType.grammar_correct,
@@ -1085,11 +1099,14 @@ class AnalyzerResponse(BaseModel):
                 if self.result.output_format != ComplianceOutputFormat.pdf:
                     raise ValueError("human_readable_report and annotated_source_output must use pdf output.")
 
-        # 3) Transcription output rule: always inline txt
+        # 3) Transcription output rule: inline txt + downloadable pdf
         if self.action == FeatureType.transcribe:
-            if not isinstance(self.result, InlineTextResult) or self.result.output_format != InlineOutputFormat.txt:
-                raise ValueError("transcribe output must be inline txt (strict contract rule).")
-
+            if not isinstance(self.result, TranscriptionResult):
+                raise ValueError("transcribe output must include inline txt and a pdf artifact.")
+            if self.result.output_format != InlineOutputFormat.txt:
+                raise ValueError("transcribe inline output must be txt.")
+            if self.result.pdf_artifact.output_format != DocumentFileOutputFormat.pdf:
+                raise ValueError("transcribe downloadable output must be pdf only.")
         # 4) Language boundary validation for non-translate features (when language fields are provided)
         if self.action in EN_FR_ONLY_NON_TRANSLATE_ACTIONS or self.action == FeatureType.transcribe:
             if self.detected_language is not None and not _is_en_or_fr_tag(self.detected_language):

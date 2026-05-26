@@ -33,6 +33,7 @@ from .schema import (
     SummarizationRequest,
     SystemLanguage,
     TranscriptionRequest,
+    TranscriptionResult,
     TranslationRequest,
 )
 from .processing.llm.summarize import summarize_text
@@ -43,6 +44,7 @@ from .validation import (
     build_answer_generation_inline_result,
     build_document_file_result,
     build_inline_txt_result,
+    build_transcription_result,
     build_question_generation_file_result,
     build_question_generation_inline_result,
     get_question_range,
@@ -171,13 +173,14 @@ class Analyzer:
             algorithm_version=self.config.algorithm_version,
         )
 
-    def _handle_transcribe(self, req: AnalyzerRequest) -> InlineTextResult:
+    def _handle_transcribe(self, req: AnalyzerRequest) -> TranscriptionResult:
         if not isinstance(req.payload, TranscriptionRequest):
             raise ValueError("transcribe requires TranscriptionRequest payload.")
         if not isinstance(req.input, MediaPayload):
             raise ValueError("transcribe requires MediaPayload input.")
 
         file_reference = self._require_media_source_reference(req.input)
+
         content = transcribe_media(
             media_type=req.input.media_type.value,
             media_format=req.input.media_format.value,
@@ -186,8 +189,27 @@ class Analyzer:
             remove_background_noise=req.payload.remove_background_noise,
             diarize_speakers=req.payload.diarize_speakers,
         )
-        return build_inline_txt_result(
+
+        output_name = self._planned_transcript_output_name(req.input)
+
+        written = write_document(
             content=content,
+            output_format=DocumentFileOutputFormat.pdf.value,
+            output_name=output_name,
+        )
+    
+        pdf_artifact = build_document_file_result(
+            filename=written.file_name,
+            output_format=DocumentFileOutputFormat.pdf,
+            file_size_mb=written.file_size_mb,
+            storage_key=written.storage_key,
+            download_url=written.download_url,
+            algorithm_version=self.config.algorithm_version,
+        )
+
+        return build_transcription_result(
+            content=content,
+            pdf_artifact=pdf_artifact,
             algorithm_version=self.config.algorithm_version,
         )
 
@@ -450,8 +472,12 @@ class Analyzer:
         stem = _safe_basename(Path(str(base_source)).stem)
         normalized_suffix = _safe_basename(suffix)
         return f"{stem}.{normalized_suffix}.{output_format.value}"
-
-
+    
+    @staticmethod
+    def _planned_transcript_output_name(media: MediaPayload) -> str:
+        base_source = media.filename or f"media.{media.media_format.value}"
+        stem = _safe_basename(Path(str(base_source)).stem)
+        return f"{stem}.transcript.pdf"
 
 def _document_file_output_from_string(value: str) -> DocumentFileOutputFormat:
     normalized = value.strip().lower()

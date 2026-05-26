@@ -218,13 +218,67 @@ def _download_url_for_storage_key(storage_key: str | None) -> str | None:
 
 def _ensure_download_url(response: AnalyzerResponse) -> AnalyzerResponse:
     result = response.result
+
+    # Existing behavior for normal top-level downloadable results.
     storage_key = getattr(result, "storage_key", None)
     download_url = getattr(result, "download_url", None)
 
     if storage_key and not download_url and hasattr(result, "download_url"):
         result.download_url = _download_url_for_storage_key(storage_key)
 
+    # New behavior for transcription's nested PDF artifact only.
+    pdf_artifact = getattr(result, "pdf_artifact", None)
+
+    if pdf_artifact is not None:
+        pdf_storage_key = getattr(pdf_artifact, "storage_key", None)
+        pdf_download_url = getattr(pdf_artifact, "download_url", None)
+
+        if (
+            pdf_storage_key
+            and not pdf_download_url
+            and hasattr(pdf_artifact, "download_url")
+        ):
+            pdf_artifact.download_url = _download_url_for_storage_key(pdf_storage_key)
+
     return response
+
+def _artifact_storage_download_candidates() -> list[LocalArtifactStorage]:
+    """
+    Download resolver candidates.
+
+    The first candidate preserves existing behavior.
+    The ai_documents fallback supports writer-generated AI document artifacts,
+    including transcription PDF outputs.
+    """
+    candidate_base_dirs: list[str | None] = [
+        None,  # existing default behavior: LocalArtifactStorage()
+    ]
+
+    configured_root = os.getenv("ARTIFACT_STORAGE_DIR", "").strip()
+
+    if configured_root:
+        candidate_base_dirs.append(configured_root)
+
+        # If ARTIFACT_STORAGE_DIR points to the artifact root, also try its
+        # ai_documents child because writer-generated files may live there.
+        candidate_base_dirs.append(str(Path(configured_root) / "ai_documents"))
+
+    candidate_base_dirs.append("artifacts/ai_documents")
+
+    storages: list[LocalArtifactStorage] = []
+    seen: set[str] = set()
+
+    for base_dir in candidate_base_dirs:
+        storage = LocalArtifactStorage(base_dir=base_dir)
+        resolved = str(storage.base_dir.resolve())
+
+        if resolved in seen:
+            continue
+
+        seen.add(resolved)
+        storages.append(storage)
+
+    return storages
 
 def _run_structured_extraction_request_with_preview(
     request: AnalyzerRequest,
@@ -636,7 +690,7 @@ def transcribe_route(
         policy=_policy_for_action(FeatureType.transcribe),
         system_language=system_language,
     )
-    return _run_request(request)
+    return _ensure_download_url(_run_request(request))
 
 
 @router.post(
@@ -986,13 +1040,55 @@ def compliance_preview_route(
     except RuntimeError as exc:
         raise _service_unavailable(str(exc)) from exc
 
+def _artifact_storage_download_candidates() -> list[LocalArtifactStorage]:
+    """
+    Try existing artifact storage first, then writer-generated AI document storage.
+
+    This keeps existing feature downloads safe because the normal storage path
+    is checked first. The ai_documents fallback only runs if the normal lookup
+    does not find the file.
+    """
+    candidate_base_dirs: list[str | None] = [
+        None,  # Existing default behavior: LocalArtifactStorage()
+    ]
+
+    configured_root = os.getenv("ARTIFACT_STORAGE_DIR", "").strip()
+
+    if configured_root:
+        candidate_base_dirs.append(configured_root)
+
+        configured_path = Path(configured_root)
+
+        # If ARTIFACT_STORAGE_DIR points to artifacts root, also try ai_documents.
+        # If it already points to ai_documents, do not append ai_documents again.
+        if configured_path.name != "ai_documents":
+            candidate_base_dirs.append(str(configured_path / "ai_documents"))
+
+    # Local fallback based on your observed persist path:
+    # C:\Users\Akan\jupitAIx\artifacts\ai_documents\...
+    candidate_base_dirs.append("artifacts/ai_documents")
+
+    storages: list[LocalArtifactStorage] = []
+    seen: set[str] = set()
+
+    for base_dir in candidate_base_dirs:
+        storage = LocalArtifactStorage(base_dir=base_dir)
+        resolved_base_dir = str(storage.base_dir.resolve())
+
+        if resolved_base_dir in seen:
+            continue
+
+        seen.add(resolved_base_dir)
+        storages.append(storage)
+
+    return storages
+
+
 @router.api_route("/artifacts/{storage_key:path}", methods=["GET", "HEAD"])
 def download_artifact(
     storage_key: str,
     disposition: Literal["attachment", "inline"] = "attachment",
 ):
-    storage = LocalArtifactStorage()
-
     content_disposition_type = (
         "inline" if disposition == "inline" else "attachment"
     )
@@ -1013,18 +1109,36 @@ def download_artifact(
 
         return response
 
-    try:
-        path = storage.resolve_storage_key(storage_key)
-        if path.exists() and path.is_file():
-            return _file_response(path)
-    except ValueError:
-        pass
+    # Preferred storage-key lookup.
+    # This handles normal artifacts first, then ai_documents artifacts.
+    last_checked_path: Path | None = None
 
+    for storage in _artifact_storage_download_candidates():
+        try:
+            path = storage.resolve_storage_key(storage_key)
+            last_checked_path = path
+
+            print("ARTIFACT DOWNLOAD BASE DIR:", storage.base_dir)
+            print("ARTIFACT DOWNLOAD STORAGE KEY:", storage_key)
+            print("ARTIFACT DOWNLOAD RESOLVED PATH:", path)
+            print("ARTIFACT DOWNLOAD EXISTS:", path.exists())
+
+            if path.exists() and path.is_file():
+                return _file_response(path)
+
+        except ValueError:
+            continue
+
+    # Legacy fallback for older code paths that may have returned relative paths
+    # instead of clean storage keys.
     normalized_key = storage_key.strip().replace("\\", "/")
     candidate = Path(normalized_key)
 
     if candidate.is_absolute():
-        raise HTTPException(status_code=400, detail="Artifact path must be relative.")
+        raise HTTPException(
+            status_code=400,
+            detail="Artifact path must be relative.",
+        )
 
     if any(part == ".." for part in candidate.parts):
         raise HTTPException(
@@ -1032,19 +1146,37 @@ def download_artifact(
             detail="Artifact path must not contain parent-directory traversal.",
         )
 
-    if not candidate.exists() or not candidate.is_file():
-        raise HTTPException(status_code=404, detail="Artifact not found.")
+    resolved = candidate.resolve()
+
+    configured_root = os.getenv("ARTIFACT_STORAGE_DIR", "").strip()
 
     allowed_roots = {
         Path("artifacts").resolve(),
+        Path("artifacts/ai_documents").resolve(),
         Path("outputs").resolve(),
     }
 
-    resolved = candidate.resolve()
+    if configured_root:
+        configured_path = Path(configured_root).expanduser().resolve()
+        allowed_roots.add(configured_path)
+
+        if configured_path.name != "ai_documents":
+            allowed_roots.add((configured_path / "ai_documents").resolve())
+
     if not any(resolved == root or root in resolved.parents for root in allowed_roots):
         raise HTTPException(
             status_code=400,
             detail="Artifact path is outside the allowed artifact directories.",
+        )
+
+    if not resolved.exists() or not resolved.is_file():
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "error": "artifact_not_found",
+                "message": "Artifact not found.",
+                "last_checked_path": str(last_checked_path) if last_checked_path else None,
+            },
         )
 
     return _file_response(resolved)

@@ -42,6 +42,7 @@ from .schema import (
     SummarizationRequest,
     TranscriptionRequest,
     TranslationRequest,
+    TranscriptionResult,
     classify_word_count,
 )
 
@@ -233,6 +234,18 @@ def build_inline_txt_result(
     algorithm_version: Optional[str] = None,
 ) -> InlineTextResult:
     return InlineTextResult(content=content, meta=_meta(algorithm_version=algorithm_version))
+
+def build_transcription_result(
+    *,
+    content: str,
+    pdf_artifact: DocumentFileResult,
+    algorithm_version: Optional[str] = None,
+) -> TranscriptionResult:
+    return TranscriptionResult(
+        content=content,
+        pdf_artifact=pdf_artifact,
+        meta=_meta(algorithm_version=algorithm_version),
+    )
 
 
 def build_document_file_result(
