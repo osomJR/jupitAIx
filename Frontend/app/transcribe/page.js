@@ -141,6 +141,77 @@ function extractTranscriptText(responseData) {
   return "";
 }
 
+function cleanArtifactStorageKey(value) {
+  if (typeof value !== "string" || !value.trim()) return "";
+
+  let key = value.trim().replaceAll("\\", "/");
+
+  try {
+    const parsedUrl = new URL(
+      key,
+      typeof window !== "undefined" ? window.location.origin : "http://local",
+    );
+
+    key = parsedUrl.pathname;
+  } catch {
+    // Keep key as-is when it is not URL-shaped.
+  }
+
+  const prefixes = [
+    "/api/analyzer/artifacts/",
+    "api/analyzer/artifacts/",
+    "/api/v1/analyzer/artifacts/",
+    "api/v1/analyzer/artifacts/",
+    "/artifacts/",
+    "artifacts/",
+  ];
+
+  let changed = true;
+
+  while (changed) {
+    changed = false;
+
+    for (const prefix of prefixes) {
+      if (key.startsWith(prefix)) {
+        key = key.slice(prefix.length);
+        changed = true;
+      }
+    }
+  }
+
+  return key.replace(/^\/+/, "");
+}
+
+function buildArtifactDownloadUrl(storageKey) {
+  const cleanStorageKey = cleanArtifactStorageKey(storageKey);
+  if (!cleanStorageKey) return "";
+
+  return `/api/analyzer/artifacts/${cleanStorageKey}`;
+}
+
+function extractTranscriptPdfArtifact(responseData) {
+  const result = responseData?.result || responseData?.data?.result || null;
+  const artifact = result?.pdf_artifact || result?.pdfArtifact || null;
+
+  if (!artifact) return null;
+
+  const storageKey =
+    artifact.storage_key ||
+    artifact.storageKey ||
+    cleanArtifactStorageKey(
+      artifact.download_url || artifact.downloadUrl || "",
+    );
+
+  const downloadUrl = buildArtifactDownloadUrl(storageKey);
+
+  if (!downloadUrl) return null;
+
+  return {
+    filename: artifact.filename || "transcript.pdf",
+    downloadUrl,
+  };
+}
+
 function readMediaDuration(file, mediaType) {
   return new Promise((resolve, reject) => {
     const objectUrl = URL.createObjectURL(file);
@@ -253,6 +324,7 @@ export default function TranscribePage() {
   const [isCheckingFile, setIsCheckingFile] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [transcriptResult, setTranscriptResult] = useState("");
+  const [transcriptPdfArtifact, setTranscriptPdfArtifact] = useState(null);
   const [preserveFillerWords, setPreserveFillerWords] = useState(true);
   const [removeBackgroundNoise, setRemoveBackgroundNoise] = useState(false);
   const [diarizeSpeakers, setDiarizeSpeakers] = useState(false);
@@ -267,6 +339,7 @@ export default function TranscribePage() {
 
   function resetResultState() {
     setTranscriptResult("");
+    setTranscriptPdfArtifact(null);
   }
 
   function resetFileState() {
@@ -370,6 +443,14 @@ export default function TranscribePage() {
       }
 
       setTranscriptResult(transcriptText);
+      const pdfArtifact = extractTranscriptPdfArtifact(responseData);
+      if (!pdfArtifact) {
+        throw new Error(
+          "Backend returned transcript text but no PDF download artifact.",
+        );
+      }
+
+      setTranscriptPdfArtifact(pdfArtifact);
     } catch (submitError) {
       setError(submitError?.message || t.transcriptionFailed);
     } finally {
@@ -630,6 +711,16 @@ export default function TranscribePage() {
                           </div>
                         </div>
                       </div>
+
+                      {transcriptPdfArtifact && (
+                        <a
+                          href={transcriptPdfArtifact.downloadUrl}
+                          download={transcriptPdfArtifact.filename}
+                          className="inline-flex items-center justify-center rounded-2xl bg-[var(--app-button-bg)] px-5 py-3 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
+                        >
+                          {t.downloadPdfTranscript || "Download PDF transcript"}
+                        </a>
+                      )}
 
                       <pre className="whitespace-pre-wrap break-words pr-1 text-xs leading-6 app-text-muted md:text-sm">
                         {transcriptResult}
