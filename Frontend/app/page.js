@@ -14,6 +14,7 @@ import {
   BookOpen,
   PenTool,
   Mic,
+  Volume2,
   HelpCircle,
   EyeOff,
   EyeClosed,
@@ -35,6 +36,7 @@ const actionIcons = {
   translate: Languages,
   explain: BookOpen,
   transcribe: Mic,
+  textToSpeech: Volume2,
   questions: HelpCircle,
   redact: EyeOff,
   mask: EyeClosed,
@@ -67,6 +69,7 @@ const dashboardActionKeys = [
   "redact",
   "mask",
   "transcribe",
+  "textToSpeech",
 ];
 
 export default function HomePage() {

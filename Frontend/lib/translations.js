@@ -180,6 +180,12 @@ export const homePageTranslations = {
         description: "Soon",
       },
       {
+        key: "textToSpeech",
+        name: "Text to Speech",
+        comingSoon: true,
+        description: "Soon",
+      },
+      {
         key: "extraction",
         name: "Structured Extraction",
         route: "/extraction",
@@ -308,6 +314,12 @@ export const homePageTranslations = {
       {
         key: "pdfTools",
         name: "Outils PDF",
+        comingSoon: true,
+        description: "Bientôt",
+      },
+      {
+        key: "textToSpeech",
+        name: "Synthèse vocale",
         comingSoon: true,
         description: "Bientôt",
       },
@@ -814,8 +826,9 @@ export const transcribePageTranslations = {
     transcriptReady: "Transcript ready",
     transcriptReadyText:
       "The spoken content has been converted into written text",
-    transcriptMetaLabel: "Transcript format",
-    transcriptMetaValue: ".txt inline text only",
+    transcriptMetaLabel: "Transcript output",
+    transcriptMetaValue: "Inline text with .pdf download",
+    downloadPdfTranscript: "Download PDF transcript",
     detectedTypeLabel: "Detected media type",
     durationLabel: "Duration",
     audioType: "Audio",
@@ -857,8 +870,9 @@ export const transcribePageTranslations = {
 
     transcriptReady: "Transcription prête",
     transcriptReadyText: "Le contenu parlé a été converti en texte écrit",
-    transcriptMetaLabel: "Format de transcription",
-    transcriptMetaValue: ".txt texte inline uniquement",
+    transcriptMetaLabel: "Sortie de transcription",
+    transcriptMetaValue: "Aperçu texte inline avec téléchargement PDF",
+    downloadPdfTranscript: "Télécharger la transcription PDF",
     detectedTypeLabel: "Type de média détecté",
     durationLabel: "Durée",
     audioType: "Audio",
