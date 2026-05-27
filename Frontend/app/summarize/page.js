@@ -19,6 +19,7 @@ import {
   summarizePageTranslations,
 } from "@/lib/translations";
 import AppSidebarLayout from "@/components/app_sidebar";
+import { postAnalyzerFeature } from "@/lib/api_client";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
 const MAX_FILE_SIZE_MB = 10;
@@ -163,28 +164,7 @@ export default function SummarizePage() {
 
       formData.append("system_language", "english");
 
-      const response = await fetch(
-        "http://127.0.0.1:8000/api/v1/analyzer/summarize",
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-
-      let data = null;
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
-      }
-
-      if (!response.ok) {
-        const message =
-          data?.detail?.message ||
-          data?.detail ||
-          "Summarization request failed.";
-        throw new Error(message);
-      }
+      const data = await postAnalyzerFeature("summarize", formData, true);
 
       const result = data?.result;
       if (!result) {
@@ -204,8 +184,10 @@ export default function SummarizePage() {
       const downloadUrl =
         result.download_url ||
         (result.storage_key
-          ? `http://127.0.0.1:8000/api/v1/analyzer/artifacts/${result.storage_key}`
+          ? `/api/analyzer/artifacts/${result.storage_key}`
           : null);
+
+      setDownloadUrl(downloadUrl || "");
 
       setSummaryResult(
         [

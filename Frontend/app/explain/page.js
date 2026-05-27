@@ -19,6 +19,7 @@ import {
   explainPageTranslations,
 } from "@/lib/translations";
 import AppSidebarLayout from "@/components/app_sidebar";
+import { postAnalyzerFeature } from "@/lib/api_client";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
 const REJECTED_EXTENSIONS = [".png", ".jpg", ".jpeg"];
@@ -168,30 +169,7 @@ export default function ExplainPage() {
       );
       formData.append("allow_external_knowledge", "false");
 
-      const backendBase = process.env.NEXT_PUBLIC_API_BASE_URL;
-      if (!backendBase) {
-        throw new Error("NEXT_PUBLIC_API_BASE_URL is not set.");
-      }
-      const res = await fetch(`${backendBase}/api/v1/analyzer/explain`, {
-        method: "POST",
-        body: formData,
-      });
-
-      let data = null;
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
-      }
-
-      if (!res.ok) {
-        throw new Error(
-          data?.detail?.message ||
-            data?.detail ||
-            data?.message ||
-            "Explain request failed.",
-        );
-      }
+      const data = await postAnalyzerFeature("explain", formData, true);
 
       const result = data?.result;
 
@@ -210,7 +188,7 @@ export default function ExplainPage() {
           fileSizeMb: result.file_size_mb,
           url:
             result.download_url ||
-            `${backendBase}/api/v1/analyzer/artifacts/${result.storage_key}`,
+            `/api/analyzer/artifacts/${result.storage_key}`,
         });
       } else {
         throw new Error("Unexpected response shape from backend.");

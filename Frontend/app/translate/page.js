@@ -20,10 +20,61 @@ import {
   translatePageTranslations,
 } from "@/lib/translations";
 import AppSidebarLayout from "@/components/app_sidebar";
+import { postAnalyzerFeature } from "@/lib/api_client";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
 const MAX_FILE_SIZE_MB = 10;
 const INLINE_TEXT_EXTENSION = ".txt";
+
+const LANGUAGE_CODE_MAP = {
+  english: "en",
+  en: "en",
+  french: "fr",
+  français: "fr",
+  francais: "fr",
+  fr: "fr",
+  spanish: "es",
+  español: "es",
+  espanol: "es",
+  es: "es",
+  portuguese: "pt",
+  português: "pt",
+  portugues: "pt",
+  pt: "pt",
+  german: "de",
+  deutsch: "de",
+  de: "de",
+  italian: "it",
+  italiano: "it",
+  it: "it",
+  dutch: "nl",
+  nederlands: "nl",
+  nl: "nl",
+  arabic: "ar",
+  عربي: "ar",
+  ar: "ar",
+  chinese: "zh",
+  mandarin: "zh",
+  "simplified chinese": "zh-CN",
+  "traditional chinese": "zh-TW",
+  zh: "zh",
+  japanese: "ja",
+  日本語: "ja",
+  ja: "ja",
+  korean: "ko",
+  한국어: "ko",
+  ko: "ko",
+  hindi: "hi",
+  हिन्दी: "hi",
+  hi: "hi",
+  yoruba: "yo",
+  yorùbá: "yo",
+  yo: "yo",
+  igbo: "ig",
+  ig: "ig",
+  hausa: "ha",
+  ha: "ha",
+};
 
 function getFileExtension(filename = "") {
   const lastDot = filename.lastIndexOf(".");
@@ -42,6 +93,17 @@ function replaceVars(template, vars = {}) {
   return template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? "");
 }
 
+function normalizeTargetLanguage(value) {
+  const normalized = value.trim();
+
+  if (!normalized) return "";
+
+  const collapsed = normalized.replace(/\s+/g, " ");
+  const lower = collapsed.toLowerCase();
+
+  return LANGUAGE_CODE_MAP[lower] || collapsed;
+}
+
 export default function TranslatePage() {
   const router = useRouter();
   const fileInputRef = useRef(null);
@@ -57,6 +119,7 @@ export default function TranslatePage() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [translationResult, setTranslationResult] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   const inputExtension = useMemo(() => {
     if (mode === "text") return INLINE_TEXT_EXTENSION;
@@ -83,6 +146,7 @@ export default function TranslatePage() {
 
   function resetResultState() {
     setTranslationResult("");
+    setDownloadUrl("");
   }
 
   function rejectFile(message) {
@@ -163,38 +227,54 @@ export default function TranslatePage() {
     resetResultState();
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      const formData = new FormData();
 
-      if (mode === "text") {
-        const mockResult = `${t.inlineTranslationIntro}
-
-${t.targetLanguageResultLabel} ${targetLanguage}
-${t.outputExtensionResultLabel} ${INLINE_TEXT_EXTENSION}
-
-${t.translatedPreviewLabel}
-[${targetLanguage}] ${inlineText.slice(0, 180)}${
-          inlineText.length > 180 ? "..." : ""
-        }`;
-
-        setTranslationResult(mockResult);
+      if (mode === "file") {
+        formData.append("file", selectedFile);
       } else {
-        const mockResult = `${replaceVars(t.fileTranslationIntro, {
-          filename: selectedFile.name,
-        })}
-
-${t.targetLanguageResultLabel} ${targetLanguage}
-${t.inputExtensionLabel} ${inputExtension}
-${t.outputExtensionResultLabel} ${outputExtension}
-
-${t.preservedExtensionMessage}
-
-${t.translatedPreviewLabel}
-[${targetLanguage}] Document content translated while preserving file format compatibility.`;
-
-        setTranslationResult(mockResult);
+        formData.append("text", inlineText.trim());
       }
+
+      formData.append("source_language", "auto");
+      formData.append("target_language", normalizeTargetLanguage(targetLanguage));
+      formData.append(
+        "system_language",
+        language === "fr" ? "french" : "english",
+      );
+
+      const data = await postAnalyzerFeature("translate", formData, true);
+      const result = data?.result;
+
+      if (!result) {
+        throw new Error("Backend returned no result.");
+      }
+
+      if (typeof result.content === "string") {
+        setTranslationResult(result.content);
+        setDownloadUrl("");
+        return;
+      }
+
+      const artifactDownloadUrl =
+        result.download_url ||
+        (result.storage_key
+          ? `/api/analyzer/artifacts/${result.storage_key}`
+          : null);
+
+      setDownloadUrl(artifactDownloadUrl || "");
+
+      setTranslationResult(
+        [
+          `Translation generated successfully.`,
+          `Filename: ${result.filename || "unknown"}`,
+          `Output format: .${result.output_format || "unknown"}`,
+          `File size: ${result.file_size_mb ?? "unknown"} MB`,
+        ]
+          .filter(Boolean)
+          .join("\n\n"),
+      );
     } catch (submitError) {
-      setError(t.translationFailed);
+      setError(submitError.message || t.translationFailed);
     } finally {
       setIsSubmitting(false);
     }
@@ -493,6 +573,17 @@ ${t.translatedPreviewLabel}
                     </p>
                   )}
                 </div>
+
+                {downloadUrl && (
+                  <a
+                    href={downloadUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex rounded-2xl bg-[var(--app-button-bg)] px-4 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02] hover:shadow-xl"
+                  >
+                    Download translated file
+                  </a>
+                )}
 
                 <div className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 text-sm app-text-muted">
                   <Languages className="h-4 w-4 text-cyan-300" />
