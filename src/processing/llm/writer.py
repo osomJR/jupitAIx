@@ -16,6 +16,7 @@ Design notes:
 - .txt inline output is intentionally out of scope for this layer
 """
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -32,6 +33,9 @@ from src.storage.artifacts import (
 
 
 SUPPORTED_OUTPUT_FORMATS = {"pdf", "docx"}
+
+PDF_UNICODE_FONT_PATH_ENV = "PDF_UNICODE_FONT_PATH"
+PDF_UNICODE_FONT_NAME = "UnicodeDocumentFont"
 
 
 @dataclass(frozen=True)
@@ -139,19 +143,62 @@ class RealDocumentWriterBackend:
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
-        pdf.set_font("Helvetica", size=11)
+
+        is_arabic_document = _contains_arabic(content)
+        unicode_font_path = _find_unicode_font_path(content)
+
+        if unicode_font_path is not None:
+            try:
+               pdf.add_font(PDF_UNICODE_FONT_NAME, "", str(unicode_font_path))
+               pdf.set_font(PDF_UNICODE_FONT_NAME, size=11)
+            except Exception as exc:
+               if _contains_non_latin1(content):
+                   raise RuntimeError(
+                       "PDF output contains Unicode characters, but the configured "
+                       f"font could not be loaded: {unicode_font_path}. "
+                       f"Set {PDF_UNICODE_FONT_PATH_ENV} to a valid Unicode .ttf/.otf "
+                       "font that covers the target language, or use DOCX output."
+                   ) from exc
+
+               pdf.set_font("Helvetica", size=11)
+        else:
+            if _contains_non_latin1(content):
+                raise RuntimeError(
+                    "PDF output contains Unicode characters that FPDF's built-in "
+                    "Helvetica font cannot encode. Set "
+                    f"{PDF_UNICODE_FONT_PATH_ENV} to a local Unicode .ttf/.otf font "
+                    "that covers the target language, or use DOCX output."
+                )
+            pdf.set_font("Helvetica", size=11)
+
+        if is_arabic_document:
+            try:
+                pdf.set_text_shaping(
+                    use_shaping_engine=True,
+                    direction="rtl",
+                    script="arab",
+                    language="ara",
+                )
+            except AttributeError as exc:
+                raise RuntimeError(
+                    "Arabic PDF output requires fpdf2 with text shaping support. "
+                    "Run: pip uninstall -y fpdf && pip install --upgrade fpdf2 uharfbuzz"
+                ) from exc
 
         paragraphs = _split_paragraphs(content)
         line_height = 6
-
         for index, paragraph_text in enumerate(paragraphs):
             text = paragraph_text if paragraph_text.strip() else " "
-            pdf.multi_cell(0, line_height, text)
+
+            if is_arabic_document:
+                pdf.multi_cell(0, line_height, text, align="R")
+            else:
+                pdf.multi_cell(0, line_height, text)
+
             if index < len(paragraphs) - 1:
                 pdf.ln(2)
 
         pdf.output(str(output_path))
-
 
 class DocumentWriter:
     """
@@ -252,6 +299,76 @@ def _normalize_file_name(value: str) -> str:
 
 def _get_file_size_mb(path: Path) -> float:
     return round(path.stat().st_size / (1024 * 1024), 4)
+
+
+def _contains_non_latin1(value: str) -> bool:
+    try:
+        value.encode("latin-1")
+        return False
+    except UnicodeEncodeError:
+        return True
+
+def _contains_arabic(value: str) -> bool:
+    return any(
+        "\u0600" <= char <= "\u06FF"
+        or "\u0750" <= char <= "\u077F"
+        or "\u08A0" <= char <= "\u08FF"
+        for char in value
+    )
+
+def _find_unicode_font_path(content: str = "") -> Path | None:
+    configured = os.getenv(PDF_UNICODE_FONT_PATH_ENV, "").strip()
+    candidates: list[Path] = []
+
+    if configured:
+        candidates.append(Path(configured))
+
+    if _contains_arabic(content):
+        candidates.extend(
+            [
+                Path("assets/fonts/NotoNaskhArabic-Regular.ttf"),
+                Path("assets/fonts/NotoNaskhArabic-Medium.ttf"),
+                Path("assets/fonts/NotoSansArabic-Regular.ttf"),
+                Path("fonts/NotoNaskhArabic-Regular.ttf"),
+                Path("fonts/NotoNaskhArabic-Medium.ttf"),
+                Path("fonts/NotoSansArabic-Regular.ttf"),
+                Path("C:/Users/Akan/jupitAIx/assets/fonts/NotoNaskhArabic-Regular.ttf"),
+                Path("/usr/share/fonts/truetype/noto/NotoNaskhArabic-Regular.ttf"),
+                Path("/usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf"),
+            ]
+        )
+    else:
+        candidates.extend(
+            [
+                Path("assets/fonts/NotoSans-Regular.ttf"),
+                Path("assets/fonts/NotoSansJP-Regular.ttf"),
+                Path("assets/fonts/NotoSansCJK-Regular.ttf"),
+                Path("fonts/NotoSans-Regular.ttf"),
+                Path("fonts/NotoSansJP-Regular.ttf"),
+                Path("fonts/NotoSansCJK-Regular.ttf"),
+                Path("/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"),
+                Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+                Path("C:/Windows/Fonts/arial.ttf"),
+            ]
+        )
+
+    seen: set[str] = set()
+
+    for candidate in candidates:
+        key = str(candidate)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        try:
+            resolved = candidate.expanduser().resolve()
+        except OSError:
+            continue
+
+        if resolved.is_file():
+            return resolved
+
+    return None
 
 
 __all__ = [
