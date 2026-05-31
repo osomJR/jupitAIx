@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/language_provider";
 import { useAccount } from "@/components/account_provider";
 import ActionCard from "@/components/ActionCard";
@@ -24,11 +24,13 @@ import {
   LayoutDashboard,
   KeyRound,
   CreditCard,
+  CheckCircle2,
   UsersRound,
   Menu,
   X,
 } from "lucide-react";
 import { homePageTranslations } from "@/lib/translations";
+import { getAccessToken } from "@/lib/api_client";
 const actionIcons = {
   convert: FileText,
   summarize: Sparkles,
@@ -72,11 +74,177 @@ const dashboardActionKeys = [
   "textToSpeech",
 ];
 
+const defaultInvitationToastCopy = {
+  title: "Team invitation",
+  body: "You have been invited to join {organization} on the {plan} plan.",
+  fallbackOrganization: "this team",
+  accept: "Accept",
+  accepting: "Accepting...",
+  accepted: "Invitation accepted. Your account is now on the team plan.",
+  deny: "Deny",
+  denying: "Denying...",
+  denied: "Invitation denied.",
+};
+
+function titleCase(value) {
+  if (!value) return "—";
+  return String(value)
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+async function readJson(response) {
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(
+      data?.detail?.message ||
+        data?.detail?.error ||
+        data?.error?.message ||
+        data?.message ||
+        "Request failed",
+    );
+  }
+
+  return data;
+}
+
+function isBusinessOrEnterpriseInvitation(invitation) {
+  const plan = invitation?.subscription?.plan;
+  const subscriptionStatus = invitation?.subscription?.status;
+  const memberStatus = invitation?.member?.status;
+
+  return (
+    ["business", "enterprise"].includes(plan) &&
+    subscriptionStatus === "active" &&
+    memberStatus === "invited"
+  );
+}
+
+function TeamInvitationToast({ invitation, busy, message, copy, onAccept, onDeny }) {
+  if (!invitation) {
+    return null;
+  }
+
+  const planLabel = titleCase(invitation?.subscription?.plan);
+  const roleLabel = titleCase(invitation?.member?.role);
+
+  return (
+    <section
+      role="status"
+      aria-live="polite"
+      className="fixed bottom-5 right-5 z-[90] w-[calc(100vw-2.5rem)] max-w-sm rounded-3xl border app-surface-strong p-5 shadow-2xl backdrop-blur md:bottom-7 md:right-7"
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border app-surface">
+          <UsersRound className="h-5 w-5 app-text-muted" />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] app-text-soft">
+            {copy.title}
+          </p>
+          <h2 className="mt-1 text-base font-semibold app-text">
+            {copy.body
+              .replace("{organization}", invitation.name || copy.fallbackOrganization)
+              .replace("{plan}", planLabel)}
+          </h2>
+          <p className="mt-1 text-xs app-text-muted">
+            {roleLabel} · {planLabel}
+          </p>
+        </div>
+      </div>
+
+      {message ? (
+        <p className="mt-4 rounded-2xl border border-[var(--app-border)] app-surface px-3 py-2 text-xs app-text">
+          {message}
+        </p>
+      ) : null}
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={() => onDeny(invitation.id)}
+          disabled={Boolean(busy)}
+          className="rounded-2xl border app-surface px-4 py-2.5 text-sm font-semibold app-text transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-[#2d2d33]"
+        >
+          {busy === `deny:${invitation.id}` ? copy.denying : copy.deny}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onAccept(invitation.id)}
+          disabled={Boolean(busy)}
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--app-button-bg)] px-4 py-2.5 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <CheckCircle2 className="h-4 w-4" />
+          {busy === `accept:${invitation.id}` ? copy.accepting : copy.accept}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function TeamAccessModal({ message, onClose, signInLabel, closeLabel }) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/30 px-4 pt-24 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-live="polite"
+        className="w-full max-w-sm rounded-2xl border app-surface-strong p-5 text-center shadow-2xl"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={closeLabel}
+          className="ml-auto flex h-8 w-8 items-center justify-center rounded-xl app-text-soft transition hover:bg-neutral-100 hover:text-[var(--app-text)] dark:hover:bg-[#2d2d33]"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        <div className="mx-auto mt-1 flex h-11 w-11 items-center justify-center rounded-2xl border app-surface">
+          <UsersRound className="h-5 w-5 app-text-muted" />
+        </div>
+
+        <p className="mt-4 text-base font-semibold app-text">{message}</p>
+
+        <div className="mt-5 flex justify-center gap-2">
+          {signInLabel ? (
+            <a
+              href="/auth/login?returnTo=/"
+              className="rounded-xl bg-[var(--app-button-bg)] px-4 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02]"
+            >
+              {signInLabel}
+            </a>
+          ) : null}
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl border app-surface px-4 py-2 text-sm font-semibold app-text transition hover:bg-[var(--app-button-bg)] hover:text-[var(--app-button-text)]"
+          >
+            {closeLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const router = useRouter();
   const { language, setLanguage } = useLanguage();
-  const { user, authChecked } = useAccount();
+  const { user, authChecked, entitlement, reloadAccount } = useAccount();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [teamAccessMessage, setTeamAccessMessage] = useState("");
+  const [teamInvitations, setTeamInvitations] = useState([]);
+  const [invitationBusy, setInvitationBusy] = useState("");
+  const [invitationMessage, setInvitationMessage] = useState("");
 
 
   const isSignedIn = !!user;
@@ -85,6 +253,17 @@ export default function HomePage() {
     () => homePageTranslations[language] || homePageTranslations.en,
     [language],
   );
+
+  const teamAccessModal = t.teamAccessModal || homePageTranslations.en.teamAccessModal;
+  const invitationToast =
+    t.teamInvitationToast ||
+    homePageTranslations.en.teamInvitationToast ||
+    defaultInvitationToastCopy;
+
+  const hasTeamAccess =
+    entitlement?.source === "organization" &&
+    entitlement?.status === "active" &&
+    ["business", "enterprise"].includes(entitlement?.plan);
 
   const dashboardActions = useMemo(() => {
     const lockedActionKeys = new Set(t.lockedActions.map((action) => action.key));
@@ -157,8 +336,157 @@ export default function HomePage() {
   const languageInactiveClass =
     "app-text hover:bg-neutral-100 hover:text-[var(--app-text)] hover:shadow-sm dark:hover:bg-[#2d2d33]";
 
+  function upsertTeamInvitation(invitation) {
+    if (!isBusinessOrEnterpriseInvitation(invitation)) {
+      return;
+    }
+
+    setTeamInvitations((current) => {
+      const filtered = current.filter((item) => item.id !== invitation.id);
+      return [invitation, ...filtered];
+    });
+    setInvitationMessage("");
+  }
+
+
+  async function loadTeamInvitations() {
+    if (!authChecked || !isSignedIn) {
+      setTeamInvitations([]);
+      setInvitationMessage("");
+      return;
+    }
+
+    try {
+      const token = await getAccessToken();
+
+      const response = await fetch("/api/organizations/me", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await readJson(response);
+      setTeamInvitations(
+        (data.invitations || []).filter(isBusinessOrEnterpriseInvitation),
+      );
+    } catch (error) {
+      // Keep the main dashboard usable even if invitation loading fails.
+      setInvitationMessage(error.message);
+    }
+  }
+
+  async function respondToInvitation(organizationId, action) {
+    if (!organizationId || invitationBusy) {
+      return;
+    }
+
+    setInvitationBusy(`${action}:${organizationId}`);
+    setInvitationMessage("");
+
+    try {
+      const token = await getAccessToken();
+
+      const response = await fetch(
+        `/api/organizations/${organizationId}/invitations/${action}`,
+        {
+          method: "POST",
+          credentials: "include",
+          cache: "no-store",
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      await readJson(response);
+
+      setTeamInvitations((current) =>
+        current.filter((invitation) => invitation.id !== organizationId),
+      );
+      setInvitationMessage(
+        action === "accept"
+          ? invitationToast.accepted
+          : invitationToast.denied,
+      );
+      await reloadAccount?.();
+    } catch (error) {
+      setInvitationMessage(error.message);
+    } finally {
+      setInvitationBusy("");
+    }
+  }
+
+  useEffect(() => {
+    void loadTeamInvitations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authChecked, isSignedIn, user?.email, entitlement?.organization_id]);
+
+  useEffect(() => {
+    if (!authChecked || !isSignedIn) {
+      return undefined;
+    }
+
+    const handleRealtimeInvitation = (customEvent) => {
+      const event = customEvent.detail;
+
+      if (event?.type === "organization.invitation.created" && event.invitation) {
+        upsertTeamInvitation(event.invitation);
+        return;
+      }
+
+      if (event?.type === "organization.invitation.cancelled" && event.organization_id) {
+        setTeamInvitations((current) =>
+          current.filter((invitation) => invitation.id !== event.organization_id),
+        );
+      }
+    };
+
+    window.addEventListener(
+      "team-invitation-realtime-event",
+      handleRealtimeInvitation,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "team-invitation-realtime-event",
+        handleRealtimeInvitation,
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authChecked, isSignedIn]);
+
   function handleSidebarActionClick(action) {
     if (action.requiresAuth && !isSignedIn) {
+      return;
+    }
+
+    router.push(action.route);
+  }
+
+  function handleManageActionClick(action) {
+    if (!action.route) {
+      return;
+    }
+
+    if (action.key !== "projectsTeam") {
+      router.push(action.route);
+      return;
+    }
+
+    if (!authChecked) {
+      return;
+    }
+
+    if (!isSignedIn) {
+      setTeamAccessMessage(teamAccessModal.signInAndUpgrade);
+      return;
+    }
+
+    if (!hasTeamAccess) {
+      setTeamAccessMessage(teamAccessModal.upgradeToTeamPlan);
       return;
     }
 
@@ -256,7 +584,7 @@ export default function HomePage() {
               type="button"
               disabled={isDisabled}
               aria-disabled={isDisabled ? "true" : undefined}
-              onClick={isDisabled ? undefined : () => router.push(action.route)}
+              onClick={isDisabled ? undefined : () => handleManageActionClick(action)}
               title={
                 sidebarOpen
                   ? undefined
@@ -280,7 +608,11 @@ export default function HomePage() {
 
               {sidebarOpen ? (
                 <span className="min-w-0 flex-1 leading-tight">
-                  <span className="block truncate font-medium app-text">
+                  <span
+                    className={`block break-words font-medium leading-snug app-text ${
+                      action.key === "billing" ? "text-[13px] tracking-[-0.01em]" : ""
+                    }`}
+                  >
                     {action.name}
                   </span>
                   {isDisabled ? (
@@ -335,6 +667,21 @@ export default function HomePage() {
 
   return (
     <main className="app-shell min-h-screen bg-[var(--app-bg)] text-[var(--app-text)]">
+      <TeamAccessModal
+        message={teamAccessMessage}
+        onClose={() => setTeamAccessMessage("")}
+        signInLabel={!isSignedIn ? t.signIn : null}
+        closeLabel={teamAccessModal.close}
+      />
+      <TeamInvitationToast
+        invitation={teamInvitations[0]}
+        busy={invitationBusy}
+        message={invitationMessage}
+        copy={invitationToast}
+        onAccept={(organizationId) => respondToInvitation(organizationId, "accept")}
+        onDeny={(organizationId) => respondToInvitation(organizationId, "deny")}
+      />
+
       <aside
         className={`fixed left-0 top-0 z-50 flex h-dvh flex-col overflow-visible border-r app-surface backdrop-blur-xl transition-all duration-300 ${
           sidebarOpen ? "w-72" : "w-16"
@@ -386,6 +733,9 @@ export default function HomePage() {
                     user={user}
                     settingsLabel={t.settings}
                     logoutLabel={t.logout}
+                    logoutConfirmTitle={t.logoutConfirm?.title}
+                    logoutConfirmYesLabel={t.logoutConfirm?.yes}
+                    logoutReturnDashboardLabel={t.logoutConfirm?.returnDashboard}
                     appearanceLabel={t.appearance}
                     lightLabel={t.light}
                     darkLabel={t.dark}
@@ -458,6 +808,9 @@ export default function HomePage() {
               signUpLabel={t.signUp}
               loadingLabel={t.loading}
               logoutLabel={t.logout}
+              logoutConfirmTitle={t.logoutConfirm?.title}
+              logoutConfirmYesLabel={t.logoutConfirm?.yes}
+              logoutReturnDashboardLabel={t.logoutConfirm?.returnDashboard}
               settingsLabel={t.settings}
               appearanceLabel={t.appearance}
               lightLabel={t.light}

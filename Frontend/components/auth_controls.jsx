@@ -9,6 +9,9 @@ export default function AuthControls({
   signUpLabel = "Sign Up",
   loadingLabel = "Loading...",
   logoutLabel = "Logout",
+  logoutConfirmTitle = "Are you sure you want to Logout?",
+  logoutConfirmYesLabel = "Yes",
+  logoutReturnDashboardLabel = "Return back to Dashboard",
   settingsLabel = "Settings",
   appearanceLabel = "Appearance",
   lightLabel = "Light",
@@ -45,6 +48,9 @@ export default function AuthControls({
       user={user}
       settingsLabel={settingsLabel}
       logoutLabel={logoutLabel}
+      logoutConfirmTitle={logoutConfirmTitle}
+      logoutConfirmYesLabel={logoutConfirmYesLabel}
+      logoutReturnDashboardLabel={logoutReturnDashboardLabel}
       appearanceLabel={appearanceLabel}
       lightLabel={lightLabel}
       darkLabel={darkLabel}

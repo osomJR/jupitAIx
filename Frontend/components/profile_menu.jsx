@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ChevronDown,
   LogOut,
@@ -35,6 +36,9 @@ export default function ProfileMenu({
   user,
   settingsLabel = "Settings",
   logoutLabel = "Logout",
+  logoutConfirmTitle = "Are you sure you want to Logout?",
+  logoutConfirmYesLabel = "Yes",
+  logoutReturnDashboardLabel = "Return back to Dashboard",
   appearanceLabel = "Appearance",
   lightLabel = "Light",
   darkLabel = "Dark",
@@ -46,7 +50,9 @@ export default function ProfileMenu({
 }) {
   const [open, setOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const containerRef = useRef(null);
+  const router = useRouter();
   const { theme, setTheme, loading } = useTheme();
   const { entitlement } = useAccount();
 
@@ -55,6 +61,7 @@ export default function ProfileMenu({
       if (!containerRef.current?.contains(event.target)) {
         setOpen(false);
         setShowSettings(false);
+        setShowLogoutConfirm(false);
       }
     }
 
@@ -90,8 +97,12 @@ export default function ProfileMenu({
       <button
         type="button"
         onClick={() => {
-          setOpen((current) => !current);
-          if (open) setShowSettings(false);
+          const nextOpen = !open;
+          setOpen(nextOpen);
+          if (!nextOpen) {
+            setShowSettings(false);
+            setShowLogoutConfirm(false);
+          }
         }}
         className={`flex items-center gap-3 rounded-2xl border app-surface px-3 py-2 text-sm app-text transition ${hoverItemClass} ${
           fullWidth ? "w-full justify-between" : ""
@@ -124,7 +135,40 @@ export default function ProfileMenu({
         <div
           className={`absolute ${menuAlignClass} ${menuPlacementClass} z-[80] w-72 overflow-hidden rounded-3xl border app-surface-strong p-2 shadow-2xl backdrop-blur-xl`}
         >
-          {!showSettings ? (
+          {showLogoutConfirm ? (
+            <div className="space-y-3 p-1">
+              <div className="rounded-2xl border app-surface p-4 text-center">
+                <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--app-button-bg)] text-[var(--app-button-text)]">
+                  <LogOut className="h-5 w-5" />
+                </div>
+                <p className="mt-3 text-sm font-semibold app-text">
+                  {logoutConfirmTitle}
+                </p>
+              </div>
+
+              <div className="grid gap-2">
+                <a
+                  href="/auth/logout"
+                  className="rounded-2xl bg-[var(--app-button-bg)] px-4 py-3 text-center text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.01] hover:shadow-xl"
+                >
+                  {logoutConfirmYesLabel}
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowLogoutConfirm(false);
+                    setShowSettings(false);
+                    setOpen(false);
+                    router.push("/");
+                  }}
+                  className={`rounded-2xl border app-surface px-4 py-3 text-sm font-semibold app-text transition ${hoverItemClass}`}
+                >
+                  {logoutReturnDashboardLabel}
+                </button>
+              </div>
+            </div>
+          ) : !showSettings ? (
             <div className="space-y-1">
               <div className={`flex items-center gap-3 rounded-2xl px-3 py-3 transition ${hoverItemClass}`}>
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--app-button-bg)] text-sm font-semibold text-[var(--app-button-text)]">
@@ -155,20 +199,27 @@ export default function ProfileMenu({
 
               <button
                 type="button"
-                onClick={() => setShowSettings(true)}
+                onClick={() => {
+                  setShowLogoutConfirm(false);
+                  setShowSettings(true);
+                }}
                 className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm app-text transition ${hoverItemClass}`}
               >
                 <Settings className="h-4 w-4 app-text-muted" />
                 <span>{settingsLabel}</span>
               </button>
 
-              <a
-                href="/auth/logout"
-                className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm app-text transition ${hoverItemClass}`}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSettings(false);
+                  setShowLogoutConfirm(true);
+                }}
+                className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm app-text transition ${hoverItemClass}`}
               >
                 <LogOut className="h-4 w-4 app-text-muted" />
                 <span>{logoutLabel}</span>
-              </a>
+              </button>
             </div>
           ) : (
             <div className="space-y-2">

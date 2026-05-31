@@ -66,6 +66,11 @@ export const homePageTranslations = {
     loading: "Loading...",
     signedInAs: "Signed in as",
     logout: "Logout",
+    logoutConfirm: {
+      title: "Are you sure you want to Logout?",
+      yes: "Yes",
+      returnDashboard: "Return back to Dashboard",
+    },
     languageLabel: "Language",
     english: "English",
     french: "Français",
@@ -82,6 +87,22 @@ export const homePageTranslations = {
     manageCompactTitle: "Manage",
     soon: "Soon",
     requiresSignIn: "Requires sign in",
+    teamAccessModal: {
+      signInAndUpgrade: "Sign in and upgrade to continue",
+      upgradeToTeamPlan: "Upgrade to Business or Enterprise to continue",
+      close: "Close",
+    },
+    teamInvitationToast: {
+      title: "Team invitation",
+      body: "You have been invited to join {organization} on the {plan} plan.",
+      fallbackOrganization: "this team",
+      accept: "Accept",
+      accepting: "Accepting...",
+      accepted: "Invitation accepted. Your account is now on the team plan.",
+      deny: "Deny",
+      denying: "Denying...",
+      denied: "Invitation denied.",
+    },
     manageActions: [
       {
         key: "dashboard",
@@ -99,7 +120,7 @@ export const homePageTranslations = {
       },
       {
         key: "billing",
-        name: "Billing",
+        name: "Billing & Upgrade",
       },
     ],
     enabledActions: [
@@ -137,7 +158,7 @@ export const homePageTranslations = {
     lockedActions: [
       {
         key: "transcribe",
-        name: "Transcribe audio and video",
+        name: "Speech to Text",
         route: "/transcribe",
         description: "Convert speech to accurate text",
       },
@@ -200,6 +221,11 @@ export const homePageTranslations = {
     loading: "Chargement...",
     signedInAs: "Connecté en tant que",
     logout: "Se déconnecter",
+    logoutConfirm: {
+      title: "Êtes-vous sûr de vouloir vous déconnecter ?",
+      yes: "Oui",
+      returnDashboard: "Retour au tableau de bord",
+    },
     languageLabel: "Langue",
     english: "English",
     french: "Français",
@@ -216,6 +242,24 @@ export const homePageTranslations = {
     manageCompactTitle: "Gérer",
     soon: "Bientôt",
     requiresSignIn: "Connexion requise",
+    teamAccessModal: {
+      signInAndUpgrade:
+        "Connectez-vous et passez à une offre supérieure pour continuer",
+      upgradeToTeamPlan: "Passez à Business ou Enterprise pour continuer",
+      close: "Fermer",
+    },
+    teamInvitationToast: {
+      title: "Invitation d’équipe",
+      body: "Vous avez été invité à rejoindre {organization} avec le forfait {plan}.",
+      fallbackOrganization: "cette équipe",
+      accept: "Accepter",
+      accepting: "Acceptation...",
+      accepted:
+        "Invitation acceptée. Votre compte est maintenant sur le forfait d’équipe.",
+      deny: "Refuser",
+      denying: "Refus...",
+      denied: "Invitation refusée.",
+    },
     manageActions: [
       {
         key: "dashboard",
@@ -233,7 +277,7 @@ export const homePageTranslations = {
       },
       {
         key: "billing",
-        name: "Facturation",
+        name: "Facturation & mise à niveau",
       },
     ],
     enabledActions: [
@@ -274,7 +318,7 @@ export const homePageTranslations = {
     lockedActions: [
       {
         key: "transcribe",
-        name: "Transcrire des fichiers audio et vidéo",
+        name: "Voix en texte",
         route: "/transcribe",
         description: "Convertir la parole en texte avec précision",
       },
@@ -1735,7 +1779,8 @@ export const compliancePageTranslations = {
 export const teamPageTranslations = {
   en: {
     title: "Projects & Team",
-    subtitle: "Manage your organization, subscription seats, members, and invitations.",
+    subtitle:
+      "Manage your organization, subscription seats, members, and invitations.",
     loading: "Loading team...",
     noTeam: "No team workspace found.",
     refresh: "Refresh",
@@ -1756,6 +1801,15 @@ export const teamPageTranslations = {
     acceptInvitation: "Accept invitation",
     accepting: "Accepting...",
     acceptedInvitation: "Invitation accepted.",
+    denyInvitation: "Deny",
+    denying: "Denying...",
+    deniedInvitation: "Invitation denied.",
+    cancelInvitation: "Cancel invitation",
+    cancellingInvitation: "Cancelling...",
+    invitationCancelled: "Invitation cancelled.",
+    leavePlan: "Leave plan",
+    leavingPlan: "Leaving...",
+    leftPlan: "You left the plan.",
     invite: "Invite member",
     email: "Email address",
     member: "Member",
@@ -1767,7 +1821,8 @@ export const teamPageTranslations = {
   },
   fr: {
     title: "Projets & équipe",
-    subtitle: "Gérez votre organisation, les sièges d’abonnement, les membres et les invitations.",
+    subtitle:
+      "Gérez votre organisation, les sièges d’abonnement, les membres et les invitations.",
     loading: "Chargement de l’équipe...",
     noTeam: "Aucun espace d’équipe trouvé.",
     refresh: "Actualiser",
@@ -1788,6 +1843,15 @@ export const teamPageTranslations = {
     acceptInvitation: "Accepter l’invitation",
     accepting: "Acceptation...",
     acceptedInvitation: "Invitation acceptée.",
+    denyInvitation: "Refuser",
+    denying: "Refus...",
+    deniedInvitation: "Invitation refusée.",
+    cancelInvitation: "Annuler l’invitation",
+    cancellingInvitation: "Annulation...",
+    invitationCancelled: "Invitation annulée.",
+    leavePlan: "Quitter le forfait",
+    leavingPlan: "Départ...",
+    leftPlan: "Vous avez quitté le forfait.",
     invite: "Inviter un membre",
     email: "Adresse e-mail",
     member: "Membre",
@@ -1795,6 +1859,7 @@ export const teamPageTranslations = {
     send: "Envoyer l’invitation",
     remove: "Retirer",
     none: "Aucun",
-    ownerNote: "Les propriétaires ne peuvent pas être retirés ici. Attribuez d’abord un autre propriétaire.",
+    ownerNote:
+      "Les propriétaires ne peuvent pas être retirés ici. Attribuez d’abord un autre propriétaire.",
   },
 };

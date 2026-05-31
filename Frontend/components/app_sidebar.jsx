@@ -50,11 +50,64 @@ const sidebarActionKeys = [
   "questions",
 ];
 
+
+function TeamAccessModal({ message, onClose, signInLabel, closeLabel }) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/30 px-4 pt-24 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-live="polite"
+        className="w-full max-w-sm rounded-2xl border app-surface-strong p-5 text-center shadow-2xl"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={closeLabel}
+          className="ml-auto flex h-8 w-8 items-center justify-center rounded-xl app-text-soft transition hover:bg-neutral-100 hover:text-[var(--app-text)] dark:hover:bg-[#2d2d33]"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        <div className="mx-auto mt-1 flex h-11 w-11 items-center justify-center rounded-2xl border app-surface">
+          <UsersRound className="h-5 w-5 app-text-muted" />
+        </div>
+
+        <p className="mt-4 text-base font-semibold app-text">{message}</p>
+
+        <div className="mt-5 flex justify-center gap-2">
+          {signInLabel ? (
+            <a
+              href="/auth/login?returnTo=/"
+              className="rounded-xl bg-[var(--app-button-bg)] px-4 py-2 text-sm font-semibold text-[var(--app-button-text)] transition hover:scale-[1.02]"
+            >
+              {signInLabel}
+            </a>
+          ) : null}
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl border app-surface px-4 py-2 text-sm font-semibold app-text transition hover:bg-[var(--app-button-bg)] hover:text-[var(--app-button-text)]"
+          >
+            {closeLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AppSidebarLayout({ children }) {
   const router = useRouter();
   const { language } = useLanguage();
-  const { user, authChecked } = useAccount();
+  const { user, authChecked, entitlement } = useAccount();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [teamAccessMessage, setTeamAccessMessage] = useState("");
 
   const isSignedIn = !!user;
 
@@ -62,6 +115,13 @@ export default function AppSidebarLayout({ children }) {
     () => homePageTranslations[language] || homePageTranslations.en,
     [language],
   );
+
+  const teamAccessModal = t.teamAccessModal || homePageTranslations.en.teamAccessModal;
+
+  const hasTeamAccess =
+    entitlement?.source === "organization" &&
+    entitlement?.status === "active" &&
+    ["business", "enterprise"].includes(entitlement?.plan);
 
   const sidebarActions = useMemo(() => {
     const actionsByKey = new Map(
@@ -116,6 +176,33 @@ export default function AppSidebarLayout({ children }) {
 
   function handleSidebarActionClick(action) {
     if (action.requiresAuth && !isSignedIn) {
+      return;
+    }
+
+    router.push(action.route);
+  }
+
+  function handleManageActionClick(action) {
+    if (!action.route) {
+      return;
+    }
+
+    if (action.key !== "projectsTeam") {
+      router.push(action.route);
+      return;
+    }
+
+    if (!authChecked) {
+      return;
+    }
+
+    if (!isSignedIn) {
+      setTeamAccessMessage(teamAccessModal.signInAndUpgrade);
+      return;
+    }
+
+    if (!hasTeamAccess) {
+      setTeamAccessMessage(teamAccessModal.upgradeToTeamPlan);
       return;
     }
 
@@ -213,7 +300,7 @@ export default function AppSidebarLayout({ children }) {
               type="button"
               disabled={isDisabled}
               aria-disabled={isDisabled ? "true" : undefined}
-              onClick={isDisabled ? undefined : () => router.push(action.route)}
+              onClick={isDisabled ? undefined : () => handleManageActionClick(action)}
               title={
                 sidebarOpen
                   ? undefined
@@ -237,7 +324,11 @@ export default function AppSidebarLayout({ children }) {
 
               {sidebarOpen ? (
                 <span className="min-w-0 flex-1 leading-tight">
-                  <span className="block truncate font-medium app-text">
+                  <span
+                    className={`block break-words font-medium leading-snug app-text ${
+                      action.key === "billing" ? "text-[13px] tracking-[-0.01em]" : ""
+                    }`}
+                  >
                     {action.name}
                   </span>
                   {isDisabled ? (
@@ -256,6 +347,12 @@ export default function AppSidebarLayout({ children }) {
 
   return (
     <main className="app-shell min-h-screen overflow-x-hidden">
+      <TeamAccessModal
+        message={teamAccessMessage}
+        onClose={() => setTeamAccessMessage("")}
+        signInLabel={!isSignedIn ? t.signIn : null}
+        closeLabel={teamAccessModal.close}
+      />
       <aside
         className={`fixed left-0 top-0 z-50 flex h-dvh flex-col overflow-visible border-r app-surface backdrop-blur-xl transition-all duration-300 ${
           sidebarOpen ? "w-72" : "w-16"

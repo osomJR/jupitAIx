@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
+import "@livekit/components-styles";
 import Providers from "./providers";
 
 const geistSans = Geist({
